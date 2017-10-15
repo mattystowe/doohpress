@@ -1,5 +1,5 @@
 <!-- Navigation Bar-->
-<header id="topnav">
+<header id="topnav" ng-controller="HeaderController as vm">
     <div class="topbar-main">
         <div class="container-fluid">
 
@@ -25,7 +25,7 @@
 
                     <li class="menu-item list-inline-item">
                         <!-- Mobile menu toggle-->
-                        <a class="navbar-toggle nav-link">
+                        <a class="navbar-toggle nav-link" id="burgerMenu" ng-click="vm.toggleMenu();">
                             <div class="lines">
                                 <span></span>
                                 <span></span>

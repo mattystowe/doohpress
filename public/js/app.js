@@ -49214,6 +49214,45 @@ function getStates() {
 
 /***/ }),
 
+/***/ "./resources/assets/js/layout/header.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.layout').controller('HeaderController', HeaderController);
+
+HeaderController.$inject = ['$scope', '$state'];
+
+/* @ngInject */
+function HeaderController($scope, $state) {
+    var vm = this;
+
+    vm.toggleMenu = toggleMenu;
+
+    /////////////////////////////////////////////////
+    activate();
+
+    function activate() {}
+    //console.log($state.current.name);
+
+
+    /////////////////////////////////////////////////
+
+
+    //Toggle menu
+    //
+    function toggleMenu() {
+        $('#burgerMenu').toggleClass('open');
+        $('#navigation').slideToggle(400);
+    }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/layout/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -49225,6 +49264,8 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 __webpack_require__("./resources/assets/js/core/index.js");
 
 angular.module('app.layout', ['app.core']);
+
+__webpack_require__("./resources/assets/js/layout/header.controller.js");
 
 /***/ }),
 

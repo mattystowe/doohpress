@@ -7,3 +7,6 @@ require('../core');
 angular.module('app.layout', [
   'app.core'
 ]);
+
+
+require('./header.controller');
