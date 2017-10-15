@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('app');
-});
+
+$this->get('/', 'IndexController@index');
+
 
 Auth::routes();
 $this->get('logout', 'Auth\LoginController@logout')->name('logout');
