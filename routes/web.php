@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+$this->get('logout', 'Auth\LoginController@logout')->name('logout');
