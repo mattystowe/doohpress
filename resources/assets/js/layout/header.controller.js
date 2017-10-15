@@ -7,13 +7,14 @@
         .module('app.layout')
         .controller('HeaderController', HeaderController);
 
-    HeaderController.$inject = ['$scope','$state'];
+    HeaderController.$inject = ['$scope','$state','$rootScope'];
 
     /* @ngInject */
-    function HeaderController($scope, $state) {
+    function HeaderController($scope, $state, $rootScope) {
         var vm = this;
 
         vm.toggleMenu = toggleMenu;
+
 
         /////////////////////////////////////////////////
         activate();
@@ -31,5 +32,8 @@
           $('#burgerMenu').toggleClass('open');
           $('#navigation').slideToggle(400);
         }
+
+
+
 
     }

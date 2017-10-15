@@ -49226,10 +49226,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.layout').controller('HeaderController', HeaderController);
 
-HeaderController.$inject = ['$scope', '$state'];
+HeaderController.$inject = ['$scope', '$state', '$rootScope'];
 
 /* @ngInject */
-function HeaderController($scope, $state) {
+function HeaderController($scope, $state, $rootScope) {
     var vm = this;
 
     vm.toggleMenu = toggleMenu;
