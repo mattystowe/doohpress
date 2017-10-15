@@ -1186,7 +1186,7 @@ select[multiple] {
     list-style: none;
     margin: 0;
     padding: 0;
-    text-align: center; }
+    text-align: left; }
   #topnav .navigation-menu > li {
     display: inline-block;
     position: relative; }

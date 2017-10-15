@@ -48936,8 +48936,9 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 __webpack_require__("./resources/assets/js/core/index.js");
 __webpack_require__("./resources/assets/js/layout/index.js");
 __webpack_require__("./resources/assets/js/home/index.js");
+__webpack_require__("./resources/assets/js/profile/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile']);
 
 /***/ }),
 
@@ -49266,6 +49267,51 @@ __webpack_require__("./resources/assets/js/core/index.js");
 angular.module('app.layout', ['app.core']);
 
 __webpack_require__("./resources/assets/js/layout/header.controller.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/profile/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.profile', ['app.core']);
+
+__webpack_require__("./resources/assets/js/profile/routes.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/profile/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.profile').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'profile',
+        config: {
+            url: '/profile',
+            templateUrl: '/html/profile/index.html'
+        }
+    }];
+}
 
 /***/ }),
 
