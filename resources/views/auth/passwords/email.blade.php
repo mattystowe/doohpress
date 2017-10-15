@@ -10,6 +10,11 @@
     </div>
 
     <div class="p-20">
+      @if (session('status'))
+          <div class="alert alert-success">
+              {{ session('status') }}
+          </div>
+      @endif
       <form method="POST" action="{{ route('password.email') }}" class="text-center">
         {{ csrf_field() }}
         <div class="alert alert-info alert-dismissable">
