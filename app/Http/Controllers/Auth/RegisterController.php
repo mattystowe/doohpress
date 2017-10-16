@@ -22,6 +22,9 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+
+    private $default_user_avatar = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/profilepics/avatar-starter.png';
+
     /**
      * Where to redirect users after registration.
      *
@@ -69,6 +72,7 @@ class RegisterController extends Controller
             'lastname' => $data['lastname'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'profilepic' => $this->default_user_avatar
         ]);
     }
 }
