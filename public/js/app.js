@@ -54016,7 +54016,9 @@ function AuthService($http, UserService) {
   ////////////
   var api = {
     init: init,
-    currentUser: currentUser
+    currentUser: currentUser,
+    updateUserDetails: updateUserDetails,
+    updatePassword: updatePassword
   };
   return api;
   ///////////
@@ -54036,6 +54038,35 @@ function AuthService($http, UserService) {
 
   function currentUser() {
     return service.user;
+  }
+
+  //Save details to db and if successful update the user store
+  //
+  //
+  function updateUserDetails(user) {
+    return UserService.updateDetails(user).then(function (data) {
+      //success - update the user store
+      service.user.firstname = user.firstname;
+      service.user.lastname = user.lastname;
+      service.user.email = user.email;
+      return data;
+    }, function (data) {
+      //httperror
+      return data;
+    });
+  }
+
+  //save details of new password
+  //
+  //
+  function updatePassword(user) {
+    return UserService.updatePassword(user.password).then(function (data) {
+      //success
+      return data;
+    }, function (data) {
+      //httperror
+      return data;
+    });
   }
 }
 
@@ -54089,22 +54120,51 @@ UserService.$inject = ['$http'];
 /* @ngInject */
 function UserService($http) {
 
-    var api = {
-        getUser: getUser
-    };
-    return api;
+  var api = {
+    getUser: getUser,
+    updateDetails: updateDetails,
+    updatePassword: updatePassword
+  };
+  return api;
 
-    ////////////
+  ////////////
 
-    function getUser() {
-        return $http({
-            url: '/user/',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
+  function getUser() {
+    return $http({
+      url: '/user/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function updateDetails(user) {
+    var userjson = angular.toJson(user);
+    return $http({
+      url: '/user/update/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        user: userjson
+      }
+    });
+  }
+
+  function updatePassword(password) {
+    return $http({
+      url: '/user/updatepassword/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        password: password
+      }
+    });
+  }
 }
 
 /***/ }),
@@ -54510,10 +54570,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.profile').controller('ProfileController', ProfileController);
 
-ProfileController.$inject = ['$scope', '$state', 'AuthService', 'UserService'];
+ProfileController.$inject = ['$scope', '$state', 'AuthService', 'toastr'];
 
 /* @ngInject */
-function ProfileController($scope, $state, AuthService, UserService) {
+function ProfileController($scope, $state, AuthService, toastr) {
   var vm = this;
 
   vm.getUser = getUser;
@@ -54528,7 +54588,8 @@ function ProfileController($scope, $state, AuthService, UserService) {
   activate();
 
   function activate() {
-    vm.localUser = getUser();
+    angular.copy(getUser(), vm.localUser); //clone user to local copy for editing
+
     //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
     //console.log(currentUser);
     //});
@@ -54573,14 +54634,30 @@ function ProfileController($scope, $state, AuthService, UserService) {
   //
   //
   function submitDetails() {
-    console.log(vm.localUser);
+    AuthService.updateUserDetails(vm.localUser).then(function (data) {
+      if (data.status == 200) {
+        toastr.success('Success', 'Your details have been saved.');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error saving.');
+      }
+    });
   }
 
   //Submit details to be saved
   //
   //
   function submitPasswordChange() {
-    console.log(vm.localUser);
+    AuthService.updatePassword(vm.localUser).then(function (data) {
+      if (data.status == 200) {
+        toastr.success('Success', 'Your details have been saved.');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error saving.');
+      }
+    });
   }
 }
 

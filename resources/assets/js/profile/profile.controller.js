@@ -7,10 +7,10 @@
         .module('app.profile')
         .controller('ProfileController', ProfileController);
 
-    ProfileController.$inject = ['$scope','$state','AuthService','UserService'];
+    ProfileController.$inject = ['$scope','$state','AuthService', 'toastr'];
 
     /* @ngInject */
-    function ProfileController($scope, $state, AuthService, UserService) {
+    function ProfileController($scope, $state, AuthService, toastr) {
         var vm = this;
 
         vm.getUser = getUser;
@@ -25,7 +25,8 @@
         activate();
 
         function activate() {
-            vm.localUser = getUser();
+            angular.copy(getUser(), vm.localUser); //clone user to local copy for editing
+
             //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
               //console.log(currentUser);
             //});
@@ -61,7 +62,16 @@
         //
         //
         function submitDetails() {
-          console.log(vm.localUser);
+          AuthService.updateUserDetails(vm.localUser)
+          .then(function(data) {
+            if (data.status == 200) {
+              toastr.success('Success','Your details have been saved.');
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error saving.');
+            }
+          });
         }
 
 
@@ -70,7 +80,16 @@
         //
         //
         function submitPasswordChange() {
-          console.log(vm.localUser);
+          AuthService.updatePassword(vm.localUser)
+          .then(function(data) {
+            if (data.status == 200) {
+              toastr.success('Success','Your details have been saved.');
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error saving.');
+            }
+          });
         }
 
 

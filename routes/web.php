@@ -22,5 +22,7 @@ Route::middleware(['auth'])->group(function () {
   //
   //
   $this->get('/user/','UserController@getUser');
-  
+  $this->post('/user/update/','UserController@updateUserDetails');
+  $this->post('/user/updatepassword/','UserController@updateUserPassword');
+
 });

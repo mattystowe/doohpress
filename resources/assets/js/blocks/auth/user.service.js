@@ -14,7 +14,9 @@ var angular = require('angular');
     function UserService($http) {
 
       var api = {
-        getUser:getUser
+        getUser:getUser,
+        updateDetails:updateDetails,
+        updatePassword:updatePassword
       };
       return api;
 
@@ -26,6 +28,34 @@ var angular = require('angular');
               method : 'GET',
               headers : {
                 'Content-Type' : 'application/json'
+              }
+          });
+      }
+
+
+      function updateDetails(user) {
+        var userjson = angular.toJson(user);
+        return $http({
+              url : '/user/update/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                user: userjson
+              }
+          });
+      }
+
+      function updatePassword(password) {
+        return $http({
+              url : '/user/updatepassword/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                password: password
               }
           });
       }
