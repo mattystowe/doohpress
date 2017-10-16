@@ -28,6 +28,7 @@ mix.styles([
     'resources/assets/css/icons.css',
     'resources/assets/css/style.css',
     './node_modules/angular-loading-bar/build/loading-bar.min.css',
+    './node_modules/angular-toastr/dist/angular-toastr.min.css'
 ], 'public/css/theme.css').version();
 
 

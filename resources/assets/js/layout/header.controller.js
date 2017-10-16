@@ -7,10 +7,10 @@
         .module('app.layout')
         .controller('HeaderController', HeaderController);
 
-    HeaderController.$inject = ['$scope','$state','$rootScope'];
+    HeaderController.$inject = ['$scope','$state'];
 
     /* @ngInject */
-    function HeaderController($scope, $state, $rootScope) {
+    function HeaderController($scope, $state) {
         var vm = this;
 
         vm.toggleMenu = toggleMenu;

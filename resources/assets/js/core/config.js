@@ -27,3 +27,21 @@ function loadingSpinnerConfig(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeBar = true;
     cfpLoadingBarProvider.latencyThreshold = 0; // set to 50 on production
 }
+
+
+//Toastr config
+//
+//
+core.config(function(toastrConfig) {
+  angular.extend(toastrConfig, {
+    autoDismiss: false,
+    containerId: 'toast-container',
+    maxOpened: 0,
+    newestOnTop: true,
+    positionClass: 'toast-top-right', //toast-top-full-width
+    preventDuplicates: false,
+    preventOpenDuplicates: false,
+    target: 'body',
+    timeOut: 4000,
+  });
+});
