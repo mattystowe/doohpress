@@ -13,7 +13,14 @@
 
 
 $this->get('/', 'IndexController@index');
-
-
 Auth::routes();
 $this->get('logout', 'Auth\LoginController@logout')->name('logout');
+
+
+//Application routes - Authenticated
+Route::middleware(['auth'])->group(function () {
+  //
+  //
+  $this->get('/user/','UserController@getUser');
+  
+});

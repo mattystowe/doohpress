@@ -9,3 +9,4 @@ angular.module('app.profile', [
 ]);
 
 require('./routes');
+require('./profile.controller');

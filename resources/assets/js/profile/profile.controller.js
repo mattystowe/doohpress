@@ -4,17 +4,17 @@
 
 
     angular
-        .module('app.layout')
-        .controller('HeaderController', HeaderController);
+        .module('app.profile')
+        .controller('ProfileController', ProfileController);
 
-    HeaderController.$inject = ['$scope','$state','AuthService'];
+    ProfileController.$inject = ['$scope','$state','AuthService'];
 
     /* @ngInject */
-    function HeaderController($scope, $state, AuthService) {
+    function ProfileController($scope, $state, AuthService) {
         var vm = this;
 
-        vm.toggleMenu = toggleMenu;
         vm.getUser = getUser;
+
 
         /////////////////////////////////////////////////
         activate();
@@ -29,16 +29,10 @@
         /////////////////////////////////////////////////
 
 
-        //Toggle menu
-        //
-        function toggleMenu() {
-          $('#burgerMenu').toggleClass('open');
-          $('#navigation').slideToggle(400);
-        }
-
         function getUser() {
           return AuthService.currentUser();
         }
+
 
 
 

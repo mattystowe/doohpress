@@ -53994,6 +53994,121 @@ angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile']);
 
 /***/ }),
 
+/***/ "./resources/assets/js/blocks/auth/auth.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.auth').service('AuthService', AuthService);
+
+AuthService.$inject = ['$http', 'UserService'];
+
+/* @ngInject */
+function AuthService($http, UserService) {
+
+  var service = {};
+  service.user = {};
+
+  ////////////
+  var api = {
+    init: init,
+    currentUser: currentUser
+  };
+  return api;
+  ///////////
+
+  function init() {
+    return UserService.getUser().then(function (data) {
+      service.user = data.data;
+      return data;
+    }, function (data) {
+      //httperror
+      return data;
+    });
+  }
+
+  ////////////
+
+
+  function currentUser() {
+    return service.user;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/auth/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.auth', []);
+
+__webpack_require__("./resources/assets/js/blocks/auth/auth.service.js");
+__webpack_require__("./resources/assets/js/blocks/auth/user.service.js");
+
+var authblock = angular.module('blocks.auth');
+authblock.run(runBlock);
+
+runBlock.$inject = ['AuthService', '$state'];
+
+/* @ngInject */
+function runBlock(AuthService, $state) {
+
+  AuthService.init().then(function (data) {
+    //console.log(data.status);
+    if (data.status != 200) {
+      //console.log('ERROR');
+      $state.go('404');
+    }
+  });;
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/auth/user.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.auth').service('UserService', UserService);
+
+UserService.$inject = ['$http'];
+
+/* @ngInject */
+function UserService($http) {
+
+    var api = {
+        getUser: getUser
+    };
+    return api;
+
+    ////////////
+
+    function getUser() {
+        return $http({
+            url: '/user/',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/blocks/router/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -54246,11 +54361,12 @@ function getStates() {
 var angular = __webpack_require__("./node_modules/angular/index.js");
 
 __webpack_require__("./resources/assets/js/blocks/router/index.js");
+__webpack_require__("./resources/assets/js/blocks/auth/index.js");
 __webpack_require__("./node_modules/angular-animate/index.js");
 __webpack_require__("./node_modules/angular-loading-bar/index.js");
 __webpack_require__("./node_modules/angular-toastr/index.js");
 
-angular.module('app.core', ['ngAnimate', 'blocks.router', 'ui.router', 'angular-loading-bar', 'toastr']);
+angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'ui.router', 'angular-loading-bar', 'toastr']);
 
 __webpack_require__("./resources/assets/js/core/config.js");
 __webpack_require__("./resources/assets/js/core/constants.js");
@@ -54314,19 +54430,23 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.layout').controller('HeaderController', HeaderController);
 
-HeaderController.$inject = ['$scope', '$state'];
+HeaderController.$inject = ['$scope', '$state', 'AuthService'];
 
 /* @ngInject */
-function HeaderController($scope, $state) {
+function HeaderController($scope, $state, AuthService) {
     var vm = this;
 
     vm.toggleMenu = toggleMenu;
+    vm.getUser = getUser;
 
     /////////////////////////////////////////////////
     activate();
 
     function activate() {}
-    //console.log($state.current.name);
+
+    //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
+    //console.log(currentUser);
+    //});
 
 
     /////////////////////////////////////////////////
@@ -54337,6 +54457,10 @@ function HeaderController($scope, $state) {
     function toggleMenu() {
         $('#burgerMenu').toggleClass('open');
         $('#navigation').slideToggle(400);
+    }
+
+    function getUser() {
+        return AuthService.currentUser();
     }
 }
 
@@ -54371,6 +54495,46 @@ __webpack_require__("./resources/assets/js/core/index.js");
 angular.module('app.profile', ['app.core']);
 
 __webpack_require__("./resources/assets/js/profile/routes.js");
+__webpack_require__("./resources/assets/js/profile/profile.controller.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/profile/profile.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.profile').controller('ProfileController', ProfileController);
+
+ProfileController.$inject = ['$scope', '$state', 'AuthService'];
+
+/* @ngInject */
+function ProfileController($scope, $state, AuthService) {
+    var vm = this;
+
+    vm.getUser = getUser;
+
+    /////////////////////////////////////////////////
+    activate();
+
+    function activate() {}
+
+    //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
+    //console.log(currentUser);
+    //});
+
+
+    /////////////////////////////////////////////////
+
+
+    function getUser() {
+        return AuthService.currentUser();
+    }
+}
 
 /***/ }),
 
