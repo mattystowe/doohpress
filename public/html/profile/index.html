@@ -1,5 +1,120 @@
 <div ng-controller="ProfileController as vm">
 
-Profile for {{vm.getUser().firstname}}
+
+
+          <!-- Page-Title -->
+          <div class="row">
+              <div class="col-sm-12">
+                  <div class="page-title-box">
+                      <div class="btn-group pull-right">
+                          <ol class="breadcrumb hide-phone p-0 m-0">
+                              <li class="breadcrumb-item"><a href="#">User</a></li>
+                              <li class="breadcrumb-item active">Profile</li>
+                          </ol>
+                      </div>
+                      <h4 class="page-title">Profile</h4>
+                  </div>
+              </div>
+          </div>
+          <!-- end page title end breadcrumb -->
+
+
+          <div class="row">
+              <div class="col-md-4 col-lg-3">
+                  <div class="profile-detail card-box">
+                      <div>
+                          <img src="{{vm.getUser().profilepic}}" class="rounded-circle" alt="profile-image"><br>
+
+                          <button type="button" class="btn btn-default btn-custom btn-rounded waves-effect waves-light">Edit</button>
+
+                          <hr>
+
+
+                          <div class="text-left">
+                              <p class="text-muted font-13"><strong>Full Name :</strong> <span class="m-l-15">{{vm.getUser().firstname}} {{vm.getUser().lastname}}</span></p>
+
+                              <p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15"><a href="mailto:{{vm.getUser().email}}">{{vm.getUser().email}}</a></span></p>
+
+                          </div>
+
+                      </div>
+
+                  </div>
+
+
+              </div>
+
+
+              <div class="col-lg-9 col-md-8">
+                  <div class="card-box">
+                    <h4>Edit details</h4>
+
+                    <form class="form-horizontal m-t-20">
+
+
+                      <div class="form-group">
+                          <div class="col-md-12">
+                              <input id="name" type="text" class="form-control" placeholder="Firstname" name="firstname" ng-model="vm.localUser.firstname" required autofocus>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="col-md-12">
+                              <input id="name" type="text" class="form-control" placeholder="Lastname" name="lastname" ng-model="vm.localUser.lastname" required autofocus>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="col-md-12">
+                              <input id="email" type="email" class="form-control" placeholder="Email" name="email" ng-model="vm.localUser.email" required>
+                          </div>
+                      </div>
+
+                      <div class="form-group text-center m-t-40">
+                        <div class="col-12">
+                          <button ng-disabled="!vm.areDetailsValid()" ng-click="vm.submitDetails();" class="btn btn-primary btn-block text-uppercase waves-effect waves-light" type="button">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+
+                    </form>
+
+                  </div>
+
+                  <div class="card-box">
+                    <h4>Change Password</h4>
+
+                    <form class="form-horizontal m-t-20">
+
+                      <div class="form-group">
+                          <div class="col-md-12">
+                              <input id="password" ng-model="vm.localUser.password" type="password" class="form-control" placeholder="Password" name="password" required>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="col-md-12">
+                              <input id="password-confirm" ng-model="vm.localUser.password_confirm" type="password" class="form-control" placeholder="Confirm password" name="password_confirmation" required>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group text-center m-t-40">
+                        <div class="col-12">
+                          <button ng-disabled="!vm.arePasswordDetailsValid();" ng-click="vm.submitPasswordChange();" class="btn btn-primary btn-block text-uppercase waves-effect waves-light" type="button">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+
+                    </form>
+
+                  </div>
+
+              </div>
+
+          </div>
+
 
 </div>
