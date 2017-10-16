@@ -5,11 +5,12 @@ var angular = require('angular');
 
 
 require('../blocks/router');
-
+require('angular-loading-bar');
 
 angular.module('app.core', [
     'blocks.router',
-    'ui.router'
+    'ui.router',
+    'angular-loading-bar'
 ]);
 
 

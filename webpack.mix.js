@@ -26,7 +26,8 @@ mix.sass('resources/assets/sass/app.scss', 'public/css').version();
 mix.styles([
     'resources/assets/css/bootstrap.min.css',
     'resources/assets/css/icons.css',
-    'resources/assets/css/style.css'
+    'resources/assets/css/style.css',
+    './node_modules/angular-loading-bar/build/loading-bar.min.css',
 ], 'public/css/theme.css').version();
 
 
