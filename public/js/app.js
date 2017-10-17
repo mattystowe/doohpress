@@ -54030,8 +54030,9 @@ __webpack_require__("./resources/assets/js/core/index.js");
 __webpack_require__("./resources/assets/js/layout/index.js");
 __webpack_require__("./resources/assets/js/home/index.js");
 __webpack_require__("./resources/assets/js/profile/index.js");
+__webpack_require__("./resources/assets/js/teams/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams']);
 
 /***/ }),
 
@@ -54046,28 +54047,37 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('blocks.auth').service('AuthService', AuthService);
 
-AuthService.$inject = ['$http', 'UserService'];
+AuthService.$inject = ['$http', 'UserService', 'TeamService'];
 
 /* @ngInject */
-function AuthService($http, UserService) {
+function AuthService($http, UserService, TeamService) {
 
-  var service = {};
+  var service = this;
   service.user = {};
+  service.currentTeam = {};
 
   ////////////
   var api = {
     init: init,
     currentUser: currentUser,
+    currentTeam: currentTeam,
     updateUserDetails: updateUserDetails,
     updatePassword: updatePassword,
-    updateUserProfilePic: updateUserProfilePic
+    updateUserProfilePic: updateUserProfilePic,
+    changeCurrentTeam: changeCurrentTeam,
+    updateCurrentTeamProfilePic: updateCurrentTeamProfilePic
   };
   return api;
   ///////////
 
+
+  //Get initial user object
+  //
+  //
   function init() {
     return UserService.getUser().then(function (data) {
       service.user = data.data;
+      service.currentTeam = data.data.teams[0]; // assigns default first team
       return data;
     }, function (data) {
       //httperror
@@ -54080,6 +54090,10 @@ function AuthService($http, UserService) {
 
   function currentUser() {
     return service.user;
+  }
+
+  function currentTeam() {
+    return service.currentTeam;
   }
 
   //Save details to db and if successful update the user store
@@ -54115,6 +54129,27 @@ function AuthService($http, UserService) {
     return UserService.updateProfilePic(user.profilepic).then(function (data) {
       //success
       service.user.profilepic = user.profilepic;
+      return data;
+    }, function (data) {
+      //httperror
+      return data;
+    });
+  }
+
+  function changeCurrentTeam(team) {
+    service.currentTeam = team;
+  }
+
+  function updateCurrentTeamProfilePic(file) {
+    return TeamService.updateProfilePic(currentTeam().id, file).then(function (data) {
+      //success
+      service.currentTeam.profilepic = file;
+      //
+      service.user.teams.forEach(function (team) {
+        if (team.id == currentTeam().id) {
+          team.profilepic = file;
+        }
+      });
       return data;
     }, function (data) {
       //httperror
@@ -54660,34 +54695,45 @@ HeaderController.$inject = ['$scope', '$state', 'AuthService'];
 
 /* @ngInject */
 function HeaderController($scope, $state, AuthService) {
-    var vm = this;
+  var vm = this;
 
-    vm.toggleMenu = toggleMenu;
-    vm.getUser = getUser;
+  vm.toggleMenu = toggleMenu;
+  vm.getUser = getUser;
+  vm.getCurrentTeam = getCurrentTeam;
 
-    /////////////////////////////////////////////////
-    activate();
+  vm.changeTeam = changeTeam;
 
-    function activate() {}
+  /////////////////////////////////////////////////
+  activate();
 
-    //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
-    //console.log(currentUser);
-    //});
+  function activate() {}
+
+  //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
+  //console.log(currentUser);
+  //});
 
 
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
 
 
-    //Toggle menu
-    //
-    function toggleMenu() {
-        $('#burgerMenu').toggleClass('open');
-        $('#navigation').slideToggle(400);
-    }
+  //Toggle menu
+  //
+  function toggleMenu() {
+    $('#burgerMenu').toggleClass('open');
+    $('#navigation').slideToggle(400);
+  }
 
-    function getUser() {
-        return AuthService.currentUser();
-    }
+  function getUser() {
+    return AuthService.currentUser();
+  }
+
+  function getCurrentTeam() {
+    return AuthService.currentTeam();
+  }
+
+  function changeTeam(team) {
+    AuthService.changeCurrentTeam(team);
+  }
 }
 
 /***/ }),
@@ -54758,9 +54804,10 @@ function ProfileController($scope, $state, AuthService, toastr) {
   function activate() {
     angular.copy(getUser(), vm.localUser); //clone user to local copy for editing
 
-    //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
-    //console.log(currentUser);
-    //});
+    /*$scope.$watch( AuthService.currentTeam, function ( currentTeam ) {
+      console.log('TeamChanged=======');
+      console.log(currentTeam);
+    });*/
   }
 
   /////////////////////////////////////////////////
@@ -54873,6 +54920,199 @@ function getStates() {
             templateUrl: '/html/profile/index.html'
         }
     }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/teams/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.teams', ['app.core']);
+
+__webpack_require__("./resources/assets/js/teams/routes.js");
+__webpack_require__("./resources/assets/js/teams/teams.controller.js");
+__webpack_require__("./resources/assets/js/teams/teams.service.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/teams/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.teams').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'teams',
+        config: {
+            url: '/teams',
+            templateUrl: '/html/teams/index.html'
+        }
+    }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/teams/teams.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.teams').controller('TeamsController', TeamsController);
+
+TeamsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'TeamService'];
+
+/* @ngInject */
+function TeamsController($scope, $state, AuthService, toastr, TeamService) {
+  var vm = this;
+
+  vm.getUser = getUser;
+  vm.changeTeam = changeTeam;
+  vm.getCurrentTeam = getCurrentTeam;
+
+  vm.getTeamDetails = getTeamDetails;
+
+  vm.teamMembers = [];
+
+  vm.userIsMyself = userIsMyself;
+
+  vm.handleProfilePicUpload = handleProfilePicUpload;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    getTeamDetails();
+    $scope.$watch(AuthService.currentTeam, function (currentTeam) {
+      vm.getTeamDetails();
+    });
+  }
+
+  /////////////////////////////////////////////////
+
+
+  function getUser() {
+    return AuthService.currentUser();
+  }
+
+  function changeTeam(team) {
+    AuthService.changeCurrentTeam(team);
+  }
+
+  function getCurrentTeam() {
+    return AuthService.currentTeam();
+  }
+
+  function getTeamDetails() {
+    TeamService.getTeamDetails(getCurrentTeam().id).then(function (data) {
+      if (data.status == 200) {
+        vm.teamMembers = data.data.users;
+        //console.log(data.data.users);
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading team details.');
+      }
+    });
+  }
+
+  //helper function to return bool if passed user is actually myself (current logged in user)
+  //
+  function userIsMyself(user) {
+    if (user.id == getUser().id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Handle profile pic upload for current team
+  //
+  //
+  function handleProfilePicUpload(file) {
+    AuthService.updateCurrentTeamProfilePic(file).then(function (data) {
+      if (data.status == 200) {
+        toastr.success('Success', 'Your details have been saved.');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error saving.');
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/teams/teams.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.teams').service('TeamService', TeamService);
+
+TeamService.$inject = ['$http'];
+
+/* @ngInject */
+function TeamService($http) {
+
+  var api = {
+    getTeamDetails: getTeamDetails,
+    updateProfilePic: updateProfilePic
+  };
+  return api;
+
+  ////////////
+
+  function getTeamDetails(teamid) {
+    return $http({
+      url: '/team/getdetails/' + teamid,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function updateProfilePic(teamid, file) {
+    return $http({
+      url: '/team/updateprofilepic/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        teamid: teamid,
+        profilepic: file
+      }
+    });
+  }
 }
 
 /***/ }),

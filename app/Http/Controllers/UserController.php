@@ -18,11 +18,7 @@ class UserController extends Controller
     public function getUser() {
       //sleep(1);
       $user = Auth::user();
-      $user->teams = [
-        ['name'=>'test team'],
-        ['name'=>'team 2'],
-        ['name'=>'Team 3']
-      ];
+      $user->teams;
       return $user;
       //return response('Item not found.', 500);
     }

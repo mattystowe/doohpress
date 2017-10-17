@@ -38,19 +38,31 @@
 
                     <li class="list-inline-item dropdown notification-list">
 
-                        <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            {{vm.getUser().firstname;}}
+                        <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                            {{vm.getUser().firstname;}} [ <img src="{{vm.getCurrentTeam().profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" /> {{vm.getCurrentTeam().name}}]
                             <img src="{{vm.getUser().profilepic}}" alt="user" class="rounded-circle">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
                             <!-- item-->
                             <a ui-sref="profile" class="dropdown-item notify-item">
-                                <i class="zmdi zmdi-account-circle"></i> <span>Profile</span>
+                                <i class="fa fa-user-o"></i> <span>Profile</span>
                             </a>
 
+                            <a ui-sref="teams" class="dropdown-item notify-item">
+                                <i class=" fa fa-industry"></i> <span>Teams</span>
+                            </a>
                             <!-- item-->
+
+                            <hr>
+
+                            <a href="" class="dropdown-item notify-item" ng-repeat="team in vm.getUser().teams" ng-click="vm.changeTeam(team);">
+                                <img src="{{team.profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" />
+                                <span>{{team.name}}</span>
+
+                            </a>
+                            <hr>
                             <a href="/logout" class="dropdown-item notify-item">
-                                <i class="zmdi zmdi-power"></i> <span>Logout</span>
+                                <i class="fa fa-power-off"></i> <span>Logout</span>
                             </a>
 
                         </div>

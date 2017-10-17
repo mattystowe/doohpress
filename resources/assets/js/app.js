@@ -10,10 +10,12 @@ require('./core');
 require('./layout');
 require('./home');
 require('./profile');
+require('./teams');
 
 angular.module('app', [
   'app.core',
   'app.layout',
   'app.home',
-  'app.profile'
+  'app.profile',
+  'app.teams'
 ]);

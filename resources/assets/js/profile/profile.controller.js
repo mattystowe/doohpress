@@ -29,9 +29,10 @@
         function activate() {
             angular.copy(getUser(), vm.localUser); //clone user to local copy for editing
 
-            //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
-              //console.log(currentUser);
-            //});
+            /*$scope.$watch( AuthService.currentTeam, function ( currentTeam ) {
+              console.log('TeamChanged=======');
+              console.log(currentTeam);
+            });*/
         }
 
         /////////////////////////////////////////////////

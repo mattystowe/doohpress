@@ -8,13 +8,14 @@ var angular = require('angular');
         .module('blocks.auth')
         .service('AuthService', AuthService);
 
-    AuthService.$inject = ['$http','UserService'];
+    AuthService.$inject = ['$http','UserService','TeamService'];
 
     /* @ngInject */
-    function AuthService($http,UserService) {
+    function AuthService($http,UserService,TeamService) {
 
-      var service = {};
+      var service = this;
       service.user = {};
+      service.currentTeam = {};
 
 
 
@@ -22,17 +23,25 @@ var angular = require('angular');
       var api = {
         init:init,
         currentUser:currentUser,
+        currentTeam:currentTeam,
         updateUserDetails:updateUserDetails,
         updatePassword:updatePassword,
-        updateUserProfilePic:updateUserProfilePic
+        updateUserProfilePic:updateUserProfilePic,
+        changeCurrentTeam:changeCurrentTeam,
+        updateCurrentTeamProfilePic: updateCurrentTeamProfilePic
       };
       return api;
       ///////////
 
+
+      //Get initial user object
+      //
+      //
       function init() {
         return UserService.getUser()
         .then(function(data){
           service.user = data.data;
+          service.currentTeam = data.data.teams[0]; // assigns default first team
           return data;
         }, function(data) {
           //httperror
@@ -47,6 +56,14 @@ var angular = require('angular');
       function currentUser() {
         return service.user;
       }
+
+      function currentTeam() {
+        return service.currentTeam;
+      }
+
+
+
+
 
 
       //Save details to db and if successful update the user store
@@ -95,6 +112,28 @@ var angular = require('angular');
       }
 
 
+      function changeCurrentTeam(team) {
+        service.currentTeam = team;
+      }
+
+
+      function updateCurrentTeamProfilePic(file) {
+        return TeamService.updateProfilePic(currentTeam().id, file)
+        .then(function(data){
+          //success
+          service.currentTeam.profilepic = file;
+          //
+          service.user.teams.forEach(function(team) {
+            if (team.id == currentTeam().id) {
+              team.profilepic = file;
+            }
+          })
+          return data;
+        }, function(data) {
+          //httperror
+          return data;
+        });
+      }
 
 
     }

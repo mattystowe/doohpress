@@ -15,6 +15,10 @@
 
         vm.toggleMenu = toggleMenu;
         vm.getUser = getUser;
+        vm.getCurrentTeam = getCurrentTeam;
+
+        vm.changeTeam = changeTeam;
+
 
         /////////////////////////////////////////////////
         activate();
@@ -38,6 +42,16 @@
 
         function getUser() {
           return AuthService.currentUser();
+        }
+
+        function getCurrentTeam() {
+          return AuthService.currentTeam();
+        }
+
+
+
+        function changeTeam(team) {
+          AuthService.changeCurrentTeam(team);
         }
 
 

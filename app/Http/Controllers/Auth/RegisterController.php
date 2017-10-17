@@ -24,7 +24,7 @@ class RegisterController extends Controller
     use RegistersUsers;
 
 
-    private $default_user_avatar = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/profilepics/avatar-starter.png';
+    private $default_user_avatar = '/images/profilepics/avatar-starter.png';
 
     /**
      * Where to redirect users after registration.
@@ -79,6 +79,7 @@ class RegisterController extends Controller
 
         $team = new Team;
         $team->name = $data['teamname'];
+        $team->profilepic = $team->default_profile_pic;
         $team->save();
 
         //Add user to the team
