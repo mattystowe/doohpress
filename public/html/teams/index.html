@@ -26,9 +26,9 @@
                     <div class="list-group b-0 mail-list">
                         <a ng-repeat="team in vm.getUser().teams" class="list-group-item" ng-click="vm.changeTeam(team);">
                           <span>
-                            <img src="{{team.profilepic}}" class="rounded-circle">
+                            <img src="{{team.profilepic}}" style="width:35px; height:35px;" class="rounded-circle">
                           {{team.name}}
-                          <hr/>
+
                           <button class="btn btn-xs btn-default waves-effect waves-light">Settings</button>
                         </span>
                         </a>
@@ -51,7 +51,7 @@
 
                                 <profilepicker callback="vm.handleProfilePicUpload(file);"></profilepicker>
 
-                                <button class="btn btn-xs btn-warning"><span class="fa fa-angle-double-right"></span> Leave team</button>
+                                <button class="btn btn-xs btn-warning">Leave team</button>
                             </div>
 
 
@@ -71,7 +71,9 @@
                         <tr ng-repeat="teamMember in vm.teamMembers">
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
-                          <td>...</td>
+                          <td>
+                            <select class="form-control" ng-change="vm.changeUserRole(teamMember.id, vm.getCurrentTeam().id, teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.availableRoles"></select>
+                          </td>
                           <td>
                             <button ng-if="!vm.userIsMyself(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
 

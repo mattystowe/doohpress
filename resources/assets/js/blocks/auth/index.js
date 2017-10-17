@@ -6,6 +6,7 @@ angular.module('blocks.auth', []);
 
 require('./auth.service');
 require('./user.service');
+require('./role.service');
 
 var authblock = angular.module('blocks.auth')
 authblock.run(runBlock);

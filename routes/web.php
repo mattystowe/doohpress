@@ -25,7 +25,9 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/user/update/','UserController@updateUserDetails');
   $this->post('/user/updatepassword/','UserController@updateUserPassword');
   $this->post('/user/updateprofilepic/','UserController@updateProfilePic');
+  $this->post('/user/updaterole/','UserController@updateRole');
   $this->get('/team/getdetails/{teamid}','TeamController@getTeamDetails');
   $this->post('/team/updateprofilepic/','TeamController@updateProfilePic');
+  $this->get('/roles/getall/','RoleController@getAllRoles');
 
 });

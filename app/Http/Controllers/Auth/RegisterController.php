@@ -83,7 +83,7 @@ class RegisterController extends Controller
         $team->save();
 
         //Add user to the team
-        $user->teams()->save($team);
+        $user->teams()->attach($team->id,['role_id'=>1]); // default role of Administrator
 
         return $user;
     }

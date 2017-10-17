@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Auth;
+use DB;
 
 class UserController extends Controller
 {
@@ -19,6 +20,9 @@ class UserController extends Controller
       //sleep(1);
       $user = Auth::user();
       $user->teams;
+      //
+      //TODO send through roles for each team also
+      //
       return $user;
       //return response('Item not found.', 500);
     }
@@ -82,6 +86,18 @@ class UserController extends Controller
       }
     }
 
+
+    public function updateRole(Request $request) {
+      $user_id = $request->input('userid');
+      $team_id = $request->input('teamid');
+      $role_id = $request->input('roleid');
+      DB::table('team_user')->where([
+        ['user_id','=',$user_id],
+        ['team_id','=',$team_id]
+      ])->update(['role_id'=>$role_id]);
+
+
+    }
 
 
 

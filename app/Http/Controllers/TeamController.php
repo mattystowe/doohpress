@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Team;
+use App\Role;
 
 class TeamController extends Controller
 {
@@ -11,6 +12,13 @@ class TeamController extends Controller
       $team = Team::find($teamid);
       if ($team) {
         $team->users;
+        foreach ($team->users as $user) {
+          $user_team_role = Role::find($user->pivot->role_id);
+          if ($user_team_role) {
+            $user->role = $user_team_role;
+          }
+          
+        }
         return $team;
       } else {
         return response('Could not find team.', 404);

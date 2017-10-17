@@ -54172,6 +54172,7 @@ angular.module('blocks.auth', []);
 
 __webpack_require__("./resources/assets/js/blocks/auth/auth.service.js");
 __webpack_require__("./resources/assets/js/blocks/auth/user.service.js");
+__webpack_require__("./resources/assets/js/blocks/auth/role.service.js");
 
 var authblock = angular.module('blocks.auth');
 authblock.run(runBlock);
@@ -54188,6 +54189,57 @@ function runBlock(AuthService, $state) {
       $state.go('404');
     }
   });;
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/auth/role.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.auth').service('RoleService', RoleService);
+
+RoleService.$inject = ['$http'];
+
+/* @ngInject */
+function RoleService($http) {
+
+  var api = {
+    getAll: getAll,
+    updateUserRole: updateUserRole
+  };
+  return api;
+
+  ////////////
+  function getAll() {
+    return $http({
+      url: '/roles/getall/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function updateUserRole(userid, teamid, roleid) {
+    return $http({
+      url: '/user/updaterole/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        userid: userid,
+        teamid: teamid,
+        roleid: roleid
+      }
+    });
+  }
 }
 
 /***/ }),
@@ -54982,10 +55034,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.teams').controller('TeamsController', TeamsController);
 
-TeamsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'TeamService'];
+TeamsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'TeamService', 'RoleService'];
 
 /* @ngInject */
-function TeamsController($scope, $state, AuthService, toastr, TeamService) {
+function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService) {
   var vm = this;
 
   vm.getUser = getUser;
@@ -55000,11 +55052,15 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService) {
 
   vm.handleProfilePicUpload = handleProfilePicUpload;
 
+  vm.availableRoles = [];
+  vm.changeUserRole = changeUserRole;
+
   /////////////////////////////////////////////////
   activate();
 
   function activate() {
     getTeamDetails();
+    getAvailableRoles();
     $scope.$watch(AuthService.currentTeam, function (currentTeam) {
       vm.getTeamDetails();
     });
@@ -55012,6 +55068,18 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService) {
 
   /////////////////////////////////////////////////
 
+  function changeUserRole(teamMember_id, team_id, role_id) {
+    console.log('Change user ' + teamMember_id + ' to role: ' + role_id + ' for team: ' + team_id);
+    RoleService.updateUserRole(teamMember_id, team_id, role_id).then(function (data) {
+      if (data.status == 200) {
+        toastr.success('Success', 'User role updated.');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading team details.');
+      }
+    });
+  }
 
   function getUser() {
     return AuthService.currentUser();
@@ -55029,6 +55097,19 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService) {
     TeamService.getTeamDetails(getCurrentTeam().id).then(function (data) {
       if (data.status == 200) {
         vm.teamMembers = data.data.users;
+        //console.log(data.data.users);
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading team details.');
+      }
+    });
+  }
+
+  function getAvailableRoles() {
+    RoleService.getAll().then(function (data) {
+      if (data.status == 200) {
+        vm.availableRoles = data.data;
         //console.log(data.data.users);
       } else {
         //
