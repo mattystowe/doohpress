@@ -12,7 +12,22 @@
     <div class="p-20">
       <form class="form-horizontal m-t-20" method="POST" action="{{ route('register') }}">
         {{ csrf_field() }}
+        <span class="badge badge-success">1</span><strong> Create your team</strong> <i class="fa fa-question-circle-o"data-toggle="tooltip" data-placement="right" title="" data-original-title="Creating a team means you can invite more people to your account later!"></i>
+        <div class="form-group{{ $errors->has('teamname') ? ' has-error' : '' }}">
+            <div class="col-md-12">
+                <input id="name" type="text" class="form-control" placeholder="Team name" name="teamname" value="{{ old('firstname') }}" required autofocus>
 
+                @if ($errors->has('teamname'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('teamname') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>
+        <hr />
+
+
+        <span class="badge badge-success">2</span><strong> Enter your details</strong>
         <div class="form-group{{ $errors->has('firstname') ? ' has-error' : '' }}">
             <div class="col-md-12">
                 <input id="name" type="text" class="form-control" placeholder="Firstname" name="firstname" value="{{ old('firstname') }}" required autofocus>
