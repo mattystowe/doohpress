@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Role;
 use Auth;
 use DB;
 
@@ -21,7 +22,12 @@ class UserController extends Controller
       $user = Auth::user();
       $user->teams;
       //
-      //TODO send through roles for each team also
+      foreach ($user->teams as $team) {
+        $role = Role::find($team->pivot->role_id);
+        if ($role) {
+          $team->role = $role;
+        }
+      }
       //
       return $user;
       //return response('Item not found.', 500);
