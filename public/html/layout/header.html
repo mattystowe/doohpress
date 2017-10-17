@@ -39,7 +39,7 @@
                     <li class="list-inline-item dropdown notification-list">
 
                         <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                            {{vm.getUser().firstname;}} [ <img src="{{vm.getCurrentTeam().profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" /> {{vm.getCurrentTeam().name}}]
+                            *{{vm.getCurrentTeam().role.name}} {{vm.getUser().firstname;}} [ <img src="{{vm.getCurrentTeam().profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" /> {{vm.getCurrentTeam().name}}]
                             <img src="{{vm.getUser().profilepic}}" alt="user" class="rounded-circle">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
