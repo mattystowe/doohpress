@@ -16,7 +16,8 @@ var angular = require('angular');
       var api = {
         getUser:getUser,
         updateDetails:updateDetails,
-        updatePassword:updatePassword
+        updatePassword:updatePassword,
+        updateProfilePic:updateProfilePic
       };
       return api;
 
@@ -56,6 +57,20 @@ var angular = require('angular');
               },
               data : {
                 password: password
+              }
+          });
+      }
+
+
+      function updateProfilePic(profilepic) {
+        return $http({
+              url : '/user/updateprofilepic/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                profilepic: profilepic
               }
           });
       }

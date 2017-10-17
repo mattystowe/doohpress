@@ -23,10 +23,9 @@
               <div class="col-md-4 col-lg-3">
                   <div class="profile-detail card-box">
                       <div>
-                          <img src="{{vm.getUser().profilepic}}" class="rounded-circle" alt="profile-image"><br>
+                          <img ng-src="{{vm.localUser.profilepic}}" class="rounded-circle" alt="profile-image"><br>
 
-                          <button type="button" class="btn btn-default btn-custom btn-rounded waves-effect waves-light">Edit</button>
-
+                          <profilepicker callback="vm.handleProfilePicUpload(file);"></profilepicker>
                           <hr>
 
 

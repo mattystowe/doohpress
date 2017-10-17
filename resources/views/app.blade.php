@@ -1,4 +1,4 @@
-@extends('layouts.ubold')
+@extends('layouts.app')
 
 @section('content')
 

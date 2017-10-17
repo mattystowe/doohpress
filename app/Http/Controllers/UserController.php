@@ -69,5 +69,25 @@ class UserController extends Controller
     }
 
 
+    //Update profile pic
+    //
+    //
+    public function updateProfilePic(Request $request) {
+      $user = Auth::user();
+
+      $new_profilepic = $request->input('profilepic');
+
+      $user->profilepic = $new_profilepic;
+
+      if ($user->save()) {
+        return $user;
+      } else {
+        return response('Error saving user details.', 422);
+      }
+    }
+
+
+
+
 
 }

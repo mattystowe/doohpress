@@ -21,6 +21,8 @@
         vm.submitDetails = submitDetails;
         vm.submitPasswordChange = submitPasswordChange;
 
+        vm.handleProfilePicUpload = handleProfilePicUpload;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -33,6 +35,7 @@
         }
 
         /////////////////////////////////////////////////
+
 
 
         function getUser() {
@@ -81,6 +84,25 @@
         //
         function submitPasswordChange() {
           AuthService.updatePassword(vm.localUser)
+          .then(function(data) {
+            if (data.status == 200) {
+              toastr.success('Success','Your details have been saved.');
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error saving.');
+            }
+          });
+        }
+
+
+        //Handle profile pic upload
+        //
+        //
+        function handleProfilePicUpload(file) {
+          vm.localUser.profilepic = file;
+          console.log('New Profile Pic: ' + vm.localUser.profilepic);
+          AuthService.updateUserProfilePic(vm.localUser)
           .then(function(data) {
             if (data.status == 200) {
               toastr.success('Success','Your details have been saved.');

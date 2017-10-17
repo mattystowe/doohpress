@@ -10,6 +10,9 @@
 
         <link rel="shortcut icon" href="/images/favicon.ico">
 
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <!-- App css -->
         <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ mix('css/theme.css') }}" rel="stylesheet" type="text/css" />
@@ -48,6 +51,9 @@
         <!-- Theme App Specific js -->
         <script src="/js/themejs/jquery.core.js"></script>
         <script src="/js/themejs/jquery.app.js"></script>
+
+        <!-- External CDN services !-->
+        <script src="https://static.filestackapi.com/v3/filestack-0.9.8.js"></script>
 
     </body>
 </html>

@@ -23,7 +23,8 @@ var angular = require('angular');
         init:init,
         currentUser:currentUser,
         updateUserDetails:updateUserDetails,
-        updatePassword:updatePassword
+        updatePassword:updatePassword,
+        updateUserProfilePic:updateUserProfilePic
       };
       return api;
       ///////////
@@ -73,6 +74,19 @@ var angular = require('angular');
         return UserService.updatePassword(user.password)
         .then(function(data){
           //success
+          return data;
+        }, function(data) {
+          //httperror
+          return data;
+        });
+      }
+
+
+      function updateUserProfilePic(user) {
+        return UserService.updateProfilePic(user.profilepic)
+        .then(function(data){
+          //success
+          service.user.profilepic = user.profilepic;
           return data;
         }, function(data) {
           //httperror
