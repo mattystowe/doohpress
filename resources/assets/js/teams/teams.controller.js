@@ -15,15 +15,14 @@
         vm.Auth = Auth;
 
         vm.changeTeam = changeTeam;
-
         vm.getTeamDetails = getTeamDetails;
         vm.teamMembers = [];
-
         vm.userIsMyself = userIsMyself;
-
         vm.handleProfilePicUpload = handleProfilePicUpload;
-
         vm.changeUserRole = changeUserRole;
+        vm.AmIOnlyAdminUser = AmIOnlyAdminUser;
+        vm.removeMeFromTeam = removeMeFromTeam;
+        vm.removeUserFromTeam = removeUserFromTeam;
 
         /////////////////////////////////////////////////
         activate();
@@ -43,31 +42,73 @@
         /////////////////////////////////////////////////
 
         function changeUserRole(user, team, role_id) {
-          RoleService.updateUserRole(user.id,team.id,role_id)
-          .then(function(data) {
-            if (data.status == 200) {
-              //if self updating - change AuthService current user role to the new one
-              if (userIsMyself(user)) {
-                vm.Auth().setRole(data.data);
+          if (!userIsMyself(user)) {
+            RoleService.updateUserRole(user.id,team.id,role_id)
+            .then(function(data) {
+              if (data.status == 200) {
+                toastr.success('Success','User role updated.');
+              } else {
+                //
+                //log error
+                toastr.error('Error','There was an error loading team details.');
               }
-              toastr.success('Success','User role updated.');
-            } else {
-              //
-              //log error
-              toastr.error('Error','There was an error loading team details.');
-            }
-          });
+            });
+          } else {
+            toastr.error('Error','You cannot change your own role.');
+          }
         }
 
 
+        //check if I am the only admin user for this current team
+        //
+        //
+        function AmIOnlyAdminUser() {
+          if (vm.Auth().getRole().id == 1) {
+            //console.log("i am an admin user");
+            //check if I am the only admin user
+            var admin_users = [];
+            vm.teamMembers.forEach(function(member) {
+              if (member.role.id == 1) {
+                admin_users.push(member);
+              }
+            });
 
+            if (admin_users.length == 1) {
+              //console.log('I am the only admin user')
+              return true;
+            } else {
+              return false;
+            }
+
+          } else {
+            //not an admin user
+            return false;
+          }
+        }
+
+        //Current user changing team context
+        //
+        //
         function changeTeam(team) {
           AuthService.changeCurrentTeam(team);
         }
 
 
+        //Remove me from the current team
+        //
+        //
+        //
+        function removeMeFromTeam() {
+          //
+          //check that I have another team in account- otherwise not allow
+          //remember to refresh Auth.init() 
+        }
 
 
+        //remove a user from the current team
+        function removeUserFromTeam(user) {
+
+        }
 
 
         function getTeamDetails() {

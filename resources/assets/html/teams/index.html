@@ -51,7 +51,7 @@
 
                                 <profilepicker callback="vm.handleProfilePicUpload(file);"></profilepicker>
 
-                                <button class="btn btn-xs btn-warning">Leave team</button>
+                                <button ng-if="!vm.AmIOnlyAdminUser();" ng-click="vm.removeMeFromTeam();" class="btn btn-xs btn-warning">Leave team</button>
                             </div>
 
 
@@ -72,10 +72,13 @@
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
                           <td>
-                            <select class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+                            <select ng-if="!vm.userIsMyself(teamMember);" class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+                            <div ng-if="vm.userIsMyself(teamMember);">
+                              {{teamMember.role.name}}
+                            </div>
                           </td>
                           <td>
-                            <button ng-if="!vm.userIsMyself(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+                            <button ng-if="!vm.userIsMyself(teamMember);" ng-click="vm.removeUserFromTeam(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
 
                           </td>
                         </tr>
