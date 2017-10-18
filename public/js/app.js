@@ -56483,6 +56483,13 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   vm.AmIOnlyAdminUser = AmIOnlyAdminUser;
   vm.removeMeFromTeam = removeMeFromTeam;
   vm.removeUserFromTeam = removeUserFromTeam;
+  vm.removeOtherUserFromTeam = removeOtherUserFromTeam;
+
+  vm.newTeam = {
+    name: 'khkjhkjhkjh'
+  };
+  vm.saveNewTeam = saveNewTeam;
+  vm.isNewTeamValid = isNewTeamValid;
 
   /////////////////////////////////////////////////
   activate();
@@ -56499,6 +56506,36 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   }
 
   /////////////////////////////////////////////////
+
+  //save a new team and update the Auth model
+  //
+  //
+  //
+  function saveNewTeam() {
+    console.log('Adding new team: ' + vm.newTeam.name);
+    TeamService.addNew(vm.newTeam).then(function (data) {
+      if (data.status == 200) {
+        //add new team to the Auth store
+        var team = data.data;
+        vm.Auth().currentUser().teams.push(team);
+        //set the current team to the new one
+        vm.Auth().changeCurrentTeam(team);
+        toastr.success('Success', 'Team created!');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error saving your team');
+      }
+    });
+  }
+
+  function isNewTeamValid() {
+    var valid = true;
+    if (vm.newTeam.name == null) {
+      valid = false;
+    }
+    return valid;
+  }
 
   function changeUserRole(user, team, role_id) {
     if (!userIsMyself(user)) {
@@ -56554,8 +56591,58 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   //
   //
   function removeMeFromTeam() {
+    //
+    //check that I have another team in account- otherwise not allow
+    if (vm.Auth().currentUser().teams.length > 1) {
+      SweetAlert.swal({
+        title: 'Are you sure?',
+        text: '',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, Lets Go!',
+        cancelButtonText: 'No, cancel!',
+        closeOnConfirm: true,
+        closeOnCancel: true }, function (isConfirm) {
+        if (isConfirm) {
+          removeUserFromTeam(vm.Auth().currentUser());
+        }
+      });
+    } else {
+      toastr.error('You cannot remove yourself.', 'This is your only team');
+    }
+    //remember to refresh Auth.init()
+  }
+
+  //remove a user from the current team
+  function removeUserFromTeam(user) {
+    TeamService.removeUser(user, vm.Auth().currentTeam()).then(function (data) {
+      if (data.status == 200) {
+        //
+        //
+        if (userIsMyself(user)) {
+          //renew currently logged in user data
+          vm.Auth().init();
+        } else {
+          //update the teams view
+          vm.teamMembers.forEach(function (member, index) {
+            if (member.id == user.id) {
+              vm.teamMembers.splice(index, 1);
+            }
+          });
+        }
+        toastr.success('Success', 'Removed successfully');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading team details.');
+      }
+    });
+  }
+
+  //remove a user other than currently logged in user
+  function removeOtherUserFromTeam(user) {
     SweetAlert.swal({
-      title: 'Are you ready?',
+      title: 'Are you sure?',
       text: '',
       type: 'warning',
       showCancelButton: true,
@@ -56564,19 +56651,10 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
       closeOnConfirm: true,
       closeOnCancel: true }, function (isConfirm) {
       if (isConfirm) {
-        sendForProcessing();
+        removeUserFromTeam(user);
       }
     });
-    //
-    //check that I have another team in account- otherwise not allow
-    if (vm.Auth().currentUser().teams.length > 1) {} else {
-      toastr.error('You cannot remove yourself.', 'This is your only team');
-    }
-    //remember to refresh Auth.init()
   }
-
-  //remove a user from the current team
-  function removeUserFromTeam(user) {}
 
   function getTeamDetails() {
     TeamService.getTeamDetails(vm.Auth().currentTeam().id).then(function (data) {
@@ -56637,7 +56715,9 @@ function TeamService($http) {
 
   var api = {
     getTeamDetails: getTeamDetails,
-    updateProfilePic: updateProfilePic
+    updateProfilePic: updateProfilePic,
+    removeUser: removeUser,
+    addNew: addNew
   };
   return api;
 
@@ -56663,6 +56743,33 @@ function TeamService($http) {
       data: {
         teamid: teamid,
         profilepic: file
+      }
+    });
+  }
+
+  function removeUser(user, team) {
+    return $http({
+      url: '/team/removeuser/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        user_id: user.id,
+        team_id: team.id
+      }
+    });
+  }
+
+  function addNew(team) {
+    return $http({
+      url: '/team/addnew/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        team_name: team.name
       }
     });
   }

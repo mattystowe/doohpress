@@ -15,7 +15,9 @@ var angular = require('angular');
 
       var api = {
         getTeamDetails:getTeamDetails,
-        updateProfilePic:updateProfilePic
+        updateProfilePic:updateProfilePic,
+        removeUser:removeUser,
+        addNew:addNew
       };
       return api;
 
@@ -41,6 +43,33 @@ var angular = require('angular');
               data : {
                 teamid: teamid,
                 profilepic: file
+              }
+          });
+      }
+
+      function removeUser(user, team) {
+        return $http({
+              url : '/team/removeuser/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                user_id: user.id,
+                team_id: team.id
+              }
+          });
+      }
+
+      function addNew(team) {
+        return $http({
+              url : '/team/addnew/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                team_name: team.name
               }
           });
       }

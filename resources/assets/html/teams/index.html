@@ -23,16 +23,54 @@
               <div class="col-md-4 col-lg-3">
                   <div class="profile-detail card-box">
 
-                    <div class="list-group b-0 mail-list">
+                    <div class="list-group b-0 mail-list" align="left">
                         <a ng-repeat="team in vm.Auth().currentUser().teams" class="list-group-item" ng-click="vm.changeTeam(team);">
                           <span>
                             <img src="{{team.profilepic}}" style="width:35px; height:35px;" class="rounded-circle">
                           {{team.name}}
-
+                        </span>
+                        <span class="pull-right">
                           <button class="btn btn-xs btn-default waves-effect waves-light">Settings</button>
                         </span>
                         </a>
                     </div>
+                    <hr>
+
+                    <button class="btn btn-xs btn-primary waves-effect waves-light" data-toggle="modal" data-target="#newTeamModal">
+                      <i class="fa  fa-plus-square"></i> New team
+                    </button>
+
+
+
+
+                    <div id="newTeamModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mt-0" id="myModalLabel">Create new team</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <form class="form-horizontal m-t-20">
+
+
+                                              <div class="form-group">
+                                                  <div class="col-12">
+                                                      <input ng-model="vm.newTeam.name" id="teamname" type="text" class="form-control" name="teamname" placeholder="Team name" required autofocus>
+
+                                                  </div>
+                                              </div>
+
+                                          </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                                            <button ng-disabled="!vm.isNewTeamValid();" type="button" class="btn btn-primary waves-effect waves-light" data-dismiss="modal" ng-click="vm.saveNewTeam();">Save</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div>
+
 
                   </div>
 
@@ -78,7 +116,7 @@
                             </div>
                           </td>
                           <td>
-                            <button ng-if="!vm.userIsMyself(teamMember);" ng-click="vm.removeUserFromTeam(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+                            <button ng-if="!vm.userIsMyself(teamMember);" ng-click="vm.removeOtherUserFromTeam(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
 
                           </td>
                         </tr>

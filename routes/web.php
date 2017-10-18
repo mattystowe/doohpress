@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/user/updaterole/','UserController@updateRole');
   $this->get('/team/getdetails/{teamid}','TeamController@getTeamDetails');
   $this->post('/team/updateprofilepic/','TeamController@updateProfilePic');
+  $this->post('/team/removeuser/','TeamController@removeUserFromTeam');
+  $this->post('/team/addnew/','TeamController@addNew');
   $this->get('/roles/getall/','RoleController@getAllRoles');
 
 });
