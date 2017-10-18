@@ -8,22 +8,25 @@ var angular = require('angular');
         .module('blocks.auth')
         .service('AuthService', AuthService);
 
-    AuthService.$inject = ['$http','UserService','TeamService'];
+    AuthService.$inject = ['$http','UserService','TeamService','RoleService'];
 
     /* @ngInject */
-    function AuthService($http,UserService,TeamService) {
+    function AuthService($http,UserService,TeamService,RoleService) {
 
       var service = this;
       service.user = {};
       service.currentTeam = {};
-
+      service.roles = [];
 
 
       ////////////
       var api = {
         init:init,
+        initRoles:initRoles,
         currentUser:currentUser,
         currentTeam:currentTeam,
+        getRole:getRole,
+        availableRoles:availableRoles,
         updateUserDetails:updateUserDetails,
         updatePassword:updatePassword,
         updateUserProfilePic:updateUserProfilePic,
@@ -49,6 +52,21 @@ var angular = require('angular');
         });
       }
 
+      //Get available roles
+      //
+      //
+      function initRoles() {
+        return RoleService.getAll()
+        .then(function(data) {
+          service.roles = data.data;
+          return data;
+        }, function(data) {
+          //httperror
+          return data;
+        });
+
+      }
+
       ////////////
 
 
@@ -60,6 +78,17 @@ var angular = require('angular');
       function currentTeam() {
         return service.currentTeam;
       }
+
+      function availableRoles() {
+        return service.roles;
+      }
+
+      //get the current user role
+      function getRole() {
+        return currentTeam().role;
+      }
+
+
 
 
 

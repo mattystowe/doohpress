@@ -19,3 +19,33 @@ angular.module('app', [
   'app.profile',
   'app.teams'
 ]);
+
+var authblock = angular.module('blocks.auth')
+authblock.run(runBlock);
+
+  runBlock.$inject = ['AuthService','$state'];
+
+  /* @ngInject */
+  function runBlock(AuthService, $state) {
+
+    AuthService.init()
+    .then(function(data){
+      //console.log(data.status);
+      if (data.status != 200) {
+        //console.log('ERROR');
+        $state.go('404');
+      }
+    });;
+
+    AuthService.initRoles()
+    .then(function(data){
+      //console.log(data.status);
+      if (data.status != 200) {
+        //console.log('ERROR');
+        $state.go('404');
+      }
+    });;
+
+
+
+  }

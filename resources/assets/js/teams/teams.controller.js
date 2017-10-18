@@ -12,20 +12,17 @@
     /* @ngInject */
     function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService) {
         var vm = this;
+        vm.Auth = Auth;
 
-        vm.getUser = getUser;
         vm.changeTeam = changeTeam;
-        vm.getCurrentTeam = getCurrentTeam;
 
         vm.getTeamDetails = getTeamDetails;
-
         vm.teamMembers = [];
 
         vm.userIsMyself = userIsMyself;
 
         vm.handleProfilePicUpload = handleProfilePicUpload;
 
-        vm.availableRoles = [];
         vm.changeUserRole = changeUserRole;
 
         /////////////////////////////////////////////////
@@ -33,16 +30,19 @@
 
         function activate() {
           getTeamDetails();
-          getAvailableRoles();
           $scope.$watch( AuthService.currentTeam, function ( currentTeam ) {
             vm.getTeamDetails();
           });
         }
 
+        function Auth() {
+          return AuthService;
+        }
+
+
         /////////////////////////////////////////////////
 
         function changeUserRole(teamMember_id, team_id, role_id) {
-          console.log('Change user ' + teamMember_id + ' to role: ' + role_id + ' for team: ' + team_id);
           RoleService.updateUserRole(teamMember_id,team_id,role_id)
           .then(function(data) {
             if (data.status == 200) {
@@ -55,22 +55,19 @@
           });
         }
 
-        function getUser() {
-          return AuthService.currentUser();
-        }
+
 
         function changeTeam(team) {
           AuthService.changeCurrentTeam(team);
         }
 
-        function getCurrentTeam() {
-          return AuthService.currentTeam();
-        }
+
+
 
 
 
         function getTeamDetails() {
-          TeamService.getTeamDetails(getCurrentTeam().id)
+          TeamService.getTeamDetails(vm.Auth().currentTeam().id)
           .then(function(data) {
             if (data.status == 200) {
               vm.teamMembers = data.data.users;
@@ -83,26 +80,14 @@
           });
         }
 
-        function getAvailableRoles() {
-          RoleService.getAll()
-          .then(function(data) {
-            if (data.status == 200) {
-              vm.availableRoles = data.data;
-              //console.log(data.data.users);
-            } else {
-              //
-              //log error
-              toastr.error('Error','There was an error loading team details.');
-            }
-          });
-        }
+
 
 
 
         //helper function to return bool if passed user is actually myself (current logged in user)
         //
         function userIsMyself(user) {
-          if (user.id == getUser().id) {
+          if (user.id == vm.Auth().currentUser().id) {
             return true;
           } else {
             return false;

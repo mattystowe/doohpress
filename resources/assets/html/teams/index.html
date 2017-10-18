@@ -24,7 +24,7 @@
                   <div class="profile-detail card-box">
 
                     <div class="list-group b-0 mail-list">
-                        <a ng-repeat="team in vm.getUser().teams" class="list-group-item" ng-click="vm.changeTeam(team);">
+                        <a ng-repeat="team in vm.Auth().currentUser().teams" class="list-group-item" ng-click="vm.changeTeam(team);">
                           <span>
                             <img src="{{team.profilepic}}" style="width:35px; height:35px;" class="rounded-circle">
                           {{team.name}}
@@ -42,12 +42,12 @@
 
               <div class="col-lg-9 col-md-8">
                   <div class="card-box">
-                    <h4>{{vm.getCurrentTeam().name}}</h4>
+                    <h4>{{vm.Auth().currentTeam().name}}</h4>
 
                       <div class="col-md-4 col-lg-3">
                         <div class="profile-detail card-box">
                             <div>
-                                <img ng-src="{{vm.getCurrentTeam().profilepic}}" class="rounded-circle" alt="profile-image"><br>
+                                <img ng-src="{{vm.Auth().currentTeam().profilepic}}" class="rounded-circle" alt="profile-image"><br>
 
                                 <profilepicker callback="vm.handleProfilePicUpload(file);"></profilepicker>
 
@@ -72,7 +72,7 @@
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
                           <td>
-                            <select class="form-control" ng-change="vm.changeUserRole(teamMember.id, vm.getCurrentTeam().id, teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.availableRoles"></select>
+                            <select class="form-control" ng-change="vm.changeUserRole(teamMember.id, vm.getCurrentTeam().id, teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
                           </td>
                           <td>
                             <button ng-if="!vm.userIsMyself(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>

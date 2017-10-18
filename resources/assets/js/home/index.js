@@ -9,3 +9,4 @@ angular.module('app.home', [
 ]);
 
 require('./routes');
+require('./home.controller');

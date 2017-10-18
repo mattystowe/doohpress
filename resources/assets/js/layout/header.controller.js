@@ -12,10 +12,11 @@
     /* @ngInject */
     function HeaderController($scope, $state, AuthService) {
         var vm = this;
+        vm.Auth = Auth;
+
 
         vm.toggleMenu = toggleMenu;
-        vm.getUser = getUser;
-        vm.getCurrentTeam = getCurrentTeam;
+      
 
         vm.changeTeam = changeTeam;
 
@@ -25,11 +26,11 @@
 
         function activate() {
 
-            //$scope.$watch( AuthService.currentUser, function ( currentUser ) {
-              //console.log(currentUser);
-            //});
         }
 
+        function Auth() {
+          return AuthService;
+        }
         /////////////////////////////////////////////////
 
 
@@ -40,13 +41,6 @@
           $('#navigation').slideToggle(400);
         }
 
-        function getUser() {
-          return AuthService.currentUser();
-        }
-
-        function getCurrentTeam() {
-          return AuthService.currentTeam();
-        }
 
 
 
