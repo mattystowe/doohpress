@@ -31,6 +31,10 @@
         vm.saveNewTeam = saveNewTeam;
         vm.isNewTeamValid = isNewTeamValid;
 
+        vm.openInvitation = openInvitation;
+        vm.sendInvitation = sendInvitation;
+        vm.isInvitationValid = isInvitationValid;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -47,6 +51,27 @@
 
 
         /////////////////////////////////////////////////
+
+
+        function openInvitation() {
+          //
+          //open invitation modal
+          //
+        }
+
+
+        function sendInvitation() {
+
+        }
+
+        function isInvitationValid() {
+
+        }
+
+
+
+
+
 
         //save a new team and update the Auth model
         //

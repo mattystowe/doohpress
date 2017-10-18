@@ -27,6 +27,7 @@ var angular = require('angular');
         currentTeam:currentTeam,
         getRole:getRole,
         setRole:setRole,
+        isAllowed:isAllowed,
         availableRoles:availableRoles,
         updateUserDetails:updateUserDetails,
         updatePassword:updatePassword,
@@ -95,6 +96,22 @@ var angular = require('angular');
       }
 
 
+      //check if current user role contains permission keyname
+      //return bool
+      //
+      function isAllowed(keyname) {
+        var role = getRole();
+        var isAllowed = false;
+        role.permissions.forEach(function(permission) {
+          if (permission.keyname == keyname) {
+            console.log('User is allowed : ' + keyname);
+            isAllowed = true;
+          }
+        });
+
+        return isAllowed;
+
+      }
 
 
 

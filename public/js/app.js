@@ -55458,6 +55458,7 @@ function AuthService($http, UserService, TeamService, RoleService) {
     currentTeam: currentTeam,
     getRole: getRole,
     setRole: setRole,
+    isAllowed: isAllowed,
     availableRoles: availableRoles,
     updateUserDetails: updateUserDetails,
     updatePassword: updatePassword,
@@ -55519,6 +55520,22 @@ function AuthService($http, UserService, TeamService, RoleService) {
   //set the current user role
   function setRole(role) {
     service.currentTeam.role = role;
+  }
+
+  //check if current user role contains permission keyname
+  //return bool
+  //
+  function isAllowed(keyname) {
+    var role = getRole();
+    var isAllowed = false;
+    role.permissions.forEach(function (permission) {
+      if (permission.keyname == keyname) {
+        console.log('User is allowed : ' + keyname);
+        isAllowed = true;
+      }
+    });
+
+    return isAllowed;
   }
 
   //Save details to db and if successful update the user store
@@ -56491,6 +56508,10 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   vm.saveNewTeam = saveNewTeam;
   vm.isNewTeamValid = isNewTeamValid;
 
+  vm.openInvitation = openInvitation;
+  vm.sendInvitation = sendInvitation;
+  vm.isInvitationValid = isInvitationValid;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -56506,6 +56527,17 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   }
 
   /////////////////////////////////////////////////
+
+
+  function openInvitation() {
+    //
+    //open invitation modal
+    //
+  }
+
+  function sendInvitation() {}
+
+  function isInvitationValid() {}
 
   //save a new team and update the Auth model
   //

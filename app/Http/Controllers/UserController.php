@@ -24,6 +24,7 @@ class UserController extends Controller
       //
       foreach ($user->teams as $team) {
         $role = Role::find($team->pivot->role_id);
+        $role->permissions;
         if ($role) {
           $team->role = $role;
         }

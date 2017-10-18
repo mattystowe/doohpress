@@ -87,7 +87,7 @@
                             <div>
                                 <img ng-src="{{vm.Auth().currentTeam().profilepic}}" class="rounded-circle" alt="profile-image"><br>
 
-                                <profilepicker callback="vm.handleProfilePicUpload(file);"></profilepicker>
+                                <profilepicker ng-if="vm.Auth().isAllowed('teams.members.edit')" callback="vm.handleProfilePicUpload(file);"></profilepicker>
 
                                 <button ng-if="!vm.AmIOnlyAdminUser();" ng-click="vm.removeMeFromTeam();" class="btn btn-xs btn-warning">Leave team</button>
                             </div>
@@ -97,7 +97,10 @@
                       </div>
 
                       <hr>
-                      <h4>Team members</h4>
+                      <h4>
+                        Team members
+                        <button ng-if="vm.Auth().isAllowed('teams.members.add')" class="btn btn-xs btn-primary waves-effect waves-light" ng-click="vm.openInvitation();">Invite people</button>
+                      </h4>
 
                       <table class="table table-hover">
                         <tr>
@@ -110,14 +113,17 @@
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
                           <td>
+                            <div ng-if="vm.Auth().isAllowed('teams.members.edit')">
                             <select ng-if="!vm.userIsMyself(teamMember);" class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+                            </div>
                             <div ng-if="vm.userIsMyself(teamMember);">
                               {{teamMember.role.name}}
                             </div>
                           </td>
                           <td>
+                            <div ng-if="vm.Auth().isAllowed('teams.members.remove')">
                             <button ng-if="!vm.userIsMyself(teamMember);" ng-click="vm.removeOtherUserFromTeam(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
-
+                            <div>
                           </td>
                         </tr>
                       </table>

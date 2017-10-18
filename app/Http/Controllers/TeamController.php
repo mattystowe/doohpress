@@ -76,6 +76,7 @@ class TeamController extends Controller
         $user = Auth::user();
         $user->teams()->attach($team->id,['role_id'=>1]); // default role of Administrator
         $role = Role::find(1);
+        $role->permissions;
         $team->role = $role;
         return $team;
       } else {

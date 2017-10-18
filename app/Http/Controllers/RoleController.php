@@ -9,6 +9,9 @@ class RoleController extends Controller
 {
     public function getAllRoles() {
       $roles = Role::all();
+      foreach ($roles as $role) {
+        $role->permissions;
+      }
       return $roles;
     }
 }
