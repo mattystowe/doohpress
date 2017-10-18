@@ -72,7 +72,7 @@
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
                           <td>
-                            <select class="form-control" ng-change="vm.changeUserRole(teamMember.id, vm.getCurrentTeam().id, teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+                            <select class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
                           </td>
                           <td>
                             <button ng-if="!vm.userIsMyself(teamMember);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>

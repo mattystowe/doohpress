@@ -42,10 +42,14 @@
 
         /////////////////////////////////////////////////
 
-        function changeUserRole(teamMember_id, team_id, role_id) {
-          RoleService.updateUserRole(teamMember_id,team_id,role_id)
+        function changeUserRole(user, team, role_id) {
+          RoleService.updateUserRole(user.id,team.id,role_id)
           .then(function(data) {
             if (data.status == 200) {
+              //if self updating - change AuthService current user role to the new one
+              if (userIsMyself(user)) {
+                vm.Auth().setRole(data.data);
+              }
               toastr.success('Success','User role updated.');
             } else {
               //

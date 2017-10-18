@@ -54089,6 +54089,7 @@ function AuthService($http, UserService, TeamService, RoleService) {
     currentUser: currentUser,
     currentTeam: currentTeam,
     getRole: getRole,
+    setRole: setRole,
     availableRoles: availableRoles,
     updateUserDetails: updateUserDetails,
     updatePassword: updatePassword,
@@ -54145,6 +54146,11 @@ function AuthService($http, UserService, TeamService, RoleService) {
   //get the current user role
   function getRole() {
     return currentTeam().role;
+  }
+
+  //set the current user role
+  function setRole(role) {
+    service.currentTeam.role = role;
   }
 
   //Save details to db and if successful update the user store
@@ -55125,9 +55131,13 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
 
   /////////////////////////////////////////////////
 
-  function changeUserRole(teamMember_id, team_id, role_id) {
-    RoleService.updateUserRole(teamMember_id, team_id, role_id).then(function (data) {
+  function changeUserRole(user, team, role_id) {
+    RoleService.updateUserRole(user.id, team.id, role_id).then(function (data) {
       if (data.status == 200) {
+        //if self updating - change AuthService current user role to the new one
+        if (userIsMyself(user)) {
+          vm.Auth().setRole(data.data);
+        }
         toastr.success('Success', 'User role updated.');
       } else {
         //

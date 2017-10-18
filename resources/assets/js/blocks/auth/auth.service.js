@@ -26,6 +26,7 @@ var angular = require('angular');
         currentUser:currentUser,
         currentTeam:currentTeam,
         getRole:getRole,
+        setRole:setRole,
         availableRoles:availableRoles,
         updateUserDetails:updateUserDetails,
         updatePassword:updatePassword,
@@ -86,6 +87,11 @@ var angular = require('angular');
       //get the current user role
       function getRole() {
         return currentTeam().role;
+      }
+
+      //set the current user role
+      function setRole(role) {
+        service.currentTeam.role = role;
       }
 
 

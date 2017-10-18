@@ -102,6 +102,8 @@ class UserController extends Controller
         ['team_id','=',$team_id]
       ])->update(['role_id'=>$role_id]);
 
+      $role = Role::find($role_id);
+      return $role;
 
     }
 
