@@ -22,11 +22,13 @@
         "angular": "^1.6.6",
         "angular-animate": "^1.6.6",
         "angular-loading-bar": "^0.9.0",
+        "angular-sweetalert": "^1.1.2",
         "angular-toastr": "^2.1.1",
         "angular-ui-router": "^0.4.3",
         "bootstrap": "^4.0.0-beta",
         "filestack-js": "^0.9.8",
         "font-awesome": "^4.7.0",
-        "popper.js": "^1.12.5"
+        "popper.js": "^1.12.5",
+        "sweetalert": "^2.0.8"
     }
 }

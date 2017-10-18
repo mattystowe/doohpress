@@ -3,13 +3,15 @@
 var angular = require('angular');
 
 
-
 require('../blocks/router');
 require('../blocks/auth');
 require('../blocks/filepicker');
 require('angular-animate');
 require('angular-loading-bar');
 require('angular-toastr');
+require('sweetalert');
+require('angular-sweetalert');
+
 
 angular.module('app.core', [
     'ngAnimate',
@@ -18,7 +20,8 @@ angular.module('app.core', [
     'blocks.filepicker',
     'ui.router',
     'angular-loading-bar',
-    'toastr'
+    'toastr',
+    'oitozero.ngSweetAlert'
 ]);
 
 

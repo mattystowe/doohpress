@@ -7,10 +7,10 @@
         .module('app.teams')
         .controller('TeamsController', TeamsController);
 
-    TeamsController.$inject = ['$scope','$state','AuthService', 'toastr','TeamService','RoleService'];
+    TeamsController.$inject = ['$scope','$state','AuthService', 'toastr','TeamService','RoleService','SweetAlert'];
 
     /* @ngInject */
-    function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService) {
+    function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService,SweetAlert) {
         var vm = this;
         vm.Auth = Auth;
 
@@ -99,9 +99,28 @@
         //
         //
         function removeMeFromTeam() {
+          SweetAlert.swal({
+             title: 'Are you ready?',
+             text: '',
+             type: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#DD6B55',confirmButtonText: 'Yes, Lets Go!',
+             cancelButtonText: 'No, cancel!',
+             closeOnConfirm: true,
+             closeOnCancel: true },
+          function(isConfirm){
+             if (isConfirm) {
+               sendForProcessing();
+             }
+          });
           //
           //check that I have another team in account- otherwise not allow
-          //remember to refresh Auth.init() 
+          if (vm.Auth().currentUser().teams.length>1) {
+
+          } else {
+            toastr.error('You cannot remove yourself.','This is your only team');
+          }
+          //remember to refresh Auth.init()
         }
 
 
