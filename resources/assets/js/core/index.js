@@ -28,3 +28,4 @@ angular.module('app.core', [
 require('./config');
 require('./constants');
 require('./core.route');
+require('./filters');

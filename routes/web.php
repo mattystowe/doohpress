@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/team/updateprofilepic/','TeamController@updateProfilePic');
   $this->post('/team/removeuser/','TeamController@removeUserFromTeam');
   $this->post('/team/addnew/','TeamController@addNew');
+  $this->post('/team/createinvitation/','TeamController@createInvitation');
   $this->get('/roles/getall/','RoleController@getAllRoles');
 
 });

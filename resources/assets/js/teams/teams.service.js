@@ -17,7 +17,8 @@ var angular = require('angular');
         getTeamDetails:getTeamDetails,
         updateProfilePic:updateProfilePic,
         removeUser:removeUser,
-        addNew:addNew
+        addNew:addNew,
+        newInvitation:newInvitation
       };
       return api;
 
@@ -74,5 +75,20 @@ var angular = require('angular');
           });
       }
 
+
+      function newInvitation(invitation) {
+        return $http({
+              url : '/team/createinvitation/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                name: invitation.name,
+                email: invitation.email,
+                team_id: invitation.team_id
+              }
+          });
+      }
 
     }

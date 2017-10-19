@@ -104,7 +104,7 @@ var angular = require('angular');
         var isAllowed = false;
         role.permissions.forEach(function(permission) {
           if (permission.keyname == keyname) {
-            console.log('User is allowed : ' + keyname);
+            //console.log('User is allowed : ' + keyname);
             isAllowed = true;
           }
         });

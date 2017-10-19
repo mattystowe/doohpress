@@ -55530,7 +55530,7 @@ function AuthService($http, UserService, TeamService, RoleService) {
     var isAllowed = false;
     role.permissions.forEach(function (permission) {
       if (permission.keyname == keyname) {
-        console.log('User is allowed : ' + keyname);
+        //console.log('User is allowed : ' + keyname);
         isAllowed = true;
       }
     });
@@ -56089,6 +56089,26 @@ function getStates() {
 
 /***/ }),
 
+/***/ "./resources/assets/js/core/filters.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.core').filter('email', function () {
+     var validateEmail = function validateEmail(email) {
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+     };
+     return function (input) {
+          return validateEmail(input);
+     };
+});
+
+/***/ }),
+
 /***/ "./resources/assets/js/core/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56111,6 +56131,7 @@ angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks
 __webpack_require__("./resources/assets/js/core/config.js");
 __webpack_require__("./resources/assets/js/core/constants.js");
 __webpack_require__("./resources/assets/js/core/core.route.js");
+__webpack_require__("./resources/assets/js/core/filters.js");
 
 /***/ }),
 
@@ -56484,10 +56505,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.teams').controller('TeamsController', TeamsController);
 
-TeamsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'TeamService', 'RoleService', 'SweetAlert'];
+TeamsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'TeamService', 'RoleService', 'SweetAlert', '$filter'];
 
 /* @ngInject */
-function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService, SweetAlert) {
+function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService, SweetAlert, $filter) {
   var vm = this;
   vm.Auth = Auth;
 
@@ -56503,7 +56524,7 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   vm.removeOtherUserFromTeam = removeOtherUserFromTeam;
 
   vm.newTeam = {
-    name: 'khkjhkjhkjh'
+    name: ''
   };
   vm.saveNewTeam = saveNewTeam;
   vm.isNewTeamValid = isNewTeamValid;
@@ -56512,6 +56533,11 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
   vm.sendInvitation = sendInvitation;
   vm.isInvitationValid = isInvitationValid;
 
+  vm.invitation = {
+    name: '',
+    email: '',
+    team_id: null
+  };
   /////////////////////////////////////////////////
   activate();
 
@@ -56533,11 +56559,44 @@ function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleS
     //
     //open invitation modal
     //
+    vm.invitation.name = null;
+    vm.invitation.email = null;
+    vm.invitation.team_id = vm.Auth().currentTeam().id;
+    $('#invitationModal').modal('show');
   }
 
-  function sendInvitation() {}
+  function sendInvitation() {
+    TeamService.newInvitation(vm.invitation).then(function (data) {
+      if (data.status == 200) {
 
-  function isInvitationValid() {}
+        toastr.success('Success', 'Email invitation sent!');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error sending invitation.');
+      }
+    });
+  }
+
+  function isInvitationValid() {
+    var valid = true;
+    if (vm.invitation.name == null) {
+      valid = false;
+    }
+    if (vm.invitation.email == null) {
+      valid = false;
+    }
+    if (!$filter('email')(vm.invitation.email)) {
+      valid = false;
+    };
+    //check that not already on team
+    vm.teamMembers.forEach(function (member) {
+      if (member.email == vm.invitation.email) {
+        valid = false;
+      }
+    });
+    return valid;
+  }
 
   //save a new team and update the Auth model
   //
@@ -56749,7 +56808,8 @@ function TeamService($http) {
     getTeamDetails: getTeamDetails,
     updateProfilePic: updateProfilePic,
     removeUser: removeUser,
-    addNew: addNew
+    addNew: addNew,
+    newInvitation: newInvitation
   };
   return api;
 
@@ -56802,6 +56862,21 @@ function TeamService($http) {
       },
       data: {
         team_name: team.name
+      }
+    });
+  }
+
+  function newInvitation(invitation) {
+    return $http({
+      url: '/team/createinvitation/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        name: invitation.name,
+        email: invitation.email,
+        team_id: invitation.team_id
       }
     });
   }

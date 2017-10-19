@@ -7,10 +7,10 @@
         .module('app.teams')
         .controller('TeamsController', TeamsController);
 
-    TeamsController.$inject = ['$scope','$state','AuthService', 'toastr','TeamService','RoleService','SweetAlert'];
+    TeamsController.$inject = ['$scope','$state','AuthService', 'toastr','TeamService','RoleService','SweetAlert','$filter'];
 
     /* @ngInject */
-    function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService,SweetAlert) {
+    function TeamsController($scope, $state, AuthService, toastr, TeamService, RoleService,SweetAlert,$filter) {
         var vm = this;
         vm.Auth = Auth;
 
@@ -26,7 +26,7 @@
         vm.removeOtherUserFromTeam = removeOtherUserFromTeam;
 
         vm.newTeam = {
-          name: 'khkjhkjhkjh'
+          name: ''
         }
         vm.saveNewTeam = saveNewTeam;
         vm.isNewTeamValid = isNewTeamValid;
@@ -35,6 +35,11 @@
         vm.sendInvitation = sendInvitation;
         vm.isInvitationValid = isInvitationValid;
 
+        vm.invitation = {
+          name: '',
+          email: '',
+          team_id: null
+        };
         /////////////////////////////////////////////////
         activate();
 
@@ -57,15 +62,38 @@
           //
           //open invitation modal
           //
+          vm.invitation.name = null;
+          vm.invitation.email = null;
+          vm.invitation.team_id = vm.Auth().currentTeam().id;
+          $('#invitationModal').modal('show');
         }
 
 
         function sendInvitation() {
+          TeamService.newInvitation(vm.invitation)
+          .then(function(data) {
+            if (data.status == 200) {
 
+              toastr.success('Success','Email invitation sent!');
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error sending invitation.');
+            }
+          });
         }
 
-        function isInvitationValid() {
 
+        function isInvitationValid() {
+          var valid = true;
+          if (vm.invitation.name == null) { valid = false; }
+          if (vm.invitation.email == null) { valid = false; }
+          if (!$filter('email')(vm.invitation.email)) { valid = false; };
+          //check that not already on team
+          vm.teamMembers.forEach(function(member) {
+            if (member.email == vm.invitation.email) { valid = false; }
+          });
+          return valid;
         }
 
 

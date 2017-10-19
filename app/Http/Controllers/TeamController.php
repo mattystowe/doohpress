@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 use App\Team;
 use App\User;
 use App\Role;
+use App\Invitation;
 use Auth;
 
 class TeamController extends Controller
@@ -84,6 +86,45 @@ class TeamController extends Controller
       }
 
 
+    }
+
+
+
+
+    public function createInvitation(Request $request) {
+      $user = Auth::user();
+      $team = Team::find($request->input('team_id'));
+      if ($team) {
+        if ($request->input('name') && $request->input('email')) {
+          $invitation = new Invitation;
+          $invitation->team_id = $team->id;
+          $invitation->user_id = $user->id;
+          $invitation->name = $request->input('name');
+          $invitation->email = $request->input('email');
+          $uuid4 = Uuid::uuid4();
+          $invitation->uuid = $uuid4->toString();
+          $invitation->used = false;
+
+          if ($invitation->save()) {
+            //
+            //
+            //Dispatch job to be handled to email the invitation
+            //
+            //
+
+            return $invitation;
+
+
+          } else {
+            return response('Could not save invitation', 422);
+          }
+
+        } else {
+          return response('Invalid request.', 422);
+        }
+      } else {
+        return response('Could not find team.', 422);
+      }
     }
 
 

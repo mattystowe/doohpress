@@ -1,5 +1,42 @@
 <div ng-controller="TeamsController as vm">
 
+  <!-- Invite new team modal !-->
+  <div id="invitationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="invitationModal" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title mt-0" id="myModalLabel">Invite a user to your team</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form-horizontal m-t-20">
+
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input ng-model="vm.invitation.name" id="invitation_name" type="text" class="form-control" name="invitation_name" placeholder="Name" required autofocus>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input ng-model="vm.invitation.email" id="invitation_email" type="text" class="form-control" name="invitation_email" placeholder="Email" required autofocus>
+
+                                </div>
+                            </div>
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                          <button ng-disabled="!vm.isInvitationValid();" type="button" class="btn btn-primary waves-effect waves-light" data-dismiss="modal" ng-click="vm.sendInvitation();">Save</button>
+                      </div>
+                  </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+          </div>
+
+
 
 
           <!-- Page-Title -->
@@ -113,12 +150,23 @@
                           <td>{{teamMember.firstname}} {{teamMember.lastname}} <span ng-if="vm.userIsMyself(teamMember);" class="label label-success"> You</span></td>
                           <td>{{teamMember.email}}</td>
                           <td>
-                            <div ng-if="vm.Auth().isAllowed('teams.members.edit')">
-                            <select ng-if="!vm.userIsMyself(teamMember);" class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+
+                            <div ng-if="!vm.userIsMyself(teamMember);">
+                              <div ng-if="!vm.Auth().isAllowed('teams.members.edit')">
+                                    {{teamMember.role.name}}
+                              </div>
+                              <div ng-if="vm.Auth().isAllowed('teams.members.edit')">
+                                <select class="form-control" ng-change="vm.changeUserRole(teamMember, vm.Auth().currentTeam(), teamMember.role.id)" ng-model="teamMember.role.id" ng-options="role.id as role.name for role in vm.Auth().availableRoles()"></select>
+                              </div>
                             </div>
+
                             <div ng-if="vm.userIsMyself(teamMember);">
                               {{teamMember.role.name}}
                             </div>
+
+
+
+
                           </td>
                           <td>
                             <div ng-if="vm.Auth().isAllowed('teams.members.remove')">
