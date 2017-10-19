@@ -111,7 +111,8 @@ class TeamController extends Controller
             //Dispatch job to be handled to email the invitation
             //
             //
-
+            $job = (new \App\Jobs\Emails\SendInvitation($invitation))->onQueue(env('QUEUE_JOBS'));
+            dispatch($job);
             return $invitation;
 
 
@@ -125,6 +126,13 @@ class TeamController extends Controller
       } else {
         return response('Could not find team.', 422);
       }
+    }
+
+
+
+    
+    public function join($invitation_uuid) {
+      return $invitation_uuid;
     }
 
 

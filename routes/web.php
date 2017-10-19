@@ -34,3 +34,7 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/roles/getall/','RoleController@getAllRoles');
 
 });
+
+
+//
+$this->get('/team/join/{invitation_uuid}','TeamController@join');
