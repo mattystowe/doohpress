@@ -5414,11 +5414,12 @@ ul.ColVis_collection {
    Accounts pages
 ============= */
 .account-pages {
-  background: url("../images/agsquare.png");
+  background: url("../images/doohpress_header.jpg");
   position: absolute;
+  background-size:cover;
   height: 100%;
   width: 100%;
-  top: 0; }
+top: 0; }
 
 .wrapper-page {
   margin: 5% auto;

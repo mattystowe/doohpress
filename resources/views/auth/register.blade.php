@@ -110,11 +110,14 @@
   </div>
 
   <div class="row">
+
     <div class="col-12 text-center">
+      <div class="card-box">
       <p>
         Already have account?<a href="/login" class="text-primary m-l-5"><b>Sign In</b></a>
       </p>
     </div>
+  </div>
   </div>
 
 </div>

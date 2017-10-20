@@ -73,9 +73,10 @@
     </div>
     <div class="row">
         <div class="col-sm-12 text-center">
+          <div class="card-box">
             <p>Don't have an account? <a href="/register" class="text-primary m-l-5"><b>Sign Up</b></a>
             </p>
-
+          </div>
         </div>
     </div>
 
