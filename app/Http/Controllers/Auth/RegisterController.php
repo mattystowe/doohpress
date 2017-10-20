@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\User;
 use App\Team;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
+use App\Invitation;
 
 class RegisterController extends Controller
 {
@@ -87,4 +90,66 @@ class RegisterController extends Controller
 
         return $user;
     }
+
+
+
+    //display registration with invite
+    //
+    //
+    //
+    public function withInvite($invitation_uuid) {
+      $invitations = Invitation::where('uuid','=',$invitation_uuid)->get();
+      if (!$invitations->isEmpty()) {
+        $invitation = $invitations[0];
+        return view('auth.registerwithinvite', ['invitation' => $invitation]);
+      } else {
+          //invitation has been used already
+          return redirect('/404');
+      }
+    }
+
+
+    //handle submission of registration with invitation
+    //
+    //
+    //
+    public function handleWithInvite(Request $request)
+    {
+      $invitations = Invitation::where('uuid','=',$request->input('invitation_uuid'))
+                                  ->where('used','=',false)->get();
+      if (!$invitations->isEmpty()) {
+        $invitation = $invitations[0];
+
+        $this->validator($request->all())->validate();
+
+        $user = User::create([
+            'firstname' => $request->input('firstname'),
+            'lastname' => $request->input('lastname'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'profilepic' => $this->default_user_avatar
+        ]);
+
+        event(new Registered($user));
+
+        //
+        //associate user with team
+        $user->teams()->attach($invitation->team->id,['role_id'=>2]); // default role of Administrator
+
+        $invitation->markAsAccepted();
+
+        //log user in
+        $this->guard()->login($user);
+
+        //redirect to team welcome page
+        return redirect('/team/joined/' . $invitation->uuid);
+
+
+      } else {
+        return redirect('/404');
+      }
+
+
+    }
+
 }

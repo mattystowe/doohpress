@@ -130,9 +130,60 @@ class TeamController extends Controller
 
 
 
-    
+
     public function join($invitation_uuid) {
-      return $invitation_uuid;
+      $invitations = Invitation::where('uuid','=',$invitation_uuid)->get();
+      if (!$invitations->isEmpty()) {
+        $invitation = $invitations[0];
+        if (!$invitation->used) {
+          $users = User::where('email','=',$invitation->email)->get();
+          if (!$users->isEmpty()) {
+            //
+            //user already exists on doohpress -
+            //1.accept the invitation
+            $invitation->markAsAccepted();
+            //Add user to the team
+            $user = $users[0];
+            $team = $invitation->team;
+            $user->teams()->attach($team->id,['role_id'=>2]); //default standard user
+
+            //2.log them in and redirect to success page
+            Auth::login($user);
+            return redirect('/team/joined/' . $invitation->uuid);
+
+          } else {
+            //
+            //user does not exist in the system yet - need to get them to register
+            //1.redirect them to registerWithInvite route
+            return redirect('/register/withinvite/' . $invitation->uuid);
+          }
+
+        } else {
+          //invitation has been used already
+          return redirect('/404');
+        }
+
+      } else {
+        return redirect('/404');
+      }
+
+    }
+
+
+    //display welcome page for newly joined member
+    //
+    //
+    public function joined($invitation_uuid) {
+      $invitations = Invitation::where('uuid','=',$invitation_uuid)->get();
+      if (!$invitations->isEmpty()) {
+        $invitation = $invitations[0];
+        return view('team.welcome', ['invitation' => $invitation, 'user'=>Auth::user()]);
+      } else {
+          //invitation has been used already
+          return redirect('/404');
+      }
+
+
     }
 
 
