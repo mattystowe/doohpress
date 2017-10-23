@@ -20,7 +20,7 @@ class FrameSeeder extends Seeder
     public function run()
     {
           $Country_UK = new Country;
-          $Country_UK->name = "United Kingddom";
+          $Country_UK->name = "United Kingdom";
           $Country_UK->country_code = "UK";
           $Country_UK->save();
 

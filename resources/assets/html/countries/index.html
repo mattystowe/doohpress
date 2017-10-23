@@ -1,0 +1,85 @@
+<div ng-controller="CountriesController as vm">
+
+  <!-- Page-Title -->
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item active">Countries &amp; Cities</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">Countries &amp; Cities</h4>
+          </div>
+      </div>
+  </div>
+  <!-- end page title end breadcrumb -->
+
+
+
+
+  <div class="row">
+
+    <div class="col-md-6 col-lg-6">
+        <div class="profile-detail card-box">
+          <table class="table table-striped">
+            <tr ng-repeat="country in vm.countries">
+              <td align="left">
+                <p>{{country.name}}</p>
+              </td>
+              <td>
+                <button ng-click="vm.confirmRemoveCountry(country,$index);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+                <button class="btn btn-xs btn-info"><span class="fa fa-pencil"></span></button>
+                <button ng-click="vm.selectCountry(country);" class="btn btn-xs btn-success"><span class="fa fa-pencil"></span> Cities</button>
+              </td>
+            </tr>
+          </table>
+          <hr />
+
+          <form class="form-horizontal m-t-20">
+            <div class="input-group">
+                      <input ng-model="vm.newCountry.name" type="text" id="country_name" name="country_name" class="form-control" placeholder="Country Name" required autofocus>
+                      <span class="input-group-btn">
+                        <button ng-disabled="!vm.isNewCountryValid();" ng-click="vm.addNewCountry()" type="button" class="btn waves-effect waves-light btn-primary">Add</button>
+                      </span>
+            </div>
+            <div class="input-group">
+              <input ng-model="vm.newCountry.country_code" type="text" id="country_code" name="country_code" class="form-control" placeholder="Country Code" required autofocus>
+            </div>
+          </form>
+
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <div class="profile-detail card-box">
+          <h4> Cities {{vm.selectedCountry.name}}</h4>
+
+            <form class="form-horizontal m-t-20">
+              <div class="input-group">
+                        <input ng-model="vm.newCity.name" type="text" id="city_name" name="city_name" class="form-control" placeholder="City Name" required autofocus>
+                        <span class="input-group-btn">
+                          <button ng-disabled="!vm.isNewCityValid();" ng-click="vm.addNewCity()" type="button" class="btn waves-effect waves-light btn-primary">Add</button>
+                        </span>
+              </div>
+            </form>
+
+          <hr />
+          <table class="table table-striped">
+            <tr ng-repeat="city in vm.cities">
+              <td align="left">
+                <p>{{city.name}}</p>
+              </td>
+              <td>
+                <button ng-click="vm.confirmRemoveCity(city,$index);" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+              </td>
+
+            </tr>
+          </table>
+
+    </div>
+
+  </div>
+  <!-- end row -->
+
+</div>

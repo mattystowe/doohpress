@@ -11,13 +11,15 @@ require('./layout');
 require('./home');
 require('./profile');
 require('./teams');
+require('./countries');
 
 angular.module('app', [
   'app.core',
   'app.layout',
   'app.home',
   'app.profile',
-  'app.teams'
+  'app.teams',
+  'app.countries'
 ]);
 
 var authblock = angular.module('blocks.auth')

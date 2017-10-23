@@ -88,9 +88,13 @@
                         <a ui-sref='home'><i class="md md-dashboard"></i>Home</a>
                     </li>
 
-
                     <li ng-if="vm.Auth().isSuperAdmin()" class="has-submenu">
-                        <a ui-sref='admin'><i class="md md-dashboard"></i>Admin</a>
+                        <a><i class="md md-dashboard"></i>Admin</a>
+                        <ul class="submenu">
+                            <li>
+                                <a ui-sref="countries">Countries/Cities</a>
+                            </li>
+                        </ul>
                     </li>
 
 

@@ -33,6 +33,15 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/team/createinvitation/','TeamController@createInvitation');
   $this->get('/roles/getall/','RoleController@getAllRoles');
 
+  $this->get('/countries/getall/','CountriesController@getAll');
+  $this->get('/cities/getall/','CitiesController@getAll');
+  $this->get('/cities/getallincountry/{country_id}','CitiesController@getAllForCountry');
+  $this->post('/countries/add/','CountriesController@addNew');
+  $this->post('/countries/remove/','CountriesController@remove');
+  $this->post('/cities/add/','CitiesController@addNew');
+  $this->post('/cities/remove/','CitiesController@remove');
+
+
 });
 
 
