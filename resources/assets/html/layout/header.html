@@ -89,6 +89,11 @@
                     </li>
 
 
+                    <li ng-if="vm.Auth().isSuperAdmin()" class="has-submenu">
+                        <a ui-sref='admin'><i class="md md-dashboard"></i>Admin</a>
+                    </li>
+
+
                 </ul>
                 <!-- End navigation menu -->
             </div> <!-- end #navigation -->

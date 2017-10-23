@@ -55464,7 +55464,8 @@ function AuthService($http, UserService, TeamService, RoleService) {
     updatePassword: updatePassword,
     updateUserProfilePic: updateUserProfilePic,
     changeCurrentTeam: changeCurrentTeam,
-    updateCurrentTeamProfilePic: updateCurrentTeamProfilePic
+    updateCurrentTeamProfilePic: updateCurrentTeamProfilePic,
+    isSuperAdmin: isSuperAdmin
   };
   return api;
   ///////////
@@ -55536,6 +55537,17 @@ function AuthService($http, UserService, TeamService, RoleService) {
     });
 
     return isAllowed;
+  }
+
+  //return if current user is super admin or not
+  //
+  //
+  function isSuperAdmin() {
+    if (service.user.superadmin) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   //Save details to db and if successful update the user store

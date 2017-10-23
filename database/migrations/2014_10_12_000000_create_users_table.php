@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('profilepic')->nullable();
+            $table->boolean('superadmin')->default(false);
             $table->timestamps();
         });
     }

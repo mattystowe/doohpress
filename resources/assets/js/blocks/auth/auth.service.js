@@ -33,7 +33,8 @@ var angular = require('angular');
         updatePassword:updatePassword,
         updateUserProfilePic:updateUserProfilePic,
         changeCurrentTeam:changeCurrentTeam,
-        updateCurrentTeamProfilePic: updateCurrentTeamProfilePic
+        updateCurrentTeamProfilePic: updateCurrentTeamProfilePic,
+        isSuperAdmin: isSuperAdmin
       };
       return api;
       ///////////
@@ -96,6 +97,7 @@ var angular = require('angular');
       }
 
 
+
       //check if current user role contains permission keyname
       //return bool
       //
@@ -113,6 +115,18 @@ var angular = require('angular');
 
       }
 
+
+
+      //return if current user is super admin or not
+      //
+      //
+      function isSuperAdmin() {
+        if (service.user.superadmin) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
 
 
