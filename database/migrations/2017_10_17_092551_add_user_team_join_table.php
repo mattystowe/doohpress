@@ -20,6 +20,14 @@ class AddUserTeamJoinTable extends Migration
           $table->integer('role_id'); // pivot for user_team_role relation
           $table->timestamps();
       });
+
+      DB::table('team_user')->insert([
+          [
+            'user_id'=>1,
+            'team_id'=>1,
+            'role_id'=>1
+          ]
+      ]);
     }
 
     /**

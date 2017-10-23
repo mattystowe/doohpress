@@ -28,7 +28,7 @@ class User extends Authenticatable
     ];
 
 
-
+    private $default_user_avatar = '/images/profilepics/avatar-starter.png';
 
 
     public function teams() {

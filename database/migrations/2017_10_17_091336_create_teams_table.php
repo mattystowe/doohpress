@@ -19,6 +19,13 @@ class CreateTeamsTable extends Migration
             $table->string('profilepic',255);
             $table->timestamps();
         });
+
+        DB::table('teams')->insert([
+            [
+              'name'=>'Dooohpress',
+              'profilepic'=>'/images/profilepics/avatar-team-default.gif'
+            ]
+        ]);
     }
 
     /**
