@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/compositions/getall',"CompositionsController@getAll");
   $this->get('/compositions/getoutputtypes',"CompositionsController@getOutputTypes");
   $this->get('/compositions/getcompositioncategories',"CompositionsController@getCompositionCategories");
+  $this->get('/frames/search/{query}',"FramesController@search");
 });
 
 

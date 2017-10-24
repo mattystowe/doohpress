@@ -52,8 +52,49 @@
           Add
         </button></a>
 
+        <table class="table table-striped">
+          <tr ng-repeat="frame in vm.composition.frames">
+            <td>
+              [{{frame.id}}] - {{frame.name}}
+              <button ng-click="vm.removeFrame($index)" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+            </td>
+          </tr>
+        </table>
+
       </div>
   </div>
+
+
+
+
+  <div id="selectFrameModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectFrameModal" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title mt-0" id="myModalLabel">Add frame to composition</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form-horizontal m-t-20">
+
+                          <div class="form-group">
+                              <div class="col-12">
+                                  <input ng-change="vm.searchFrames(vm.framesearch);" type="text" placeholder="Search frames" ng-model="vm.framesearch" class="form-control" />
+                              </div>
+                          </div>
+                          <hr />
+                          <div ng-repeat="frame in vm.frame_search_results">
+                            [{{frame.id}}] {{frame.name}}
+                            <button ng-click="vm.addFrameToComposition(frame);" class="btn btn-success waves-effect" type="button">Add</button>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                      </div>
+                  </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+          </div>
 
 
 

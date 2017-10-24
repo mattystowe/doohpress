@@ -10,5 +10,6 @@ angular.module('app.compositions', [
 
 require('./routes');
 require('./compositions.service');
+require('./frames.service');
 require('./compositions.controller');
 require('./compositionsview.controller');

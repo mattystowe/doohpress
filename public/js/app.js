@@ -55993,10 +55993,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.compositions').controller('CompositionsController', CompositionsController);
 
-CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService'];
+CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'FrameService'];
 
 /* @ngInject */
-function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService) {
+function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, FrameService) {
   var vm = this;
 
   vm.Auth = Auth;
@@ -56014,6 +56014,15 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   }; // placeholder for new comp
 
 
+  vm.openSelectAFrame = openSelectAFrame;
+  vm.addFrameToComposition = addFrameToComposition;
+
+  vm.searchFrames = searchFrames;
+  vm.framesearch = '';
+  vm.frame_search_results = [];
+
+  vm.removeFrame = removeFrame;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -56029,6 +56038,49 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   }
   /////////////////////////////////////////////////
 
+
+  //open the select a frame modal
+  function openSelectAFrame() {
+    vm.framesearch = '';
+    vm.frame_search_results = [];
+    $('#selectFrameModal').modal('show');
+  }
+
+  //handle adding a frame to the composition
+  function addFrameToComposition(frame) {
+    $('#selectFrameModal').modal('hide');
+    //add frame to composition if not already there
+    var exists = false;
+    vm.composition.frames.forEach(function (existing_frame) {
+      if (existing_frame.id == frame.id) {
+        exists = true;
+      }
+    });
+    if (exists != true) {
+      vm.composition.frames.push(frame);
+    }
+  }
+
+  function removeFrame(index) {
+    vm.composition.frames.splice(index, 1);
+  }
+
+  function searchFrames(query) {
+    if (query != null) {
+      if (query.length > 2) {
+        FrameService.search(query).then(function (data) {
+          if (data.status == 200) {
+
+            vm.frame_search_results = data.data;
+          } else {
+            //
+            //log error
+            toastr.error('Error', 'There was an error loading frames');
+          }
+        });
+      }
+    }
+  }
 
   function getCompositions() {
     CompositionService.getAll().then(function (data) {
@@ -56167,6 +56219,42 @@ function CompositionsViewController($scope, $state, AuthService, toastr, SweetAl
 
 /***/ }),
 
+/***/ "./resources/assets/js/compositions/frames.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').service('FrameService', FrameService);
+
+FrameService.$inject = ['$http'];
+
+/* @ngInject */
+function FrameService($http) {
+
+    var api = {
+        search: search
+    };
+    return api;
+
+    ////////////
+
+    function search(query) {
+        return $http({
+            url: '/frames/search/' + query,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/compositions/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56181,6 +56269,7 @@ angular.module('app.compositions', ['app.core']);
 
 __webpack_require__("./resources/assets/js/compositions/routes.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.service.js");
+__webpack_require__("./resources/assets/js/compositions/frames.service.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
 
