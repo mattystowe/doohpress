@@ -24,7 +24,10 @@
           description: null,
           frames: [],
           outputtype: {},
-          compositioncategory: {}
+          compositioncategory: {},
+          thumbnail: null,
+          image: null,
+          example: null
         }; // placeholder for new comp
 
 
@@ -37,6 +40,9 @@
 
         vm.removeFrame = removeFrame;
 
+        vm.handleThumbnail = handleThumbnail;
+        vm.handleImage = handleImage;
+        
         /////////////////////////////////////////////////
         activate();
 
@@ -52,6 +58,16 @@
         }
         /////////////////////////////////////////////////
 
+
+        function handleThumbnail(file) {
+          vm.composition.thumbnail = file;
+          $scope.$apply();
+        }
+
+        function handleImage(file) {
+          vm.composition.image = file;
+          $scope.$apply();
+        }
 
 
         //open the select a frame modal

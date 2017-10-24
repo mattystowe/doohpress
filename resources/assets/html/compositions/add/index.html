@@ -62,6 +62,24 @@
         </table>
 
       </div>
+
+
+      <div class="card-box">
+        <h4>Images</h4>
+        <small>Thumbnail</small>
+        <imagepicker dimx="300" dimy="300" aspect="16/9" path="'/compositions/thumbnails/'" callback="vm.handleThumbnail(file);"></imagepicker>
+        <img class="img img-responsive" src="{{vm.composition.thumbnail}}"/>
+        <hr />
+        <small>Main Image</small>
+        <imagepicker dimx="600" dimy="600" aspect="16/9" path="'/compositions/images/'" callback="vm.handleImage(file);"></imagepicker>
+
+        <img class="img img-responsive" src="{{vm.composition.image}}"/>
+
+      </div>
+
+
+
+
   </div>
 
 
