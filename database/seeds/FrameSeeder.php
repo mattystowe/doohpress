@@ -13,6 +13,7 @@ use App\Outputtype;
 use App\Compositioncategory;
 use App\Composition;
 use App\Sku;
+use App\Tag;
 
 
 class FrameSeeder extends Seeder
@@ -130,6 +131,21 @@ class FrameSeeder extends Seeder
           $Sku_3->skutype_id = $Skutype_video_xlarge->id;
           $Sku_3->wemockup_sku = '3';
           $Sku_3->save();
+
+
+
+          //tags
+          $tag_test1 = Tag::create(['name'=>'testtag1']);
+          $tag_test2 = Tag::create(['name'=>'testtag2']);
+          $tag_test3 = Tag::create(['name'=>'testtag3']);
+
+          //associate tags with composition
+          $Composition_1->tags()->attach([
+            $tag_test1->id,
+            $tag_test2->id,
+            $tag_test3->id
+          ]);
+
 
 
     }
