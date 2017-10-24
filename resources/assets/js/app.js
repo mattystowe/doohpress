@@ -12,6 +12,7 @@ require('./home');
 require('./profile');
 require('./teams');
 require('./countries');
+require('./compositions');
 
 angular.module('app', [
   'app.core',
@@ -19,7 +20,8 @@ angular.module('app', [
   'app.home',
   'app.profile',
   'app.teams',
-  'app.countries'
+  'app.countries',
+  'app.compositions'
 ]);
 
 var authblock = angular.module('blocks.auth')

@@ -55400,8 +55400,9 @@ __webpack_require__("./resources/assets/js/home/index.js");
 __webpack_require__("./resources/assets/js/profile/index.js");
 __webpack_require__("./resources/assets/js/teams/index.js");
 __webpack_require__("./resources/assets/js/countries/index.js");
+__webpack_require__("./resources/assets/js/compositions/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions']);
 
 var authblock = angular.module('blocks.auth');
 authblock.run(runBlock);
@@ -55977,6 +55978,58 @@ function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvi
             });
         }
     }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.compositions', ['app.core']);
+
+__webpack_require__("./resources/assets/js/compositions/routes.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureDefaults('/compositions', '/compositions/list');
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'compositions',
+        config: {
+            url: '/compositions',
+            templateUrl: '/html/compositions/index.html'
+        }
+    }, {
+        state: 'compositions.list',
+        config: {
+            url: '/list',
+            templateUrl: '/html/compositions/list/index.html'
+        }
+    }];
 }
 
 /***/ }),
