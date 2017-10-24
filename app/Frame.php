@@ -21,4 +21,8 @@ class Frame extends Model
     public function city() {
       return $this->belongsTo('App\City');
     }
+
+    public function compositions() {
+      return $this->belongsToMany('App\Composition');
+    }
 }

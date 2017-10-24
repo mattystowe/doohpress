@@ -8,6 +8,11 @@ use App\City;
 use App\Country;
 use App\Frametype;
 use App\Frameformat;
+use App\Skutype;
+use App\Outputtype;
+use App\Compositioncategory;
+use App\Composition;
+use App\Sku;
 
 
 class FrameSeeder extends Seeder
@@ -68,9 +73,63 @@ class FrameSeeder extends Seeder
 
 
 
+          $Skutype_still_medium = Skutype::create(['name'=>'Still Image - Medium']);
+          $Skutype_still_large = Skutype::create(['name'=>'Still Image - Large']);
+          $Skutype_still_xlarge = Skutype::create(['name'=>'Still Image - Extra Large']);
+          $Skutype_video_medium = Skutype::create(['name'=>'Video - Medium 720p']);
+          $Skutype_video_large = Skutype::create(['name'=>'Video - Large 1080p']);
+          $Skutype_video_xlarge = Skutype::create(['name'=>'Video - Extra Large 4k']);
+
+
+          $Outputtype_singleimage = Outputtype::create(['name'=>'Single Image']);
+          $Outputtype_video = Outputtype::create(['name'=>'Video']);
+          $Outputtype_VR = Outputtype::create(['name'=>'VR']);
+
+
+          $CompCategory_static = Compositioncategory::create(['name'=>'Static Camera']);
+          $CompCategory_walking_steadycam = Compositioncategory::create(['name'=>'Walking - Steadycam']);
+          $CompCategory_vehicle_steadycam = Compositioncategory::create(['name'=>'Vehicle - Steadycam']);
+          $CompCategory_drone = Compositioncategory::create(['name'=>'Aerial Drone']);
 
 
 
+          //
+          //
+          //
+          $Composition_1 = Composition::create([
+            'name'=>'Test Composition 1',
+            'description'=>'Description goes here',
+            'outputtype_id'=>$Outputtype_video->id,
+            'compositioncategory_id'=>$CompCategory_walking_steadycam->id,
+            'geo_lat'=>'51.50460217',
+            'geo_long'=>'-0.01955867',
+            'published'=>true,
+            'image'=>'someimage',
+            'thumbnail'=>'somethumbnail',
+            'example'=>'someexamplefile'
+          ]);
+
+          //link composition to frame
+          $Composition_1->frames()->attach($Frame->id);
+
+          //Add sku to composition
+          $Sku_1 = new Sku;
+          $Sku_1->composition_id = $Composition_1->id;
+          $Sku_1->skutype_id = $Skutype_video_medium->id;
+          $Sku_1->wemockup_sku = '1';
+          $Sku_1->save();
+
+          $Sku_2 = new Sku;
+          $Sku_2->composition_id = $Composition_1->id;
+          $Sku_2->skutype_id = $Skutype_video_large->id;
+          $Sku_2->wemockup_sku = '2';
+          $Sku_2->save();
+
+          $Sku_3 = new Sku;
+          $Sku_3->composition_id = $Composition_1->id;
+          $Sku_3->skutype_id = $Skutype_video_xlarge->id;
+          $Sku_3->wemockup_sku = '3';
+          $Sku_3->save();
 
 
     }
