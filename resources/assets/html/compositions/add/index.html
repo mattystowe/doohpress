@@ -1,0 +1,61 @@
+<div class="row">
+
+  <div class="col-md-6 col-lg-6">
+      <div class="card-box">
+        <h4>Details</h4>
+
+        <form class="form-horizontal m-t-20">
+
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.composition.name" id="composition_name" type="text" class="form-control" name="composition_name" placeholder="Name" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <textarea placeholder="Description" ng-model="vm.composition.description" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Select output type:</small>
+                  <select ng-options="outputtype as outputtype.name for outputtype in vm.outputtypes" class="form-control" ng-model="vm.composition.outputtype">
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Select category:</small>
+                  <select ng-options="compositioncategory as compositioncategory.name for compositioncategory in vm.compositioncategories" class="form-control" ng-model="vm.composition.compositioncategory">
+                  </select>
+                </div>
+            </div>
+
+
+
+        </form>
+
+
+
+      </div>
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+      <div class="card-box">
+        <h4>Frames</h4>
+        <a ng-click="vm.openSelectAFrame();"><button class="btn btn-default" type="button">
+          Add
+        </button></a>
+
+      </div>
+  </div>
+
+
+
+<!-- end row -->
+</div>

@@ -55982,6 +55982,191 @@ function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvi
 
 /***/ }),
 
+/***/ "./resources/assets/js/compositions/compositions.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').controller('CompositionsController', CompositionsController);
+
+CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService'];
+
+/* @ngInject */
+function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService) {
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.compositions = [];
+  vm.outputtypes = [];
+  vm.compositioncategories = [];
+
+  vm.composition = {
+    name: null,
+    description: null,
+    frames: [],
+    outputtype: {},
+    compositioncategory: {}
+  }; // placeholder for new comp
+
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+
+    getCompositions();
+    getOutputTypes();
+    getCompositionCategories();
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function getCompositions() {
+    CompositionService.getAll().then(function (data) {
+      if (data.status == 200) {
+
+        vm.outputtypes = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+
+  function getOutputTypes() {
+    CompositionService.getOutputTypes().then(function (data) {
+      if (data.status == 200) {
+
+        vm.compositions = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+
+  function getCompositionCategories() {
+    CompositionService.getCompositionCategories().then(function (data) {
+      if (data.status == 200) {
+
+        vm.compositioncategories = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/compositions.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').service('CompositionService', CompositionService);
+
+CompositionService.$inject = ['$http'];
+
+/* @ngInject */
+function CompositionService($http) {
+
+  var api = {
+    getAll: getAll,
+    getOutputTypes: getOutputTypes,
+    getCompositionCategories: getCompositionCategories
+  };
+  return api;
+
+  ////////////
+
+  function getAll() {
+    return $http({
+      url: '/compositions/getall/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function getOutputTypes() {
+    return $http({
+      url: '/compositions/getoutputtypes/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function getCompositionCategories() {
+    return $http({
+      url: '/compositions/getcompositioncategories/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/compositionsview.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').controller('CompositionsViewController', CompositionsViewController);
+
+CompositionsViewController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', '$stateParams'];
+
+/* @ngInject */
+function CompositionsViewController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams) {
+    var vm = this;
+
+    vm.Auth = Auth;
+
+    vm.composition = {};
+
+    /////////////////////////////////////////////////
+    activate();
+
+    function activate() {
+        console.log($stateParams.composition_id);
+    }
+
+    function Auth() {
+        return AuthService;
+    }
+    /////////////////////////////////////////////////
+
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/compositions/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -55995,6 +56180,9 @@ __webpack_require__("./resources/assets/js/core/index.js");
 angular.module('app.compositions', ['app.core']);
 
 __webpack_require__("./resources/assets/js/compositions/routes.js");
+__webpack_require__("./resources/assets/js/compositions/compositions.service.js");
+__webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
+__webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
 
 /***/ }),
 
@@ -56028,6 +56216,18 @@ function getStates() {
         config: {
             url: '/list',
             templateUrl: '/html/compositions/list/index.html'
+        }
+    }, {
+        state: 'compositions.view',
+        config: {
+            url: '/view/{composition_id}',
+            templateUrl: '/html/compositions/view/index.html'
+        }
+    }, {
+        state: 'compositions.add',
+        config: {
+            url: '/add/',
+            templateUrl: '/html/compositions/add/index.html'
         }
     }];
 }

@@ -29,6 +29,20 @@ function getStates() {
               url: '/list',
               templateUrl: '/html/compositions/list/index.html'
           }
+      },
+      {
+          state: 'compositions.view',
+          config: {
+              url: '/view/{composition_id}',
+              templateUrl: '/html/compositions/view/index.html'
+          }
+      },
+      {
+          state: 'compositions.add',
+          config: {
+              url: '/add/',
+              templateUrl: '/html/compositions/add/index.html'
+          }
       }
     ];
 }

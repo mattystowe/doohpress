@@ -41,7 +41,9 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/cities/add/','CitiesController@addNew');
   $this->post('/cities/remove/','CitiesController@remove');
 
-
+  $this->get('/compositions/getall',"CompositionsController@getAll");
+  $this->get('/compositions/getoutputtypes',"CompositionsController@getOutputTypes");
+  $this->get('/compositions/getcompositioncategories',"CompositionsController@getCompositionCategories");
 });
 
 
