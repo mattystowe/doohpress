@@ -7,10 +7,10 @@
         .module('app.compositions')
         .controller('CompositionsController', CompositionsController);
 
-    CompositionsController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','FrameService'];
+    CompositionsController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','FrameService','WemockupService'];
 
     /* @ngInject */
-    function CompositionsController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,FrameService) {
+    function CompositionsController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,FrameService,WemockupService) {
         var vm = this;
 
         vm.Auth = Auth;
@@ -27,7 +27,9 @@
           compositioncategory: {},
           thumbnail: null,
           image: null,
-          example: null
+          example: null,
+          published: 'true',
+          wemockup_product: null
         }; // placeholder for new comp
 
 
@@ -42,7 +44,14 @@
 
         vm.handleThumbnail = handleThumbnail;
         vm.handleImage = handleImage;
-        
+
+        vm.searchProducts = searchProducts;
+        vm.openSelectAProduct = openSelectAProduct;
+        vm.productsearch = '';
+        vm.product_search_results = [];
+        vm.selectProduct = selectProduct;
+
+
         /////////////////////////////////////////////////
         activate();
 
@@ -57,6 +66,37 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+        function openSelectAProduct() {
+          vm.productsearch = '';
+          vm.product_search_results = [];
+          $('#selectProductModal').modal('show');
+        }
+
+        function searchProducts(query) {
+          if (query != null) {
+            if (query.length > 2) {
+              WemockupService.search(query)
+              .then(function(data) {
+                if (data.status == 200) {
+
+                  vm.product_search_results = data.data;
+                } else {
+                  //
+                  //log error
+                  toastr.error('Error','There was an error loading products');
+                }
+              });
+            }
+          }
+        }
+
+        function selectProduct(product) {
+          vm.composition.wemockup_product = product;
+          $('#selectProductModal').modal('hide');
+        }
+
+
 
 
         function handleThumbnail(file) {
@@ -121,8 +161,8 @@
           CompositionService.getAll()
           .then(function(data) {
             if (data.status == 200) {
+              vm.compositions = data.data;
 
-              vm.outputtypes = data.data;
             } else {
               //
               //log error
@@ -135,8 +175,8 @@
           CompositionService.getOutputTypes()
           .then(function(data) {
             if (data.status == 200) {
+              vm.outputtypes = data.data;
 
-              vm.compositions = data.data;
             } else {
               //
               //log error

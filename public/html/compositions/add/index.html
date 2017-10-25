@@ -37,12 +37,50 @@
             </div>
 
 
-
         </form>
 
 
 
       </div>
+
+      <div class="card-box">
+        <h4>Publish</h4>
+        <form>
+          <div class="form-group">
+              <div class="col-12">
+                <select class="form-control" ng-model="vm.composition.published">
+                  <option value="true" selected>Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+          </div>
+        </form>
+      </div>
+
+
+      <div class="card-box">
+        <h4>Location</h4>
+        <form>
+          <div class="form-group">
+              <div class="col-12">
+                <div class="form-group">
+                    <div class="col-12">
+                        <input ng-model="vm.composition.lat" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-12">
+                        <input ng-model="vm.composition.long" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
+
+                    </div>
+                </div>
+              </div>
+          </div>
+        </form>
+      </div>
+
+
   </div>
 
   <div class="col-md-6 col-lg-6">
@@ -78,10 +116,61 @@
       </div>
 
 
+      <div class="card-box">
+        <h4>Product</h4>
+        <a ng-click="vm.openSelectAProduct();"><button class="btn btn-default" type="button">
+          Link Product
+        </button></a>
+
+        <div ng-if="vm.composition.wemockup_product">
+          {{vm.composition.wemockup_product.name}}
+          <hr>
+          Available SKU<br>
+          [display sku's here with ADD and Type select box]
+
+          Linked Sku<br>
+          Display linked sky with their type
+
+        </div>
+
+
+      </div>
+
 
 
   </div>
 
+
+
+  <div id="selectProductModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectProductModal" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title mt-0" id="myModalLabel">Search products</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form-horizontal m-t-20">
+
+                          <div class="form-group">
+                              <div class="col-12">
+                                  <input ng-change="vm.searchProducts(vm.productsearch);" type="text" placeholder="Search wemockup" ng-model="vm.productsearch" class="form-control" />
+                              </div>
+                          </div>
+                          <hr />
+                          <div ng-repeat="product in vm.product_search_results">
+                            [{{product.id}}] {{product.name}}
+                            <button ng-click="vm.selectProduct(product);" class="btn btn-success waves-effect" type="button">Add</button>
+                          </div>
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                      </div>
+                  </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+          </div>
 
 
 
@@ -113,6 +202,8 @@
                   </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->
           </div>
+
+
 
 
 

@@ -6,6 +6,7 @@ var angular = require('angular');
 require('../blocks/router');
 require('../blocks/auth');
 require('../blocks/filepicker');
+require('../blocks/wemockup');
 require('angular-animate');
 require('angular-loading-bar');
 require('angular-toastr');
@@ -18,6 +19,7 @@ angular.module('app.core', [
     'blocks.router',
     'blocks.auth',
     'blocks.filepicker',
+    'blocks.wemockup',
     'ui.router',
     'angular-loading-bar',
     'toastr',

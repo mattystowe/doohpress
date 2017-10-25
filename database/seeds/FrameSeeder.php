@@ -106,8 +106,7 @@ class FrameSeeder extends Seeder
             'geo_long'=>'-0.01955867',
             'published'=>true,
             'image'=>'someimage',
-            'thumbnail'=>'somethumbnail',
-            'example'=>'someexamplefile'
+            'thumbnail'=>'somethumbnail'
           ]);
 
           //link composition to frame

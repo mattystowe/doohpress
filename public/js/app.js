@@ -56072,6 +56072,57 @@ function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvi
 
 /***/ }),
 
+/***/ "./resources/assets/js/blocks/wemockup/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.wemockup', []);
+
+__webpack_require__("./resources/assets/js/blocks/wemockup/wemockup.service.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/wemockup/wemockup.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.wemockup').service('WemockupService', WemockupService);
+
+WemockupService.$inject = ['$http'];
+
+/* @ngInject */
+function WemockupService($http) {
+
+  ////////////
+  var api = {
+    search: search
+  };
+  return api;
+  ///////////
+
+
+  function search(query) {
+    return $http({
+      url: '/wemockup/products/search/' + query,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/compositions/compositions.controller.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56083,10 +56134,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.compositions').controller('CompositionsController', CompositionsController);
 
-CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'FrameService'];
+CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'FrameService', 'WemockupService'];
 
 /* @ngInject */
-function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, FrameService) {
+function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, FrameService, WemockupService) {
   var vm = this;
 
   vm.Auth = Auth;
@@ -56103,7 +56154,9 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
     compositioncategory: {},
     thumbnail: null,
     image: null,
-    example: null
+    example: null,
+    published: 'true',
+    wemockup_product: null
   }; // placeholder for new comp
 
 
@@ -56118,6 +56171,12 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
 
   vm.handleThumbnail = handleThumbnail;
   vm.handleImage = handleImage;
+
+  vm.searchProducts = searchProducts;
+  vm.openSelectAProduct = openSelectAProduct;
+  vm.productsearch = '';
+  vm.product_search_results = [];
+  vm.selectProduct = selectProduct;
 
   /////////////////////////////////////////////////
   activate();
@@ -56134,6 +56193,33 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   }
   /////////////////////////////////////////////////
 
+  function openSelectAProduct() {
+    vm.productsearch = '';
+    vm.product_search_results = [];
+    $('#selectProductModal').modal('show');
+  }
+
+  function searchProducts(query) {
+    if (query != null) {
+      if (query.length > 2) {
+        WemockupService.search(query).then(function (data) {
+          if (data.status == 200) {
+
+            vm.product_search_results = data.data;
+          } else {
+            //
+            //log error
+            toastr.error('Error', 'There was an error loading products');
+          }
+        });
+      }
+    }
+  }
+
+  function selectProduct(product) {
+    vm.composition.wemockup_product = product;
+    $('#selectProductModal').modal('hide');
+  }
 
   function handleThumbnail(file) {
     vm.composition.thumbnail = file;
@@ -56191,8 +56277,7 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   function getCompositions() {
     CompositionService.getAll().then(function (data) {
       if (data.status == 200) {
-
-        vm.outputtypes = data.data;
+        vm.compositions = data.data;
       } else {
         //
         //log error
@@ -56204,8 +56289,7 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   function getOutputTypes() {
     CompositionService.getOutputTypes().then(function (data) {
       if (data.status == 200) {
-
-        vm.compositions = data.data;
+        vm.outputtypes = data.data;
       } else {
         //
         //log error
@@ -56581,13 +56665,14 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 __webpack_require__("./resources/assets/js/blocks/router/index.js");
 __webpack_require__("./resources/assets/js/blocks/auth/index.js");
 __webpack_require__("./resources/assets/js/blocks/filepicker/index.js");
+__webpack_require__("./resources/assets/js/blocks/wemockup/index.js");
 __webpack_require__("./node_modules/angular-animate/index.js");
 __webpack_require__("./node_modules/angular-loading-bar/index.js");
 __webpack_require__("./node_modules/angular-toastr/index.js");
 __webpack_require__("./node_modules/sweetalert/dist/sweetalert.min.js");
 __webpack_require__("./node_modules/angular-sweetalert/SweetAlert.js");
 
-angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks.filepicker', 'ui.router', 'angular-loading-bar', 'toastr', 'oitozero.ngSweetAlert']);
+angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks.filepicker', 'blocks.wemockup', 'ui.router', 'angular-loading-bar', 'toastr', 'oitozero.ngSweetAlert']);
 
 __webpack_require__("./resources/assets/js/core/config.js");
 __webpack_require__("./resources/assets/js/core/constants.js");

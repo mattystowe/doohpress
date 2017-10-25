@@ -24,7 +24,6 @@ class CreateCompositionsTable extends Migration
             $table->boolean('published')->default(true);
             $table->string('image',255);
             $table->string('thumbnail',255);
-            $table->string('example')->nullable();
             $table->timestamps();
         });
 

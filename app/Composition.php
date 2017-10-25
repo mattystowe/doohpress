@@ -16,8 +16,7 @@ class Composition extends Model
       'geo_long',
       'published',
       'image',
-      'thumbnail',
-      'example'
+      'thumbnail'
   ];
 
     public function frames() {
