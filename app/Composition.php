@@ -16,7 +16,8 @@ class Composition extends Model
       'geo_long',
       'published',
       'image',
-      'thumbnail'
+      'thumbnail',
+      'wemockup_product_id'
   ];
 
     public function frames() {

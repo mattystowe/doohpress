@@ -65,19 +65,24 @@
               <div class="col-12">
                 <div class="form-group">
                     <div class="col-12">
-                        <input ng-model="vm.composition.lat" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
+                        <input ng-model="vm.composition.geo_lat" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
 
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-12">
-                        <input ng-model="vm.composition.long" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
+                        <input ng-model="vm.composition.geo_long" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
 
                     </div>
                 </div>
               </div>
           </div>
         </form>
+      </div>
+
+
+      <div class="card-box">
+        <button ng-disabled="!vm.isCompositionValid()" ng-click="vm.saveComposition()" class="btn btn-lg btn-primary">Save Composition</button>
       </div>
 
 
@@ -123,13 +128,53 @@
         </button></a>
 
         <div ng-if="vm.composition.wemockup_product">
+          <img class="img img-responsive" src="{{vm.composition.wemockup_product.image}}"></img>
           {{vm.composition.wemockup_product.name}}
-          <hr>
-          Available SKU<br>
-          [display sku's here with ADD and Type select box]
 
-          Linked Sku<br>
-          Display linked sky with their type
+          <hr>
+          <strong>Skus Available [{{vm.composition.wemockup_product.skus.length}}]</strong>
+          <div >
+            <table class="table table-striped">
+              <tr ng-repeat="sku in vm.composition.wemockup_product.skus">
+                <td>
+                  <button ng-click="vm.addSkuToComposition(sku,$index)" ng-disabled="!sku.skutype" class="btn btn-default" type="button">Add</button>
+                </td>
+                <td>
+                  <form class="form">
+                    <select class="form-control" ng-model="sku.skutype" ng-options="skutype as skutype.name for skutype in vm.skutypes">
+                    </select>
+                  </form>
+                </td>
+                <td>
+                  {{sku.name}} - {{sku.description}}
+                </td>
+              <tr>
+            </table>
+
+          </div>
+
+          <strong>Skus Added</strong>
+
+          <div >
+            <table class="table table-striped">
+              <tr ng-repeat="sku in vm.composition.wemockup_skus">
+                <td>
+                  <button ng-click="vm.removeSkuFromComposition(sku,$index)" class="btn btn-danger" type="button">Remove</button>
+                </td>
+                <td>
+                  <form class="form">
+                    <select class="form-control" ng-model="sku.skutype" ng-options="skutype as skutype.name for skutype in vm.skutypes">
+                    </select>
+                  </form>
+                </td>
+                <td>
+                  {{sku.name}} - {{sku.description}}
+                </td>
+              <tr>
+            </table>
+
+          </div>
+
 
         </div>
 

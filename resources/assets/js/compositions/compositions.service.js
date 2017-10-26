@@ -16,11 +16,26 @@ var angular = require('angular');
       var api = {
         getAll:getAll,
         getOutputTypes:getOutputTypes,
-        getCompositionCategories:getCompositionCategories
+        getCompositionCategories:getCompositionCategories,
+        saveNewComposition:saveNewComposition
       };
       return api;
 
       ////////////
+
+      function saveNewComposition(composition) {
+        var compositionjson = angular.toJson(composition);
+        return $http({
+              url : '/compositions/savenew/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition: compositionjson
+              }
+          });
+      }
 
       function getAll() {
         return $http({

@@ -56134,10 +56134,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.compositions').controller('CompositionsController', CompositionsController);
 
-CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'FrameService', 'WemockupService'];
+CompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'FrameService', 'WemockupService', 'SkuService'];
 
 /* @ngInject */
-function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, FrameService, WemockupService) {
+function CompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, FrameService, WemockupService, SkuService) {
   var vm = this;
 
   vm.Auth = Auth;
@@ -56145,6 +56145,7 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   vm.compositions = [];
   vm.outputtypes = [];
   vm.compositioncategories = [];
+  vm.skutypes = [];
 
   vm.composition = {
     name: null,
@@ -56156,7 +56157,10 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
     image: null,
     example: null,
     published: 'true',
-    wemockup_product: null
+    wemockup_product: null,
+    wemockup_skus: [],
+    geo_lat: null,
+    geo_long: null
   }; // placeholder for new comp
 
 
@@ -56178,6 +56182,12 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
   vm.product_search_results = [];
   vm.selectProduct = selectProduct;
 
+  vm.addSkuToComposition = addSkuToComposition;
+  vm.removeSkuFromComposition = removeSkuFromComposition;
+
+  vm.isCompositionValid = isCompositionValid;
+  vm.saveComposition = saveComposition;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -56186,12 +56196,62 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
     getCompositions();
     getOutputTypes();
     getCompositionCategories();
+    getSkuTypes();
   }
 
   function Auth() {
     return AuthService;
   }
   /////////////////////////////////////////////////
+
+
+  //process saving of the composition
+  //
+  //
+  //
+  function saveComposition() {
+    CompositionService.saveNewComposition(vm.composition).then(function (data) {
+      //
+      //saved - send user somewhere
+      //
+      toastr.success('Success', 'Saved!');
+    }, function (data) {
+      toastr.error('Error', 'There was an error saving your composition');
+    });
+  }
+
+  function isCompositionValid() {
+    var valid = true;
+
+    return valid;
+  }
+
+  function addSkuToComposition(sku, index) {
+    //add to composion skus -
+    vm.composition.wemockup_skus.push(sku);
+    //remove from available skus
+    vm.composition.wemockup_product.skus.splice(index, 1);
+  }
+
+  function removeSkuFromComposition(sku, index) {
+    //remove sku from composition
+    vm.composition.wemockup_skus.splice(index, 1);
+    //add back to available skus
+    vm.composition.wemockup_product.skus.push(sku);
+  }
+
+  function getSkuTypes() {
+    SkuService.getAllTypes().then(function (data) {
+      if (data.status == 200) {
+
+        vm.skutypes = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading sku types');
+      }
+    });
+  }
 
   function openSelectAProduct() {
     vm.productsearch = '';
@@ -56333,11 +56393,26 @@ function CompositionService($http) {
   var api = {
     getAll: getAll,
     getOutputTypes: getOutputTypes,
-    getCompositionCategories: getCompositionCategories
+    getCompositionCategories: getCompositionCategories,
+    saveNewComposition: saveNewComposition
   };
   return api;
 
   ////////////
+
+  function saveNewComposition(composition) {
+    var compositionjson = angular.toJson(composition);
+    return $http({
+      url: '/compositions/savenew/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition: compositionjson
+      }
+    });
+  }
 
   function getAll() {
     return $http({
@@ -56460,6 +56535,7 @@ angular.module('app.compositions', ['app.core']);
 __webpack_require__("./resources/assets/js/compositions/routes.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.service.js");
 __webpack_require__("./resources/assets/js/compositions/frames.service.js");
+__webpack_require__("./resources/assets/js/compositions/skus.service.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
 
@@ -56509,6 +56585,42 @@ function getStates() {
             templateUrl: '/html/compositions/add/index.html'
         }
     }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/skus.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').service('SkuService', SkuService);
+
+SkuService.$inject = ['$http'];
+
+/* @ngInject */
+function SkuService($http) {
+
+    var api = {
+        getAllTypes: getAllTypes
+    };
+    return api;
+
+    ////////////
+
+    function getAllTypes() {
+        return $http({
+            url: '/skutypes/getall/',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
 }
 
 /***/ }),

@@ -7,10 +7,10 @@
         .module('app.compositions')
         .controller('CompositionsController', CompositionsController);
 
-    CompositionsController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','FrameService','WemockupService'];
+    CompositionsController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','FrameService','WemockupService','SkuService'];
 
     /* @ngInject */
-    function CompositionsController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,FrameService,WemockupService) {
+    function CompositionsController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,FrameService,WemockupService,SkuService) {
         var vm = this;
 
         vm.Auth = Auth;
@@ -18,6 +18,7 @@
         vm.compositions = [];
         vm.outputtypes = [];
         vm.compositioncategories = [];
+        vm.skutypes = [];
 
         vm.composition = {
           name: null,
@@ -29,7 +30,10 @@
           image: null,
           example: null,
           published: 'true',
-          wemockup_product: null
+          wemockup_product: null,
+          wemockup_skus: [],
+          geo_lat:null,
+          geo_long:null
         }; // placeholder for new comp
 
 
@@ -51,6 +55,12 @@
         vm.product_search_results = [];
         vm.selectProduct = selectProduct;
 
+        vm.addSkuToComposition = addSkuToComposition;
+        vm.removeSkuFromComposition = removeSkuFromComposition;
+
+
+        vm.isCompositionValid = isCompositionValid;
+        vm.saveComposition = saveComposition;
 
         /////////////////////////////////////////////////
         activate();
@@ -60,12 +70,75 @@
           getCompositions();
           getOutputTypes();
           getCompositionCategories();
+          getSkuTypes();
         }
 
         function Auth() {
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        //process saving of the composition
+        //
+        //
+        //
+        function saveComposition() {
+          CompositionService.saveNewComposition(vm.composition)
+          .then(
+            function(data) {
+            //
+            //saved - send user somewhere
+            //
+            toastr.success('Success','Saved!');
+            },
+            function(data) {
+              toastr.error('Error','There was an error saving your composition');
+            }
+          );
+        }
+
+
+
+        function isCompositionValid() {
+          var valid = true;
+
+          return valid;
+        }
+
+
+        function addSkuToComposition(sku,index) {
+          //add to composion skus -
+          vm.composition.wemockup_skus.push(sku);
+          //remove from available skus
+          vm.composition.wemockup_product.skus.splice(index,1);
+
+        }
+
+        function removeSkuFromComposition(sku,index) {
+          //remove sku from composition
+          vm.composition.wemockup_skus.splice(index,1);
+          //add back to available skus
+          vm.composition.wemockup_product.skus.push(sku);
+        }
+
+
+
+        function getSkuTypes() {
+          SkuService.getAllTypes()
+          .then(function(data) {
+            if (data.status == 200) {
+
+              vm.skutypes = data.data
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error loading sku types');
+            }
+          });
+        }
+
+
 
         function openSelectAProduct() {
           vm.productsearch = '';
