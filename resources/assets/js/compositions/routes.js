@@ -43,6 +43,13 @@ function getStates() {
               url: '/add/',
               templateUrl: '/html/compositions/add/index.html'
           }
+      },
+      {
+          state: 'compositions.edit',
+          config: {
+              url: '/edit/{composition_id}',
+              templateUrl: '/html/compositions/edit/index.html'
+          }
       }
     ];
 }

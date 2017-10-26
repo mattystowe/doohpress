@@ -14,3 +14,4 @@ require('./frames.service');
 require('./skus.service');
 require('./compositions.controller');
 require('./compositionsview.controller');
+require('./compositionsedit.controller');

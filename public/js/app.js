@@ -56213,7 +56213,7 @@ function CompositionsController($scope, $state, AuthService, toastr, SweetAlert,
     CompositionService.saveNewComposition(vm.composition).then(function (data) {
       //
       //saved - send user somewhere
-      //
+      $state.go('compositions.view', { composition_id: data.data.id });
       toastr.success('Success', 'Saved!');
     }, function (data) {
       toastr.error('Error', 'There was an error saving your composition');
@@ -56447,6 +56447,43 @@ function CompositionService($http) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/compositions/compositionsedit.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').controller('CompositionsEditController', CompositionsEditController);
+
+CompositionsEditController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', '$stateParams'];
+
+/* @ngInject */
+function CompositionsEditController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams) {
+    var vm = this;
+
+    vm.Auth = Auth;
+
+    vm.composition = {};
+
+    /////////////////////////////////////////////////
+    activate();
+
+    function activate() {
+        console.log($stateParams.composition_id);
+    }
+
+    function Auth() {
+        return AuthService;
+    }
+    /////////////////////////////////////////////////
+
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/compositions/compositionsview.controller.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56538,6 +56575,7 @@ __webpack_require__("./resources/assets/js/compositions/frames.service.js");
 __webpack_require__("./resources/assets/js/compositions/skus.service.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
+__webpack_require__("./resources/assets/js/compositions/compositionsedit.controller.js");
 
 /***/ }),
 
@@ -56583,6 +56621,12 @@ function getStates() {
         config: {
             url: '/add/',
             templateUrl: '/html/compositions/add/index.html'
+        }
+    }, {
+        state: 'compositions.edit',
+        config: {
+            url: '/edit/{composition_id}',
+            templateUrl: '/html/compositions/edit/index.html'
         }
     }];
 }

@@ -89,7 +89,7 @@
             function(data) {
             //
             //saved - send user somewhere
-            //
+            $state.go('compositions.view',{composition_id: data.data.id});
             toastr.success('Success','Saved!');
             },
             function(data) {

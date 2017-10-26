@@ -55,9 +55,11 @@
                     <span class="label label-primary" ng-repeat="tag in composition.tags">{{tag.name}}</span>
                   </td>
                   <td>
+                    <a ui-sref="compositions.edit({composition_id: composition.id})">
                     <button class="btn btn-xs btn-info">
                       <span class="fa fa-pencil">Edit</span>
                     </button>
+                  </a>
                     <a ui-sref="compositions.view({composition_id: composition.id})">
                       <button type="button" class="btn btn-xs btn-primary">
                         View
