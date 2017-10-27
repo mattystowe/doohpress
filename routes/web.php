@@ -59,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/compositions/addsku/','SkusController@addSku');
     $this->post('/compositions/updateskutype/','SkusController@updateSkuType');
     $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
+    $this->post('/compositions/addexample/','CompositionsController@addExample');
+    $this->post('/compositions/removeexample/','CompositionsController@removeExample');
 
     $this->post('/tags/addtocomposition/','TagsController@AddToComposition');
     $this->post('/tags/removefromcomposition/','TagsController@RemoveFromComposition');

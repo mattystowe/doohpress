@@ -1,0 +1,30 @@
+
+
+<!-- Vimeo embed example !-->
+<div ng-if="vm.exampletype=='Video_Vimeo'">
+
+  <div class="card-box">
+      <h4 ng-show="vm.showtitle==true" class="header-title m-t-0 m-b-20">{{vm.exampletitle}}</h4>
+                            <!-- 16:9 aspect ratio -->
+      <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="{{vm.getTrustedUrl();}}"></iframe>
+      </div>
+  </div>
+
+</div>
+
+
+
+<!-- Youtube embed example !-->
+<div ng-if="vm.exampletype=='Video_YouTube'">
+
+  <div class="card-box">
+      <h4 ng-show="vm.showtitle==true" class="header-title m-t-0 m-b-20">{{vm.exampletitle}}</h4>
+                            <!-- 16:9 aspect ratio -->
+      <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="{{vm.getTrustedUrl();}}" frameborder="0" allowfullscreen></iframe>
+
+      </div>
+  </div>
+
+</div>

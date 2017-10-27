@@ -153,7 +153,13 @@ class FrameSeeder extends Seeder
             'title'=>'Test example',
             'composition_id'=>$Composition_1->id,
             'exampletype'=>'Video_Vimeo',
-            'url'=>'tp://player.vimeo.com/video/69988283'
+            'url'=>'http://player.vimeo.com/video/69988283'
+          ]);
+          $example_2 = Example::create([
+            'title'=>'Test example 2',
+            'composition_id'=>$Composition_1->id,
+            'exampletype'=>'Video_YouTube',
+            'url'=>'https://www.youtube.com/embed/IlQnGkfskrQ?rel=0'
           ]);
 
 

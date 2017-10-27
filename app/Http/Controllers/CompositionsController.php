@@ -9,6 +9,7 @@ use App\Compositioncategory;
 use App\Sku;
 use App\Frame;
 use App\Wemockup;
+use App\Example;
 
 use Log;
 use DB;
@@ -187,4 +188,41 @@ class CompositionsController extends Controller
 
 
     }
+
+
+
+    public function removeExample(Request $request) {
+        $example = Example::find($request->input('example_id'));
+        if ($example) {
+          if ($example->delete()) {
+            return response('Example removed',200);
+          } else {
+            return response('Could not delete example',422);
+          }
+        } else {
+          return response('Example not found',404);
+        }
+    }
+
+
+    public function addExample(Request $request) {
+        $composition = Composition::find($request->input('composition_id'));
+        if ($composition) {
+          $example = Example::create([
+            'title'=>$request->input('title'),
+            'composition_id'=>$composition->id,
+            'exampletype'=>$request->input('exampletype'),
+            'url'=>$request->input('url')
+          ]);
+          if ($example) {
+            return $example;
+          } else {
+            return response('Could not save example.',422);
+          }
+        } else {
+          return response('Composition not found',404);
+        }
+    }
+
+
 }

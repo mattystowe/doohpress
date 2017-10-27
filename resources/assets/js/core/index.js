@@ -7,6 +7,7 @@ require('../blocks/router');
 require('../blocks/auth');
 require('../blocks/filepicker');
 require('../blocks/wemockup');
+require('../blocks/example');
 require('angular-animate');
 require('angular-loading-bar');
 require('angular-toastr');
@@ -21,6 +22,7 @@ angular.module('app.core', [
     'blocks.auth',
     'blocks.filepicker',
     'blocks.wemockup',
+    'blocks.example',
     'ui.router',
     'angular-loading-bar',
     'toastr',

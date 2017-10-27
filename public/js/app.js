@@ -55769,6 +55769,72 @@ function UserService($http) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/blocks/example/example.directive.js":
+/***/ (function(module, exports) {
+
+(function () {
+    'use strict';
+
+    angular.module('blocks.example').directive('example', example);
+
+    /* @ngInject */
+    function example() {
+        var directive = {
+            restrict: 'EA',
+            templateUrl: '/html/blocks/example/example.partial.html',
+            scope: {
+                exampletype: '=',
+                exampleurl: '=',
+                exampletitle: '=',
+                showtitle: '='
+            },
+            controller: ExampleController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return directive;
+    }
+
+    ExampleController.$inject = ['$scope', '$sce'];
+
+    /* @ngInject */
+    function ExampleController($scope, $sce) {
+        var vm = this;
+
+        vm.getTrustedUrl = getTrustedUrl;
+
+        ///////////////////////////////////////////////
+        activate();
+
+        function activate() {
+            vm.trustedSourceUrl = $sce.trustAsResourceUrl(vm.exampleurl);
+        }
+        /////////////////////////////////////////////
+
+        function getTrustedUrl() {
+            var url = $sce.trustAsResourceUrl(vm.exampleurl);
+            return url;
+        }
+    }
+})();
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/example/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('blocks.example', []);
+
+__webpack_require__("./resources/assets/js/blocks/example/example.directive.js");
+
+/***/ }),
+
 /***/ "./resources/assets/js/blocks/filepicker/imagepicker.directive.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -56404,12 +56470,42 @@ function CompositionService($http) {
     saveNewComposition: saveNewComposition,
     load: load,
     updateComposition: updateComposition,
-    updateProduct: updateProduct
+    updateProduct: updateProduct,
+    removeExample: removeExample,
+    addExample: addExample
   };
   return api;
 
   ////////////
 
+  function removeExample(example) {
+    return $http({
+      url: '/compositions/removeexample/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        example_id: example.id
+      }
+    });
+  }
+
+  function addExample(example, composition) {
+    return $http({
+      url: '/compositions/addexample/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition_id: composition.id,
+        url: example.url,
+        title: example.title,
+        exampletype: example.exampletype
+      }
+    });
+  }
 
   function load(composition_id) {
     return $http({
@@ -56547,6 +56643,11 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   vm.tagAdded = tagAdded;
   vm.tagRemoved = tagRemoved;
 
+  vm.removeExample = removeExample;
+  vm.example = {};
+  vm.openNewExample = openNewExample;
+  vm.addExample = addExample;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -56562,6 +56663,37 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   }
   /////////////////////////////////////////////////
 
+
+  function removeExample(example, index) {
+    CompositionService.removeExample(example).then(function (data) {
+      //
+      toastr.success('Success', 'Example removed');
+      vm.composition.examples.splice(index, 1);
+    }, function (data) {
+      toastr.error('Error', 'Could not remove example.');
+    });
+  }
+
+  function openNewExample() {
+    //reset the new example.
+    vm.example = {
+      title: null,
+      url: null,
+      exampletype: 'Video_Vimeo'
+    };
+    $('#newExampleModal').modal('show');
+  }
+
+  function addExample() {
+    $('#newExampleModal').modal('hide');
+    CompositionService.addExample(vm.example, vm.composition).then(function (data) {
+      //
+      toastr.success('Success', 'Example added');
+      vm.composition.examples.push(data.data);
+    }, function (data) {
+      toastr.error('Error', 'Could not add example.');
+    });
+  }
 
   function searchTags(query) {
     return TagService.search(query);
@@ -57230,6 +57362,7 @@ __webpack_require__("./resources/assets/js/blocks/router/index.js");
 __webpack_require__("./resources/assets/js/blocks/auth/index.js");
 __webpack_require__("./resources/assets/js/blocks/filepicker/index.js");
 __webpack_require__("./resources/assets/js/blocks/wemockup/index.js");
+__webpack_require__("./resources/assets/js/blocks/example/index.js");
 __webpack_require__("./node_modules/angular-animate/index.js");
 __webpack_require__("./node_modules/angular-loading-bar/index.js");
 __webpack_require__("./node_modules/angular-toastr/index.js");
@@ -57237,7 +57370,7 @@ __webpack_require__("./node_modules/sweetalert/dist/sweetalert.min.js");
 __webpack_require__("./node_modules/angular-sweetalert/SweetAlert.js");
 __webpack_require__("./node_modules/ng-tags-input/build/ng-tags-input.min.js");
 
-angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks.filepicker', 'blocks.wemockup', 'ui.router', 'angular-loading-bar', 'toastr', 'oitozero.ngSweetAlert', 'ngTagsInput']);
+angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks.filepicker', 'blocks.wemockup', 'blocks.example', 'ui.router', 'angular-loading-bar', 'toastr', 'oitozero.ngSweetAlert', 'ngTagsInput']);
 
 __webpack_require__("./resources/assets/js/core/config.js");
 __webpack_require__("./resources/assets/js/core/constants.js");

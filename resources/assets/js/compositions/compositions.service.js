@@ -20,11 +20,42 @@ var angular = require('angular');
         saveNewComposition:saveNewComposition,
         load:load,
         updateComposition:updateComposition,
-        updateProduct:updateProduct
+        updateProduct:updateProduct,
+        removeExample:removeExample,
+        addExample:addExample
       };
       return api;
 
       ////////////
+
+      function removeExample(example) {
+        return $http({
+              url : '/compositions/removeexample/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                example_id: example.id
+              }
+          });
+      }
+
+      function addExample(example,composition) {
+        return $http({
+              url : '/compositions/addexample/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition_id: composition.id,
+                url: example.url,
+                title: example.title,
+                exampletype: example.exampletype
+              }
+          });
+      }
 
 
       function load(composition_id) {

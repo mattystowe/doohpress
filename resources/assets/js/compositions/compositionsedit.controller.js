@@ -49,6 +49,12 @@
         vm.tagAdded = tagAdded;
         vm.tagRemoved = tagRemoved;
 
+
+        vm.removeExample = removeExample;
+        vm.example = {};
+        vm.openNewExample = openNewExample;
+        vm.addExample = addExample;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -63,6 +69,48 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        function removeExample(example,index) {
+          CompositionService.removeExample(example)
+          .then(
+            function(data) {
+            //
+            toastr.success('Success','Example removed');
+            vm.composition.examples.splice(index,1);
+            },
+            function(data) {
+              toastr.error('Error','Could not remove example.');
+            }
+          );
+        }
+
+
+        function openNewExample() {
+          //reset the new example.
+          vm.example = {
+            title: null,
+            url: null,
+            exampletype: 'Video_Vimeo'
+          }
+          $('#newExampleModal').modal('show');
+        }
+
+        function addExample() {
+          $('#newExampleModal').modal('hide');
+          CompositionService.addExample(vm.example,vm.composition)
+          .then(
+            function(data) {
+            //
+            toastr.success('Success','Example added');
+            vm.composition.examples.push(data.data);
+            },
+            function(data) {
+              toastr.error('Error','Could not add example.');
+            }
+          );
+        }
+
 
 
 

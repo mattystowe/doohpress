@@ -85,9 +85,26 @@
         </div>
 
 
+
         <div class="card-box">
-          <button ng-disabled="!vm.isCompositionValid()" ng-click="vm.saveComposition()" class="btn btn-lg btn-primary">Save Composition</button>
+          <h4>Examples</h4>
+          <button ng-click="vm.openNewExample();" class="btn btn-default" type="button">
+            Add
+          </button>
+          <hr />
+
+          <div ng-repeat="example in vm.composition.examples">
+            <button ng-click="vm.removeExample(example,$index);" class="btn btn-icon waves-effect waves-light btn-danger"> <i class="fa fa-remove"></i> </button>
+            <!-- Add example here !-->
+
+            <example showtitle="true" exampletitle="example.title" exampleurl="example.url" exampletype="example.exampletype"></example>
+            <hr />
+          </div>
+
         </div>
+
+
+
 
 
     </div>
@@ -210,7 +227,54 @@
 
 
 
+        <div class="card-box">
+          <button ng-disabled="!vm.isCompositionValid()" ng-click="vm.saveComposition()" class="btn btn-lg btn-primary">Save Composition</button>
+        </div>
+
+
+
     </div>
+
+
+    <div id="newExampleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newExampleModal" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title mt-0" id="myModalLabel">Add example</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="form-horizontal m-t-20">
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input type="text" ng-model="vm.example.title" placeholder="Title" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input type="text" ng-model="vm.example.url" placeholder="Url" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <select class="form-control" ng-model="vm.example.exampletype">
+                                      <option value="Video_Vimeo">Video - Vimeo</option>
+                                      <option value="Video_YouTube">Video - YouTube</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" ng-click="vm.addExample();" class="btn btn-primary waves-effect">Save</button>
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
 
 
 
