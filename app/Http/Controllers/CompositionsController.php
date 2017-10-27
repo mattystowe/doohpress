@@ -64,6 +64,8 @@ class CompositionsController extends Controller
             }
           }
         }
+        //get tags
+        $composition->tags;
 
 
         return $composition;

@@ -10,6 +10,7 @@
           <form class="form-horizontal m-t-20">
 
 
+
               <div class="form-group">
                   <div class="col-12">
                       <input ng-model="vm.composition.name" id="composition_name" type="text" class="form-control" name="composition_name" placeholder="Name" required autofocus>
@@ -92,6 +93,28 @@
     </div>
 
     <div class="col-md-6 col-lg-6">
+
+
+      <div class="card-box">
+        <h4>Tags</h4>
+        <tags-input ng-model="vm.composition.tags"
+        display-property="name"
+        key-property="id"
+        add-from-autocomplete-only="true"
+        on-tag-added="vm.tagAdded($tag)"
+        on-tag-removed="vm.tagRemoved($tag)">
+
+        <auto-complete
+          source="vm.searchTags($query)"
+          display-property="name"
+          key-property="id"
+          >
+          </auto-complete>
+      </tags-input>
+      </div>
+
+
+
         <div class="card-box">
           <h4>Frames</h4>
           <a ng-click="vm.openSelectAFrame();"><button class="btn btn-default" type="button">

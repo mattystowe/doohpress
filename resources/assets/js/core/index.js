@@ -12,6 +12,7 @@ require('angular-loading-bar');
 require('angular-toastr');
 require('sweetalert');
 require('angular-sweetalert');
+require('ng-tags-input');
 
 
 angular.module('app.core', [
@@ -23,7 +24,8 @@ angular.module('app.core', [
     'ui.router',
     'angular-loading-bar',
     'toastr',
-    'oitozero.ngSweetAlert'
+    'oitozero.ngSweetAlert',
+    'ngTagsInput'
 ]);
 
 
@@ -31,3 +33,4 @@ require('./config');
 require('./constants');
 require('./core.route');
 require('./filters');
+require('./tags.service');

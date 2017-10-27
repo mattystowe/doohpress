@@ -7,10 +7,10 @@
         .module('app.compositions')
         .controller('CompositionsEditController', CompositionsEditController);
 
-    CompositionsEditController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','SkuService','WemockupService','FrameService','$stateParams'];
+    CompositionsEditController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','SkuService','WemockupService','FrameService','TagService','$stateParams'];
 
     /* @ngInject */
-    function CompositionsEditController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,SkuService,WemockupService,FrameService,$stateParams) {
+    function CompositionsEditController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,SkuService,WemockupService,FrameService,TagService,$stateParams) {
         var vm = this;
 
         vm.Auth = Auth;
@@ -45,6 +45,10 @@
 
         vm.removeFrame = removeFrame;
 
+        vm.searchTags = searchTags;
+        vm.tagAdded = tagAdded;
+        vm.tagRemoved = tagRemoved;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -59,6 +63,43 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+
+        function searchTags(query) {
+          return TagService.search(query);
+        }
+
+
+        function tagAdded(tag) {
+          TagService.addTagToComposition(tag, vm.composition)
+          .then(
+            function(data) {
+            //
+            //saved - send user somewhere
+            toastr.success('Success','Tag added');
+            },
+            function(data) {
+              toastr.error('Error','Could not save tag to composition.');
+            }
+          );
+        }
+
+
+        function tagRemoved(tag) {
+          TagService.removeTagFromComposition(tag, vm.composition)
+          .then(
+            function(data) {
+            //
+            //saved - send user somewhere
+            toastr.success('Success','Tag removed');
+            },
+            function(data) {
+              toastr.error('Error','Could not remove tag to composition.');
+            }
+          );
+        }
+
 
         //open the select a frame modal
         function openSelectAFrame() {

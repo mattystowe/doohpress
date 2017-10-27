@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/skutypes/getall/','SkusController@getAll');
   $this->get('/wemockup/products/search/{query}',"WemockupController@search");
 
-
+  $this->get('/tags/search/{query}','TagsController@search');
 
   Route::middleware(['superadmin'])->group(function () {
 
@@ -59,6 +59,9 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/compositions/addsku/','SkusController@addSku');
     $this->post('/compositions/updateskutype/','SkusController@updateSkuType');
     $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
+
+    $this->post('/tags/addtocomposition/','TagsController@AddToComposition');
+    $this->post('/tags/removefromcomposition/','TagsController@RemoveFromComposition');
   });
 
 });
