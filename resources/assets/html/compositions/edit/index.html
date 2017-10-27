@@ -102,7 +102,7 @@
             <tr ng-repeat="frame in vm.composition.frames">
               <td>
                 [{{frame.id}}] - {{frame.name}}
-                <button ng-click="vm.removeFrame($index)" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+                <button ng-click="vm.removeFrame(frame, $index)" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
               </td>
             </tr>
           </table>
@@ -135,7 +135,7 @@
             {{vm.composition.wemockup_product.name}}
 
             <hr>
-            <strong>Skus Available [{{vm.composition.wemockup_product.skus.length}}]</strong>
+            <strong>Skus Available</strong>
             <div >
               <table class="table table-striped">
                 <tr ng-repeat="sku in vm.composition.wemockup_product.skus">
@@ -155,18 +155,19 @@
               </table>
 
             </div>
+            <hr />
 
             <strong>Skus Added</strong>
 
             <div >
               <table class="table table-striped">
-                <tr ng-repeat="sku in vm.composition.wemockup_skus">
+                <tr ng-repeat="sku in vm.composition.skus">
                   <td>
                     <button ng-click="vm.removeSkuFromComposition(sku,$index)" class="btn btn-danger" type="button">Remove</button>
                   </td>
                   <td>
                     <form class="form">
-                      <select class="form-control" ng-model="sku.skutype" ng-options="skutype as skutype.name for skutype in vm.skutypes">
+                      <select class="form-control" ng-change="vm.changeSkuType(sku)" ng-model="sku.skutype_id" ng-options="skutype.id as skutype.name for skutype in vm.skutypes">
                       </select>
                     </form>
                   </td>

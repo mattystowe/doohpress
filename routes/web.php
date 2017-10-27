@@ -47,9 +47,14 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/compositions/getcompositioncategories/',"CompositionsController@getCompositionCategories");
   $this->post('/compositions/savenew/','CompositionsController@saveNew');
   $this->post('/compositions/update/','CompositionsController@update');
-  $this->get('/frames/search/{query}',"FramesController@search");
+  $this->get('/frames/search/{query}','FramesController@search');
+  $this->post('/frames/addtocomposition/','FramesController@addToComposition');
+  $this->post('/frames/removefromcomposition/','FramesController@removeFromComposition');
   $this->get('/skutypes/getall/','SkusController@getAll');
-
+  $this->post('/compositions/removesku/','SkusController@removeSku');
+  $this->post('/compositions/addsku/','SkusController@addSku');
+  $this->post('/compositions/updateskutype/','SkusController@updateSkuType');
+  $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
   $this->get('/wemockup/products/search/{query}',"WemockupController@search");
 
 

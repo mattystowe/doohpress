@@ -14,7 +14,10 @@ var angular = require('angular');
     function SkuService($http) {
 
       var api = {
-        getAllTypes:getAllTypes
+        getAllTypes:getAllTypes,
+        removeSku:removeSku,
+        addSku:addSku,
+        updateSkuType:updateSkuType
       };
       return api;
 
@@ -30,6 +33,51 @@ var angular = require('angular');
           });
       }
 
+
+      function removeSku(sku) {
+        return $http({
+              url : '/compositions/removesku/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                sku_id: sku.id,
+                composition_id: sku.composition_id
+              }
+          });
+      }
+
+      function addSku(sku) {
+        return $http({
+              url : '/compositions/addsku/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                sku_id: sku.id,
+                composition_id: sku.composition_id,
+                wemockup_sku: sku.wemockup_sku,
+                skutype_id: sku.skutype_id
+              }
+          });
+      }
+
+
+      function updateSkuType(sku) {
+        return $http({
+              url : '/compositions/updateskutype/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                sku_id: sku.id,
+                skutype_id: sku.skutype_id
+              }
+          });
+      }
 
 
     }

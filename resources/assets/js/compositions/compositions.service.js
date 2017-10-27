@@ -19,7 +19,8 @@ var angular = require('angular');
         getCompositionCategories:getCompositionCategories,
         saveNewComposition:saveNewComposition,
         load:load,
-        updateComposition:updateComposition
+        updateComposition:updateComposition,
+        updateProduct:updateProduct
       };
       return api;
 
@@ -36,6 +37,20 @@ var angular = require('angular');
           });
       }
 
+
+      function updateProduct(composition,product) {
+        return $http({
+              url : '/compositions/updateproduct/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition_id: composition.id,
+                wemockup_product_id: product.id
+              }
+          });
+      }
 
       function updateComposition(composition) {
         var compositionjson = angular.toJson(composition);

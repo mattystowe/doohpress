@@ -8,6 +8,10 @@ use App\Outputtype;
 use App\Compositioncategory;
 use App\Sku;
 use App\Frame;
+use App\Wemockup;
+
+use Log;
+use DB;
 
 
 class CompositionsController extends Controller
@@ -40,9 +44,28 @@ class CompositionsController extends Controller
         } else {
           $composition->published = "false";
         }
-        //get frame
+        //get frames and output types
         $composition->frames;
         $composition->outputtype;
+        //get wemockup product
+        $wemockup = new Wemockup;
+        $wemockup_product = $wemockup->getProduct($composition->wemockup_product_id);
+        $composition->wemockup_product = $wemockup_product;
+        //return skus
+        $composition->skus;
+        foreach ($composition->skus as $sku) {
+          $sku->skutype;
+          //associate the name and description of the wemockup product->sku to this sku
+          //for easy display
+          foreach ($composition->wemockup_product->skus as $wemockup_sku) {
+            if ($wemockup_sku->id == $sku->wemockup_sku) {
+              $sku->name = $wemockup_sku->name;
+              $sku->description = $wemockup_sku->description;
+            }
+          }
+        }
+
+
         return $composition;
       } else {
         return response('Composition not found',404);
@@ -50,6 +73,36 @@ class CompositionsController extends Controller
     }
 
 
+
+    //update a product on existing composition
+    //
+    //remove all existing skus before adding the new product.
+    //
+    //
+    public function updateProduct(Request $request) {
+      $composition = Composition::find($request->input('composition_id'));
+      if ($composition) {
+        $wemockup_product_id = $request->input('wemockup_product_id');
+        //
+        //remove all skus
+        foreach($composition->skus as $sku) {
+          $sku->delete();
+        }
+
+        //
+        //associate the new wemockup product
+        $composition->wemockup_product_id = $wemockup_product_id;
+        if ($composition->save()) {
+          //return updated composition
+          return $composition;
+        } else {
+          return response('Could not update product',422);
+        }
+
+      } else {
+        return response('Could not find composition',404);
+      }
+    }
 
     //Update existing composition
     //
