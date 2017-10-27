@@ -32,31 +32,34 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/team/addnew/','TeamController@addNew');
   $this->post('/team/createinvitation/','TeamController@createInvitation');
   $this->get('/roles/getall/','RoleController@getAllRoles');
-
   $this->get('/countries/getall/','CountriesController@getAll');
   $this->get('/cities/getall/','CitiesController@getAll');
   $this->get('/cities/getallincountry/{country_id}','CitiesController@getAllForCountry');
-  $this->post('/countries/add/','CountriesController@addNew');
-  $this->post('/countries/remove/','CountriesController@remove');
-  $this->post('/cities/add/','CitiesController@addNew');
-  $this->post('/cities/remove/','CitiesController@remove');
-
   $this->get('/compositions/getall/',"CompositionsController@getAll");
   $this->get('/compositions/load/{composition_id}','CompositionsController@load');
   $this->get('/compositions/getoutputtypes/',"CompositionsController@getOutputTypes");
   $this->get('/compositions/getcompositioncategories/',"CompositionsController@getCompositionCategories");
-  $this->post('/compositions/savenew/','CompositionsController@saveNew');
-  $this->post('/compositions/update/','CompositionsController@update');
   $this->get('/frames/search/{query}','FramesController@search');
-  $this->post('/frames/addtocomposition/','FramesController@addToComposition');
-  $this->post('/frames/removefromcomposition/','FramesController@removeFromComposition');
   $this->get('/skutypes/getall/','SkusController@getAll');
-  $this->post('/compositions/removesku/','SkusController@removeSku');
-  $this->post('/compositions/addsku/','SkusController@addSku');
-  $this->post('/compositions/updateskutype/','SkusController@updateSkuType');
-  $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
   $this->get('/wemockup/products/search/{query}',"WemockupController@search");
 
+
+
+  Route::middleware(['superadmin'])->group(function () {
+
+    $this->post('/countries/add/','CountriesController@addNew');
+    $this->post('/countries/remove/','CountriesController@remove');
+    $this->post('/cities/add/','CitiesController@addNew');
+    $this->post('/cities/remove/','CitiesController@remove');
+    $this->post('/compositions/savenew/','CompositionsController@saveNew');
+    $this->post('/compositions/update/','CompositionsController@update');
+    $this->post('/frames/addtocomposition/','FramesController@addToComposition');
+    $this->post('/frames/removefromcomposition/','FramesController@removeFromComposition');
+    $this->post('/compositions/removesku/','SkusController@removeSku');
+    $this->post('/compositions/addsku/','SkusController@addSku');
+    $this->post('/compositions/updateskutype/','SkusController@updateSkuType');
+    $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
+  });
 
 });
 
