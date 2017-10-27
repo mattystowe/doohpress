@@ -56394,11 +56394,38 @@ function CompositionService($http) {
     getAll: getAll,
     getOutputTypes: getOutputTypes,
     getCompositionCategories: getCompositionCategories,
-    saveNewComposition: saveNewComposition
+    saveNewComposition: saveNewComposition,
+    load: load,
+    updateComposition: updateComposition
   };
   return api;
 
   ////////////
+
+
+  function load(composition_id) {
+    return $http({
+      url: '/compositions/load/' + composition_id,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function updateComposition(composition) {
+    var compositionjson = angular.toJson(composition);
+    return $http({
+      url: '/compositions/update/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition: compositionjson
+      }
+    });
+  }
 
   function saveNewComposition(composition) {
     var compositionjson = angular.toJson(composition);
@@ -56462,24 +56489,104 @@ CompositionsEditController.$inject = ['$scope', '$state', 'AuthService', 'toastr
 
 /* @ngInject */
 function CompositionsEditController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams) {
-    var vm = this;
+  var vm = this;
 
-    vm.Auth = Auth;
+  vm.Auth = Auth;
 
-    vm.composition = {};
+  vm.composition = {};
+  vm.outputtypes = [];
+  vm.compositioncategories = [];
 
-    /////////////////////////////////////////////////
-    activate();
+  vm.isCompositionValid = isCompositionValid;
+  vm.saveComposition = saveComposition;
 
-    function activate() {
-        console.log($stateParams.composition_id);
-    }
+  /////////////////////////////////////////////////
+  activate();
 
-    function Auth() {
-        return AuthService;
-    }
-    /////////////////////////////////////////////////
+  function activate() {
+    loadComposition($stateParams.composition_id);
+    getOutputTypes();
+    getCompositionCategories();
+    //getSkuTypes();
+  }
 
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  //process saving of the composition
+  //
+  //
+  //
+  function saveComposition() {
+    CompositionService.updateComposition(vm.composition).then(function (data) {
+      //
+      //saved - send user somewhere
+      toastr.success('Success', 'Saved!');
+    }, function (data) {
+      toastr.error('Error', 'There was an error saving your composition');
+    });
+  }
+
+  function isCompositionValid() {
+    var valid = true;
+
+    return valid;
+  }
+
+  function getOutputTypes() {
+    CompositionService.getOutputTypes().then(function (data) {
+      if (data.status == 200) {
+        vm.outputtypes = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+
+  function getCompositionCategories() {
+    CompositionService.getCompositionCategories().then(function (data) {
+      if (data.status == 200) {
+
+        vm.compositioncategories = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+
+  function getSkuTypes() {
+    SkuService.getAllTypes().then(function (data) {
+      if (data.status == 200) {
+
+        vm.skutypes = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error loading sku types');
+      }
+    });
+  }
+
+  //Load the composition id
+  //
+  //
+  //
+  function loadComposition(composition_id) {
+    CompositionService.load(composition_id).then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.composition = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading composition.');
+    });
+  }
 }
 
 /***/ }),

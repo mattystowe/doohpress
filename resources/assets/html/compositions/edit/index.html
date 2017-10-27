@@ -1,3 +1,264 @@
 <div ng-controller="CompositionsEditController as vm">
 
+
+  <div class="row">
+
+    <div class="col-md-6 col-lg-6">
+        <div class="card-box">
+          <h4>Details</h4>
+
+          <form class="form-horizontal m-t-20">
+
+
+              <div class="form-group">
+                  <div class="col-12">
+                      <input ng-model="vm.composition.name" id="composition_name" type="text" class="form-control" name="composition_name" placeholder="Name" required autofocus>
+
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-12">
+                      <textarea placeholder="Description" ng-model="vm.composition.description" class="form-control"></textarea>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-12">
+                    <small>Select output type:</small>
+                    <select ng-options="outputtype.id as outputtype.name for outputtype in vm.outputtypes" class="form-control" ng-model="vm.composition.outputtype_id">
+                    </select>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-12">
+                    <small>Select category:</small>
+                    <select ng-options="compositioncategory.id as compositioncategory.name for compositioncategory in vm.compositioncategories" class="form-control" ng-model="vm.composition.compositioncategory_id">
+                    </select>
+                  </div>
+              </div>
+
+
+          </form>
+
+
+
+        </div>
+
+        <div class="card-box">
+          <h4>Publish</h4>
+          <form>
+            <div class="form-group">
+                <div class="col-12">
+                  <select class="form-control" ng-model="vm.composition.published">
+                    <option value="true" selected>Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="card-box">
+          <h4>Location</h4>
+          <form>
+            <div class="form-group">
+                <div class="col-12">
+                  <div class="form-group">
+                      <div class="col-12">
+                          <input ng-model="vm.composition.geo_lat" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
+
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-12">
+                          <input ng-model="vm.composition.geo_long" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
+
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="card-box">
+          <button ng-disabled="!vm.isCompositionValid()" ng-click="vm.saveComposition()" class="btn btn-lg btn-primary">Save Composition</button>
+        </div>
+
+
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <div class="card-box">
+          <h4>Frames</h4>
+          <a ng-click="vm.openSelectAFrame();"><button class="btn btn-default" type="button">
+            Add
+          </button></a>
+
+          <table class="table table-striped">
+            <tr ng-repeat="frame in vm.composition.frames">
+              <td>
+                [{{frame.id}}] - {{frame.name}}
+                <button ng-click="vm.removeFrame($index)" class="btn btn-xs btn-danger"><span class="fa fa-window-close"></span></button>
+              </td>
+            </tr>
+          </table>
+
+        </div>
+
+
+        <div class="card-box">
+          <h4>Images</h4>
+          <small>Thumbnail</small>
+          <imagepicker dimx="300" dimy="300" aspect="16/9" path="'/compositions/thumbnails/'" callback="vm.handleThumbnail(file);"></imagepicker>
+          <img class="img img-responsive" src="{{vm.composition.thumbnail}}"/>
+          <hr />
+          <small>Main Image</small>
+          <imagepicker dimx="600" dimy="600" aspect="16/9" path="'/compositions/images/'" callback="vm.handleImage(file);"></imagepicker>
+
+          <img class="img img-responsive" src="{{vm.composition.image}}"/>
+
+        </div>
+
+
+        <div class="card-box">
+          <h4>Product</h4>
+          <a ng-click="vm.openSelectAProduct();"><button class="btn btn-default" type="button">
+            Link Product
+          </button></a>
+
+          <div ng-if="vm.composition.wemockup_product">
+            <img class="img img-responsive" src="{{vm.composition.wemockup_product.image}}"></img>
+            {{vm.composition.wemockup_product.name}}
+
+            <hr>
+            <strong>Skus Available [{{vm.composition.wemockup_product.skus.length}}]</strong>
+            <div >
+              <table class="table table-striped">
+                <tr ng-repeat="sku in vm.composition.wemockup_product.skus">
+                  <td>
+                    <button ng-click="vm.addSkuToComposition(sku,$index)" ng-disabled="!sku.skutype" class="btn btn-default" type="button">Add</button>
+                  </td>
+                  <td>
+                    <form class="form">
+                      <select class="form-control" ng-model="sku.skutype" ng-options="skutype as skutype.name for skutype in vm.skutypes">
+                      </select>
+                    </form>
+                  </td>
+                  <td>
+                    {{sku.name}} - {{sku.description}}
+                  </td>
+                <tr>
+              </table>
+
+            </div>
+
+            <strong>Skus Added</strong>
+
+            <div >
+              <table class="table table-striped">
+                <tr ng-repeat="sku in vm.composition.wemockup_skus">
+                  <td>
+                    <button ng-click="vm.removeSkuFromComposition(sku,$index)" class="btn btn-danger" type="button">Remove</button>
+                  </td>
+                  <td>
+                    <form class="form">
+                      <select class="form-control" ng-model="sku.skutype" ng-options="skutype as skutype.name for skutype in vm.skutypes">
+                      </select>
+                    </form>
+                  </td>
+                  <td>
+                    {{sku.name}} - {{sku.description}}
+                  </td>
+                <tr>
+              </table>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <div id="selectProductModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectProductModal" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title mt-0" id="myModalLabel">Search products</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="form-horizontal m-t-20">
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input ng-change="vm.searchProducts(vm.productsearch);" type="text" placeholder="Search wemockup" ng-model="vm.productsearch" class="form-control" />
+                                </div>
+                            </div>
+                            <hr />
+                            <div ng-repeat="product in vm.product_search_results">
+                              [{{product.id}}] {{product.name}}
+                              <button ng-click="vm.selectProduct(product);" class="btn btn-success waves-effect" type="button">Add</button>
+                            </div>
+
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+
+
+    <div id="selectFrameModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectFrameModal" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title mt-0" id="myModalLabel">Add frame to composition</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="form-horizontal m-t-20">
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input ng-change="vm.searchFrames(vm.framesearch);" type="text" placeholder="Search frames" ng-model="vm.framesearch" class="form-control" />
+                                </div>
+                            </div>
+                            <hr />
+                            <div ng-repeat="frame in vm.frame_search_results">
+                              [{{frame.id}}] {{frame.name}}
+                              <button ng-click="vm.addFrameToComposition(frame);" class="btn btn-success waves-effect" type="button">Add</button>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+
+
+
+
+  <!-- end row -->
+  </div>
+
+
+
+
 </div>

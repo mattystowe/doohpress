@@ -17,11 +17,39 @@ var angular = require('angular');
         getAll:getAll,
         getOutputTypes:getOutputTypes,
         getCompositionCategories:getCompositionCategories,
-        saveNewComposition:saveNewComposition
+        saveNewComposition:saveNewComposition,
+        load:load,
+        updateComposition:updateComposition
       };
       return api;
 
       ////////////
+
+
+      function load(composition_id) {
+        return $http({
+              url : '/compositions/load/' + composition_id,
+              method : 'GET',
+              headers : {
+                'Content-Type' : 'application/json'
+              }
+          });
+      }
+
+
+      function updateComposition(composition) {
+        var compositionjson = angular.toJson(composition);
+        return $http({
+              url : '/compositions/update/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition: compositionjson
+              }
+          });
+      }
 
       function saveNewComposition(composition) {
         var compositionjson = angular.toJson(composition);

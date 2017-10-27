@@ -42,9 +42,11 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/cities/remove/','CitiesController@remove');
 
   $this->get('/compositions/getall/',"CompositionsController@getAll");
+  $this->get('/compositions/load/{composition_id}','CompositionsController@load');
   $this->get('/compositions/getoutputtypes/',"CompositionsController@getOutputTypes");
   $this->get('/compositions/getcompositioncategories/',"CompositionsController@getCompositionCategories");
   $this->post('/compositions/savenew/','CompositionsController@saveNew');
+  $this->post('/compositions/update/','CompositionsController@update');
   $this->get('/frames/search/{query}',"FramesController@search");
   $this->get('/skutypes/getall/','SkusController@getAll');
 
