@@ -41,4 +41,8 @@ class Composition extends Model
         return $this->morphToMany('App\Tag', 'taggable');
     }
 
+    public function examples() {
+      return $this->hasMany('App\Example');
+    }
+
 }

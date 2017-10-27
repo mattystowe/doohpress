@@ -67,6 +67,9 @@ class CompositionsController extends Controller
         //get tags
         $composition->tags;
 
+        //examples
+        $composition->examples;
+
 
         return $composition;
       } else {

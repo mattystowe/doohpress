@@ -14,6 +14,7 @@ use App\Compositioncategory;
 use App\Composition;
 use App\Sku;
 use App\Tag;
+use App\Example;
 
 
 class FrameSeeder extends Seeder
@@ -144,6 +145,15 @@ class FrameSeeder extends Seeder
             $tag_test1->id,
             $tag_test2->id,
             $tag_test3->id
+          ]);
+
+
+          //Examples
+          $example_1 = Example::create([
+            'title'=>'Test example',
+            'composition_id'=>$Composition_1->id,
+            'exampletype'=>'Video_Vimeo',
+            'url'=>'tp://player.vimeo.com/video/69988283'
           ]);
 
 
