@@ -17,11 +17,26 @@ var angular = require('angular');
         getAllTypes:getAllTypes,
         removeSku:removeSku,
         addSku:addSku,
-        updateSkuType:updateSkuType
+        updateSkuType:updateSkuType,
+        saveOrdering:saveOrdering
       };
       return api;
 
       ////////////
+
+      function saveOrdering(orderValues) {
+        return $http({
+              url : '/compositions/skuorder/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                orderValues: orderValues
+              }
+          });
+      }
+
 
       function getAllTypes() {
         return $http({
@@ -59,7 +74,8 @@ var angular = require('angular');
                 sku_id: sku.id,
                 composition_id: sku.composition_id,
                 wemockup_sku: sku.wemockup_sku,
-                skutype_id: sku.skutype_id
+                skutype_id: sku.skutype_id,
+                priority: sku.priority
               }
           });
       }

@@ -55,6 +55,10 @@
         vm.openNewExample = openNewExample;
         vm.addExample = addExample;
 
+        vm.dragControlListeners = {
+          orderChanged: SkuOrderChanged
+        }
+
         /////////////////////////////////////////////////
         activate();
 
@@ -69,6 +73,34 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        function SkuOrderChanged(event) {
+
+                  var orderValues = [];
+                  vm.composition.skus.forEach(function(sku,key){
+                    orderValues.push({
+                      'sku_id': sku.id,
+                      'priority': key
+                    });
+                    sku.priority = key;
+                  });
+                  saveNewSkuOrder(orderValues);
+
+        }
+
+        function saveNewSkuOrder(orderValues) {
+          SkuService.saveOrdering(orderValues)
+          .then(
+            function(data) {
+            //
+            toastr.success('Success','Sku order saved');
+            },
+            function(data) {
+              toastr.error('Error','Could not save sku order.');
+            }
+          );
+        }
 
 
         function removeExample(example,index) {
@@ -323,7 +355,8 @@
               var newSku = {
                 composition_id: vm.composition.id,
                 wemockup_sku: sku.id,
-                skutype_id: sku.skutype.id
+                skutype_id: sku.skutype.id,
+                priority: vm.composition.skus.length+1
               }
 
 

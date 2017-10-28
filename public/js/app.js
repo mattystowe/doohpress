@@ -57931,8 +57931,11 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   vm.openNewExample = openNewExample;
   vm.addExample = addExample;
 
-  /////////////////////////////////////////////////
-  activate();
+  vm.dragControlListeners = {
+    orderChanged: SkuOrderChanged
+
+    /////////////////////////////////////////////////
+  };activate();
 
   function activate() {
     loadComposition($stateParams.composition_id);
@@ -57946,6 +57949,28 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   }
   /////////////////////////////////////////////////
 
+
+  function SkuOrderChanged(event) {
+
+    var orderValues = [];
+    vm.composition.skus.forEach(function (sku, key) {
+      orderValues.push({
+        'sku_id': sku.id,
+        'priority': key
+      });
+      sku.priority = key;
+    });
+    saveNewSkuOrder(orderValues);
+  }
+
+  function saveNewSkuOrder(orderValues) {
+    SkuService.saveOrdering(orderValues).then(function (data) {
+      //
+      toastr.success('Success', 'Sku order saved');
+    }, function (data) {
+      toastr.error('Error', 'Could not save sku order.');
+    });
+  }
 
   function removeExample(example, index) {
     CompositionService.removeExample(example).then(function (data) {
@@ -58127,7 +58152,8 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
     var newSku = {
       composition_id: vm.composition.id,
       wemockup_sku: sku.id,
-      skutype_id: sku.skutype.id
+      skutype_id: sku.skutype.id,
+      priority: vm.composition.skus.length + 1
     };
 
     if (!skuAlreadyAdded(newSku)) {
@@ -58429,11 +58455,25 @@ function SkuService($http) {
     getAllTypes: getAllTypes,
     removeSku: removeSku,
     addSku: addSku,
-    updateSkuType: updateSkuType
+    updateSkuType: updateSkuType,
+    saveOrdering: saveOrdering
   };
   return api;
 
   ////////////
+
+  function saveOrdering(orderValues) {
+    return $http({
+      url: '/compositions/skuorder/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        orderValues: orderValues
+      }
+    });
+  }
 
   function getAllTypes() {
     return $http({
@@ -58470,7 +58510,8 @@ function SkuService($http) {
         sku_id: sku.id,
         composition_id: sku.composition_id,
         wemockup_sku: sku.wemockup_sku,
-        skutype_id: sku.skutype_id
+        skutype_id: sku.skutype_id,
+        priority: sku.priority
       }
     });
   }

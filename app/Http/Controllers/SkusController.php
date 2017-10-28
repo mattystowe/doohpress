@@ -39,6 +39,7 @@ class SkusController extends Controller
       $sku->composition_id = $request->input('composition_id');
       $sku->wemockup_sku = $request->input('wemockup_sku');
       $sku->skutype_id = $request->input('skutype_id');
+      $sku->priority = $request->input('priority');
       if ($sku->save()) {
         return $sku;
       } else {

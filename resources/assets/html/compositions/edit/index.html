@@ -200,22 +200,35 @@
             <strong>Skus Added</strong>
 
             <div >
-              <table class="table table-striped">
-                <tr ng-repeat="sku in vm.composition.skus">
-                  <td>
-                    <button ng-click="vm.removeSkuFromComposition(sku,$index)" class="btn btn-danger" type="button">Remove</button>
-                  </td>
-                  <td>
-                    <form class="form">
-                      <select class="form-control" ng-change="vm.changeSkuType(sku)" ng-model="sku.skutype_id" ng-options="skutype.id as skutype.name for skutype in vm.skutypes">
-                      </select>
-                    </form>
-                  </td>
-                  <td>
-                    {{sku.name}} - {{sku.description}}
-                  </td>
-                <tr>
-              </table>
+
+              <ul data-as-sortable="vm.dragControlListeners" data-ng-model="vm.composition.skus" class="list-unstyled">
+                <li ng-repeat="sku in vm.composition.skus" data-as-sortable-item>
+                  <hr />
+                      <div class="row">
+                        <div class="col-1">
+                          <a><span data-as-sortable-item-handle class="fa fa-arrows"></span></a>
+                        </div>
+
+                        <div class="col-1">
+                          <button ng-click="vm.removeSkuFromComposition(sku,$index)" class="btn btn-danger" type="button"><span class="fa fa-minus-square"></span></button>
+                        </div>
+
+                        <div class="col-5">
+                          <form class="form">
+                            <select class="form-control" ng-change="vm.changeSkuType(sku)" ng-model="sku.skutype_id" ng-options="skutype.id as skutype.name for skutype in vm.skutypes">
+                            </select>
+                          </form>
+                        </div>
+
+                        <div class="col-5">
+                          {{sku.name}} - {{sku.description}}
+                        </div>
+                      </div>
+
+
+
+                </li>
+              </ul>
 
             </div>
 

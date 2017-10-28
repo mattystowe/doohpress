@@ -226,4 +226,19 @@ class CompositionsController extends Controller
     }
 
 
+    //save ordering of skus on a composition
+    //
+    //
+    //
+    public function saveSkuOrder(Request $request) {
+      $orderValues = $request->input('orderValues');
+      foreach ($orderValues as $item) {
+        $sku = Sku::findOrFail($item['sku_id']);
+        $sku->priority = $item['priority'];
+        $sku->save();
+      }
+      return response('Saved',200);
+    }
+
+
 }

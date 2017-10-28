@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/compositions/updateproduct/','CompositionsController@updateProduct');
     $this->post('/compositions/addexample/','CompositionsController@addExample');
     $this->post('/compositions/removeexample/','CompositionsController@removeExample');
+    $this->post('/compositions/skuorder/','CompositionsController@saveSkuOrder');
 
     $this->post('/tags/addtocomposition/','TagsController@AddToComposition');
     $this->post('/tags/removefromcomposition/','TagsController@RemoveFromComposition');
