@@ -2,12 +2,13 @@
 
 var angular = require('angular');
 
-
+require('lodash');
 require('../blocks/router');
 require('../blocks/auth');
 require('../blocks/filepicker');
 require('../blocks/wemockup');
 require('../blocks/example');
+require('../blocks/mapping');
 require('angular-animate');
 require('angular-loading-bar');
 require('angular-toastr');
@@ -17,6 +18,8 @@ require('ng-tags-input');
 require('ng-sortable');
 
 
+
+
 angular.module('app.core', [
     'ngAnimate',
     'blocks.router',
@@ -24,6 +27,7 @@ angular.module('app.core', [
     'blocks.filepicker',
     'blocks.wemockup',
     'blocks.example',
+    'blocks.mapping',
     'ui.router',
     'angular-loading-bar',
     'toastr',

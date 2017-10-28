@@ -69,19 +69,22 @@
                 <div class="col-12">
                   <div class="form-group">
                       <div class="col-12">
-                          <input ng-model="vm.composition.geo_lat" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
+                          <input ng-model="vm.composition.latitude" id="composition_lat" type="text" class="form-control" name="composition_lat" placeholder="Latitude" required autofocus>
 
                       </div>
                   </div>
                   <div class="form-group">
                       <div class="col-12">
-                          <input ng-model="vm.composition.geo_long" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
+                          <input ng-model="vm.composition.longitude" id="composition_long" type="text" class="form-control" name="composition_long" placeholder="Longitude" required autofocus>
 
                       </div>
                   </div>
                 </div>
             </div>
           </form>
+
+          <locationpicker marker="vm.composition"></locationpicker>
+
         </div>
 
 

@@ -12,7 +12,7 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        
+
         <!-- App css -->
         <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ mix('css/theme.css') }}" rel="stylesheet" type="text/css" />

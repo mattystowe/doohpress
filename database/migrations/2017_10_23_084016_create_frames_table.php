@@ -21,8 +21,8 @@ class CreateFramesTable extends Migration
             $table->integer('city_id');
             $table->string('address')->nullable();
             $table->string('postcode')->nullable();
-            $table->string('geo_lat');
-            $table->string('geo_long');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->integer('frametype_id');
             $table->integer('frameformat_id');
             $table->timestamps();

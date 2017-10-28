@@ -67,8 +67,8 @@ class FrameSeeder extends Seeder
           $Frame->city_id = $City_London->id;
           $Frame->address = 'Some address goes here';
           $Frame->postcode = 'LN1 1LN';
-          $Frame->geo_lat = '51.50460217';
-          $Frame->geo_long = '-0.01955867';
+          $Frame->latitude = '51.50460217';
+          $Frame->longitude = '-0.01955867';
           $Frame->frametype_id = $Frametype_DOOH->id;
           $Frame->frameformat_id = $Frameformat_1->id;
           $Frame->save();
@@ -103,8 +103,8 @@ class FrameSeeder extends Seeder
             'description'=>'Description goes here',
             'outputtype_id'=>$Outputtype_video->id,
             'compositioncategory_id'=>$CompCategory_walking_steadycam->id,
-            'geo_lat'=>'51.50460217',
-            'geo_long'=>'-0.01955867',
+            'latitude'=>'51.50460217',
+            'longitude'=>'-0.01955867',
             'published'=>true,
             'image'=>'someimage',
             'thumbnail'=>'somethumbnail',

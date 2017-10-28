@@ -122,8 +122,8 @@ class CompositionsController extends Controller
         $composition->description = $composition_data->description;
         $composition->compositioncategory_id = $composition_data->compositioncategory_id;
         $composition->outputtype_id = $composition_data->outputtype_id;
-        $composition->geo_lat = $composition_data->geo_lat;
-        $composition->geo_long = $composition_data->geo_long;
+        $composition->latitude = $composition_data->latitude;
+        $composition->longitude = $composition_data->longitude;
         if ($composition_data->published == 'true') { $composition->published = true; } else { $composition->published = false; }
         $composition->image = $composition_data->image;
         $composition->thumbnail = $composition_data->thumbnail;
@@ -154,8 +154,8 @@ class CompositionsController extends Controller
         'description'=>$composition_data->description,
         'outputtype_id'=>$composition_data->outputtype->id,
         'compositioncategory_id'=>$composition_data->compositioncategory->id,
-        'geo_lat'=>$composition_data->geo_lat,
-        'geo_long'=>$composition_data->geo_long,
+        'latitude'=>$composition_data->latitude,
+        'longitude'=>$composition_data->longitude,
         'published'=>$published,
         'image'=>$composition_data->image,
         'thumbnail'=>$composition_data->thumbnail,

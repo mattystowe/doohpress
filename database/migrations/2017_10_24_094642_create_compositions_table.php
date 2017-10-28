@@ -19,8 +19,8 @@ class CreateCompositionsTable extends Migration
             $table->string('description',255)->nullable();
             $table->integer('outputtype_id');
             $table->integer('compositioncategory_id');
-            $table->string('geo_lat')->nullable();
-            $table->string('geo_long')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->boolean('published')->default(true);
             $table->string('image',255);
             $table->string('thumbnail',255);
