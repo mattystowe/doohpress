@@ -33,7 +33,7 @@ class Composition extends Model
     }
 
     public function skus() {
-      return $this->hasMany('App\Sku');
+      return $this->hasMany('App\Sku')->orderBy('priority');;
     }
 
     public function tags()
@@ -44,5 +44,7 @@ class Composition extends Model
     public function examples() {
       return $this->hasMany('App\Example');
     }
+
+
 
 }

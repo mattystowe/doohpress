@@ -168,7 +168,8 @@ class CompositionsController extends Controller
           $sku = Sku::create([
             'composition_id'=>$Composition->id,
             'skutype_id'=>$comp_sku->skutype->id,
-            'wemockup_sku'=>$comp_sku->id
+            'wemockup_sku'=>$comp_sku->id,
+            'priority'=>$comp_sku->priority
           ]);
         }
 

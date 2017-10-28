@@ -119,18 +119,21 @@ class FrameSeeder extends Seeder
           $Sku_1->composition_id = $Composition_1->id;
           $Sku_1->skutype_id = $Skutype_video_medium->id;
           $Sku_1->wemockup_sku = '1';
+          $Sku_1->priority = 1;
           $Sku_1->save();
 
           $Sku_2 = new Sku;
           $Sku_2->composition_id = $Composition_1->id;
           $Sku_2->skutype_id = $Skutype_video_large->id;
           $Sku_2->wemockup_sku = '2';
+          $Sku_2->priority = 2;
           $Sku_2->save();
 
           $Sku_3 = new Sku;
           $Sku_3->composition_id = $Composition_1->id;
           $Sku_3->skutype_id = $Skutype_video_xlarge->id;
           $Sku_3->wemockup_sku = '3';
+          $Sku_3->priority = 3;
           $Sku_3->save();
 
 

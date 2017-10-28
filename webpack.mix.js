@@ -31,7 +31,8 @@ mix.styles([
     './node_modules/angular-loading-bar/build/loading-bar.min.css',
     './node_modules/angular-toastr/dist/angular-toastr.min.css',
     './node_modules/ng-tags-input/build/ng-tags-input.min.css',
-    './node_modules/ng-tags-input/build/ng-tags-input.bootstrap.css'
+    './node_modules/ng-tags-input/build/ng-tags-input.bootstrap.css',
+    './node_modules/ng-sortable/dist/ng-sortable.min.css'
 
 ], 'public/css/theme.css').version();
 

@@ -14,6 +14,7 @@ require('angular-toastr');
 require('sweetalert');
 require('angular-sweetalert');
 require('ng-tags-input');
+require('ng-sortable');
 
 
 angular.module('app.core', [
@@ -27,7 +28,8 @@ angular.module('app.core', [
     'angular-loading-bar',
     'toastr',
     'oitozero.ngSweetAlert',
-    'ngTagsInput'
+    'ngTagsInput',
+    'as.sortable'
 ]);
 
 

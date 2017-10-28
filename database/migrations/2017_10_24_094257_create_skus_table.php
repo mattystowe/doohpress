@@ -18,6 +18,7 @@ class CreateSkusTable extends Migration
             $table->integer('composition_id');
             $table->integer('skutype_id');
             $table->string('wemockup_sku');
+            $table->integer('priority');
             $table->timestamps();
         });
     }

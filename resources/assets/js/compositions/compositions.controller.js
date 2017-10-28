@@ -62,6 +62,11 @@
         vm.isCompositionValid = isCompositionValid;
         vm.saveComposition = saveComposition;
 
+        vm.dragControlListeners = {
+          orderChanged: SkuOrderChanged
+        }
+
+
         /////////////////////////////////////////////////
         activate();
 
@@ -77,6 +82,31 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        function SkuOrderChanged(event) {
+
+                  var orderValues = [];
+                  vm.composition.wemockup_skus.forEach(function(sku,key){
+                    orderValues.push({
+                      'sku_id': sku.id,
+                      'priority': key
+                    });
+                    sku.priority = key;
+                  });
+                  //saveNewInputOrder(orderValues);
+
+        }
+
+        /*function saveNewInputOrder(orderValues) {
+                  ProductsService.saveInputOrdering(orderValues, vm.product)
+                  .then(function(data){
+                    if (data.status != 200) {
+                      showError('Could not save ordering.');
+                    }
+                  });
+        }*/
+
 
 
         //process saving of the composition
@@ -108,6 +138,7 @@
 
 
         function addSkuToComposition(sku,index) {
+          sku.priority = vm.composition.wemockup_skus.length +1;
           //add to composion skus -
           vm.composition.wemockup_skus.push(sku);
           //remove from available skus
