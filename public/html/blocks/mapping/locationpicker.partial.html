@@ -1,0 +1,14 @@
+
+<style>
+.angular-google-map-container { height: 400px; }
+</style>
+
+<div class="card-box">
+    <ui-gmap-google-map center="vm.map.center" zoom="vm.map.zoom" options="vm.map.options" events="vm.map.events">
+      <ui-gmap-marker
+        idKey="1"
+        coords="vm.marker"
+        >
+      </ui-gmap-marker>
+    </ui-gmap-google-map>
+</div>

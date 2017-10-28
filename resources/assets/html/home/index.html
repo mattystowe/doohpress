@@ -22,9 +22,11 @@
 
       <div class="col-lg-12">
           <div class="card-box">
-            Role = {{vm.Auth().getRole().name}}
-            <br>
-            <button ng-if="vm.Auth().isAllowed('teams.members.add')">test</button>
+
+            {{vm.marker.latitude}}, {{vm.marker.longitude}}
+            <locationpicker center="vm.marker" marker="vm.marker"></locationpicker>
+
+
           </div>
           <!-- /Portlet -->
 
