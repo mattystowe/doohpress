@@ -11,8 +11,7 @@
             restrict: 'EA',
             templateUrl: '/html/blocks/mapping/locationpicker.partial.html',
             scope: {
-              marker: '=',
-              center: '='
+              marker: '='
             },
             controller: LocationPickerController,
             controllerAs: 'vm',
@@ -34,6 +33,10 @@
 
 
 
+        vm.marker = {
+          latitude:51.50104924156018, //default london
+          longitude:-0.12441158294677734
+        };
 
         vm.map = {
           zoom: 14,
@@ -58,8 +61,12 @@
         });
 
         function activate() {
-          vm.map.center.latitude = vm.center.latitude;
-          vm.map.center.longitude = vm.center.longitude;
+          if (vm.marker.latitude != null) {
+            vm.map.center.latitude = vm.marker.latitude;
+            vm.map.center.longitude = vm.marker.longitude;
+          }
+
+
         }
         /////////////////////////////////////////////
 

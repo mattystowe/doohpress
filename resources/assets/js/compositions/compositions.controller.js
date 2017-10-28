@@ -32,8 +32,8 @@
           published: 'true',
           wemockup_product: null,
           wemockup_skus: [],
-          geo_lat:null,
-          geo_long:null
+          latitude:null,
+          longitude:null
         }; // placeholder for new comp
 
 
