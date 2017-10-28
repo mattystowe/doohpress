@@ -1,0 +1,146 @@
+<div class="row">
+
+  <div class="col-md-6 col-lg-6">
+      <div class="card-box">
+        <h4>Details</h4>
+
+        <form class="form-horizontal m-t-20">
+
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.name" type="text" class="form-control" name="frame_name" placeholder="Name" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <textarea placeholder="Description" ng-model="vm.frame.description" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Owner:</small>
+                  <select ng-options="owner.id as owner.name for owner in vm.owners" class="form-control" ng-model="vm.frame.owner_id">
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>City:</small>
+                  <select class="form-control" ng-model="vm.frame.city_id">
+                    <optgroup ng-repeat="country in vm.countries" label="{{country.name}}">
+                      <option ng-repeat="city in country.cities" ng-selected="city.id == vm.frame.city_id" value="{{city.id}}">{{city.name}}</option>
+                    </optgroup>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.address" type="text" class="form-control" name="frame_address" placeholder="Address" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.postcode" type="text" class="form-control" name="frame_postcode" placeholder="Postcode/Zipcode" required autofocus>
+
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Frame Type:</small>
+                  <select ng-options="frametype.id as frametype.name for frametype in vm.frametypes" class="form-control" ng-model="vm.frame.frametype_id">
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Frame Format:</small>
+                  <select ng-options="frameformat.id as frameformat.name for frameformat in vm.frameformats" class="form-control" ng-model="vm.frame.frameformat_id">
+                  </select>
+                </div>
+            </div>
+
+
+
+
+        </form>
+
+
+
+      </div>
+
+
+      <div class="card-box">
+        <button ng-disabled="!vm.isFrameValid()" ng-click="vm.updateFrame()" class="btn btn-lg btn-primary">Save Frame</button>
+      </div>
+
+
+
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+
+
+    <div class="card-box">
+      <h4>Images</h4>
+      <small>Thumbnail</small>
+      <imagepicker dimx="300" dimy="300" aspect="16/9" path="'/frames/thumbnails/'" callback="vm.handleThumbnail(file);"></imagepicker>
+      <img class="img img-responsive" src="{{vm.frame.thumbnail}}"/>
+      <hr />
+      <small>Main Image</small>
+      <imagepicker dimx="600" dimy="600" aspect="16/9" path="'/frames/images/'" callback="vm.handleImage(file);"></imagepicker>
+
+      <img class="img img-responsive" src="{{vm.frame.image}}"/>
+
+    </div>
+
+
+
+    <div class="card-box">
+      <h4>Location</h4>
+      <form>
+        <div class="form-group">
+            <div class="col-12">
+              <div class="form-group">
+                  <div class="col-12">
+                      <input ng-model="vm.frame.latitude" id="frame_lat" type="text" class="form-control" name="frame_lat" placeholder="Latitude" required autofocus>
+
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-12">
+                      <input ng-model="vm.frame.longitude" id="frame_long" type="text" class="form-control" name="frame_long" placeholder="Longitude" required autofocus>
+
+                  </div>
+              </div>
+            </div>
+        </div>
+      </form>
+
+      <locationpicker marker="vm.frame"></locationpicker>
+
+    </div>
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+<!-- end row -->
+</div>

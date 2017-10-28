@@ -13,6 +13,12 @@ class CitiesController extends Controller
       return $cities;
     }
 
+    //get structured cities by country group
+    function getAllGroupedByCountry() {
+      $countries = Country::with('cities')->get();
+      return $countries;
+    }
+
     function getAllForCountry($country_id) {
       $country = Country::find($country_id);
       if ($country) {

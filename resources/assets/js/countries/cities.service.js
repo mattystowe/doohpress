@@ -15,6 +15,7 @@ var angular = require('angular');
 
       var api = {
         getAll:getAll,
+        getAllGroupedByCountry:getAllGroupedByCountry,
         getAllInCountry:getAllInCountry,
         addNew:addNew,
         removeCity:removeCity
@@ -22,6 +23,16 @@ var angular = require('angular');
       return api;
 
       ////////////
+
+      function getAllGroupedByCountry() {
+        return $http({
+              url : '/cities/getallgroupedbycountry/',
+              method : 'GET',
+              headers : {
+                'Content-Type' : 'application/json'
+              }
+          });
+      }
 
       function getAll() {
         return $http({

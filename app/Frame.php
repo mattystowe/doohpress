@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Frame extends Model
 {
+
+
+  protected $fillable = [
+      'name',
+      'description',
+      'owner_id',
+      'city_id',
+      'address',
+      'postcode',
+      'latitude',
+      'longitude',
+      'frametype_id',
+      'frameformat_id',
+      'image',
+      'thumbnail'
+  ];
+
     public function owner() {
       return $this->belongsTo('App\Owner');
     }

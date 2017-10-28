@@ -25,6 +25,8 @@ class CreateFramesTable extends Migration
             $table->string('longitude');
             $table->integer('frametype_id');
             $table->integer('frameformat_id');
+            $table->string('image');
+            $table->string('thumbnail');
             $table->timestamps();
         });
     }

@@ -71,6 +71,8 @@ class FrameSeeder extends Seeder
           $Frame->longitude = '-0.01955867';
           $Frame->frametype_id = $Frametype_DOOH->id;
           $Frame->frameformat_id = $Frameformat_1->id;
+          $Frame->image = 'someimage';
+          $Frame->thumbnail = 'somethumbnail';
           $Frame->save();
 
 

@@ -35,15 +35,20 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/countries/getall/','CountriesController@getAll');
   $this->get('/cities/getall/','CitiesController@getAll');
   $this->get('/cities/getallincountry/{country_id}','CitiesController@getAllForCountry');
+  $this->get('/cities/getallgroupedbycountry/','CitiesController@getAllGroupedByCountry');
   $this->get('/compositions/getall/',"CompositionsController@getAll");
   $this->get('/compositions/load/{composition_id}','CompositionsController@load');
   $this->get('/compositions/getoutputtypes/',"CompositionsController@getOutputTypes");
   $this->get('/compositions/getcompositioncategories/',"CompositionsController@getCompositionCategories");
   $this->get('/frames/search/{query}','FramesController@search');
+  $this->get('/frames/get/{frame_id}','FramesController@load');
+  $this->get('/frames/getall/','FramesController@getAll');
+  $this->get('/frames/gettypes/','FramesController@getAllTypes');
+  $this->get('/frames/getformats/','FramesController@getAllFormats');
   $this->get('/skutypes/getall/','SkusController@getAll');
   $this->get('/wemockup/products/search/{query}',"WemockupController@search");
-
   $this->get('/tags/search/{query}','TagsController@search');
+  $this->get('/owners/getall/','OwnersController@getAll');
 
   Route::middleware(['superadmin'])->group(function () {
 
@@ -54,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/compositions/savenew/','CompositionsController@saveNew');
     $this->post('/compositions/update/','CompositionsController@update');
     $this->post('/frames/addtocomposition/','FramesController@addToComposition');
+    $this->post('/frames/add/','FramesController@add');
+    $this->post('/frames/update/','FramesController@update');
     $this->post('/frames/removefromcomposition/','FramesController@removeFromComposition');
     $this->post('/compositions/removesku/','SkusController@removeSku');
     $this->post('/compositions/addsku/','SkusController@addSku');

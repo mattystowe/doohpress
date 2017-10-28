@@ -13,6 +13,8 @@ require('./profile');
 require('./teams');
 require('./countries');
 require('./compositions');
+require('./frames');
+require('./owners');
 
 angular.module('app', [
   'app.core',
@@ -21,7 +23,9 @@ angular.module('app', [
   'app.profile',
   'app.teams',
   'app.countries',
-  'app.compositions'
+  'app.compositions',
+  'app.frames',
+  'app.owners'
 ]);
 
 var authblock = angular.module('blocks.auth')

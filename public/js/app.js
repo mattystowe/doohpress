@@ -88683,8 +88683,10 @@ __webpack_require__("./resources/assets/js/profile/index.js");
 __webpack_require__("./resources/assets/js/teams/index.js");
 __webpack_require__("./resources/assets/js/countries/index.js");
 __webpack_require__("./resources/assets/js/compositions/index.js");
+__webpack_require__("./resources/assets/js/frames/index.js");
+__webpack_require__("./resources/assets/js/owners/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions', 'app.frames', 'app.owners']);
 
 var authblock = angular.module('blocks.auth');
 authblock.run(runBlock);
@@ -90433,72 +90435,6 @@ function CompositionsViewController($scope, $state, AuthService, toastr, SweetAl
 
 /***/ }),
 
-/***/ "./resources/assets/js/compositions/frames.service.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-
-var angular = __webpack_require__("./node_modules/angular/index.js");
-
-angular.module('app.compositions').service('FrameService', FrameService);
-
-FrameService.$inject = ['$http'];
-
-/* @ngInject */
-function FrameService($http) {
-
-  var api = {
-    search: search,
-    addFrameToComposition: addFrameToComposition,
-    removeFrameFromComposition: removeFrameFromComposition
-  };
-  return api;
-
-  ////////////
-
-  function search(query) {
-    return $http({
-      url: '/frames/search/' + query,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
-
-  function addFrameToComposition(composition, frame) {
-    return $http({
-      url: '/frames/addtocomposition/',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: {
-        composition_id: composition.id,
-        frame_id: frame.id
-      }
-    });
-  }
-
-  function removeFrameFromComposition(composition, frame) {
-    return $http({
-      url: '/frames/removefromcomposition/',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: {
-        composition_id: composition.id,
-        frame_id: frame.id
-      }
-    });
-  }
-}
-
-/***/ }),
-
 /***/ "./resources/assets/js/compositions/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -90509,11 +90445,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 __webpack_require__("./resources/assets/js/core/index.js");
 
-angular.module('app.compositions', ['app.core']);
+angular.module('app.compositions', ['app.core', 'app.frames']);
 
 __webpack_require__("./resources/assets/js/compositions/routes.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.service.js");
-__webpack_require__("./resources/assets/js/compositions/frames.service.js");
 __webpack_require__("./resources/assets/js/compositions/skus.service.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
@@ -90931,6 +90866,7 @@ function CityService($http) {
 
   var api = {
     getAll: getAll,
+    getAllGroupedByCountry: getAllGroupedByCountry,
     getAllInCountry: getAllInCountry,
     addNew: addNew,
     removeCity: removeCity
@@ -90938,6 +90874,16 @@ function CityService($http) {
   return api;
 
   ////////////
+
+  function getAllGroupedByCountry() {
+    return $http({
+      url: '/cities/getallgroupedbycountry/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
   function getAll() {
     return $http({
@@ -91303,6 +91249,382 @@ function getStates() {
 
 /***/ }),
 
+/***/ "./resources/assets/js/frames/frames.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.frames').controller('FramesController', FramesController);
+
+FramesController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'FrameService', 'OwnerService', 'CityService'];
+
+/* @ngInject */
+function FramesController($scope, $rootScope, $state, $stateParams, AuthService, toastr, FrameService, OwnerService, CityService) {
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.frame = {};
+
+  vm.frames = [];
+  vm.frametypes = [];
+  vm.frameformats = [];
+  vm.owners = [];
+  vm.countries = [];
+
+  vm.handleThumbnail = handleThumbnail;
+  vm.handleImage = handleImage;
+
+  vm.isFrameValid = isFrameValid;
+  vm.saveFrame = saveFrame;
+  vm.updateFrame = updateFrame;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    getFrames();
+    getFrameTypes();
+    getFrameFormats();
+    getOwners();
+    getCities();
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+      if (toState.name == 'frames.edit' || toState.name == 'frames.view') {
+        loadFrame(toParams.frame_id);
+      }
+      if (toState.name == 'frames.add') {
+        vm.frame = {};
+      }
+    });
+
+    if ($state.current.name == 'frames.edit') {
+      loadFrame($stateParams.frame_id);
+    }
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function loadFrame(frame_id) {
+    FrameService.load(frame_id).then(function (data) {
+      //
+      vm.frame = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frame');
+    });
+  }
+
+  function isFrameValid() {
+    var valid = true;
+
+    return valid;
+  }
+
+  function saveFrame() {
+    FrameService.add(vm.frame).then(function (data) {
+      //
+      //
+      toastr.success('Success', 'Frame saved');
+      $state.go('frames.view', { frame_id: data.data.id });
+    }, function (data) {
+      toastr.error('Error', 'There was an error saving frame');
+    });
+  }
+
+  function updateFrame() {
+    FrameService.save(vm.frame).then(function (data) {
+      //
+      //
+      toastr.success('Success', 'Frame updated');
+      $state.go('frames.view', { frame_id: data.data.id });
+    }, function (data) {
+      toastr.error('Error', 'There was an error saving frame');
+    });
+  }
+
+  function handleThumbnail(file) {
+    vm.frame.thumbnail = file;
+    $scope.$apply();
+  }
+
+  function handleImage(file) {
+    vm.frame.image = file;
+    $scope.$apply();
+  }
+
+  function getFrameFormats() {
+    FrameService.getFrameFormats().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.frameformats = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frame formats');
+    });
+  }
+
+  function getFrameTypes() {
+    FrameService.getFrameTypes().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.frametypes = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frame types');
+    });
+  }
+
+  function getCities() {
+    CityService.getAllGroupedByCountry().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.countries = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading countries and cities');
+    });
+  }
+
+  function getOwners() {
+    OwnerService.getAll().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.owners = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading owners');
+    });
+  }
+
+  function getFrames() {
+    FrameService.getAll().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.frames = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frames');
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/frames/frames.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.frames').service('FrameService', FrameService);
+
+FrameService.$inject = ['$http'];
+
+/* @ngInject */
+function FrameService($http) {
+
+  var api = {
+    search: search,
+    addFrameToComposition: addFrameToComposition,
+    removeFrameFromComposition: removeFrameFromComposition,
+    getAll: getAll,
+    getFrameTypes: getFrameTypes,
+    getFrameFormats: getFrameFormats,
+    add: add,
+    load: load,
+    save: save
+  };
+  return api;
+
+  ////////////
+
+  function add(frame) {
+    var framejson = angular.toJson(frame);
+    return $http({
+      url: '/frames/add/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        frame: framejson
+      }
+    });
+  }
+
+  function save(frame) {
+    var framejson = angular.toJson(frame);
+    return $http({
+      url: '/frames/update/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        frame: framejson
+      }
+    });
+  }
+
+  function load(frame_id) {
+    return $http({
+      url: '/frames/get/' + frame_id,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function getFrameTypes() {
+    return $http({
+      url: '/frames/gettypes/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function getFrameFormats() {
+    return $http({
+      url: '/frames/getformats/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function getAll() {
+    return $http({
+      url: '/frames/getall/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function search(query) {
+    return $http({
+      url: '/frames/search/' + query,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function addFrameToComposition(composition, frame) {
+    return $http({
+      url: '/frames/addtocomposition/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition_id: composition.id,
+        frame_id: frame.id
+      }
+    });
+  }
+
+  function removeFrameFromComposition(composition, frame) {
+    return $http({
+      url: '/frames/removefromcomposition/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition_id: composition.id,
+        frame_id: frame.id
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/frames/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.frames', ['app.core', 'app.compositions', 'app.owners', 'app.countries']);
+
+__webpack_require__("./resources/assets/js/frames/routes.js");
+__webpack_require__("./resources/assets/js/frames/frames.controller.js");
+__webpack_require__("./resources/assets/js/frames/frames.service.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/frames/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.frames').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureDefaults('/frames', '/frames/list');
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'frames',
+        config: {
+            url: '/frames',
+            templateUrl: '/html/frames/index.html'
+        }
+    }, {
+        state: 'frames.list',
+        config: {
+            url: '/list',
+            templateUrl: '/html/frames/list/index.html'
+        }
+    }, {
+        state: 'frames.add',
+        config: {
+            url: '/add/',
+            templateUrl: '/html/frames/add/index.html'
+        }
+    }, {
+        state: 'frames.edit',
+        config: {
+            url: '/edit/{frame_id}',
+            templateUrl: '/html/frames/edit/index.html'
+        }
+    }, {
+        state: 'frames.view',
+        config: {
+            url: '/view/{frame_id}',
+            templateUrl: '/html/frames/view/index.html'
+        }
+    }];
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/home/home.controller.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -91446,6 +91768,58 @@ __webpack_require__("./resources/assets/js/core/index.js");
 angular.module('app.layout', ['app.core']);
 
 __webpack_require__("./resources/assets/js/layout/header.controller.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/owners/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.owners', ['app.core']);
+
+__webpack_require__("./resources/assets/js/owners/owners.service.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/owners/owners.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.owners').service('OwnerService', OwnerService);
+
+OwnerService.$inject = ['$http'];
+
+/* @ngInject */
+function OwnerService($http) {
+
+    var api = {
+        getAll: getAll
+    };
+    return api;
+
+    ////////////
+
+    function getAll() {
+        return $http({
+            url: '/owners/getall/',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+}
 
 /***/ }),
 
