@@ -90485,7 +90485,8 @@ function getStates() {
         state: 'compositions.list',
         config: {
             url: '/list',
-            templateUrl: '/html/compositions/list/index.html'
+            templateUrl: '/html/compositions/list/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }, {
         state: 'compositions.view',
@@ -90497,15 +90498,26 @@ function getStates() {
         state: 'compositions.add',
         config: {
             url: '/add/',
-            templateUrl: '/html/compositions/add/index.html'
+            templateUrl: '/html/compositions/add/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }, {
         state: 'compositions.edit',
         config: {
             url: '/edit/{composition_id}',
-            templateUrl: '/html/compositions/edit/index.html'
+            templateUrl: '/html/compositions/edit/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state', 'AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+    if (!AuthService.isSuperAdmin()) {
+        $state.transitionTo('404');
+    }
 }
 
 /***/ }),
@@ -91242,9 +91254,19 @@ function getStates() {
         state: 'countries',
         config: {
             url: '/countries',
-            templateUrl: '/html/countries/index.html'
+            templateUrl: '/html/countries/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state', 'AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+    if (!AuthService.isSuperAdmin()) {
+        $state.transitionTo('404');
+    }
 }
 
 /***/ }),
@@ -91600,19 +91622,22 @@ function getStates() {
         state: 'frames.list',
         config: {
             url: '/list',
-            templateUrl: '/html/frames/list/index.html'
+            templateUrl: '/html/frames/list/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }, {
         state: 'frames.add',
         config: {
             url: '/add/',
-            templateUrl: '/html/frames/add/index.html'
+            templateUrl: '/html/frames/add/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }, {
         state: 'frames.edit',
         config: {
             url: '/edit/{frame_id}',
-            templateUrl: '/html/frames/edit/index.html'
+            templateUrl: '/html/frames/edit/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
         }
     }, {
         state: 'frames.view',
@@ -91621,6 +91646,15 @@ function getStates() {
             templateUrl: '/html/frames/view/index.html'
         }
     }];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state', 'AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+    if (!AuthService.isSuperAdmin()) {
+        $state.transitionTo('404');
+    }
 }
 
 /***/ }),

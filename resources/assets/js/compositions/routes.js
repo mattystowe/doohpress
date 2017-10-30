@@ -27,7 +27,8 @@ function getStates() {
           state: 'compositions.list',
           config: {
               url: '/list',
-              templateUrl: '/html/compositions/list/index.html'
+              templateUrl: '/html/compositions/list/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       },
       {
@@ -41,15 +42,26 @@ function getStates() {
           state: 'compositions.add',
           config: {
               url: '/add/',
-              templateUrl: '/html/compositions/add/index.html'
+              templateUrl: '/html/compositions/add/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       },
       {
           state: 'compositions.edit',
           config: {
               url: '/edit/{composition_id}',
-              templateUrl: '/html/compositions/edit/index.html'
+              templateUrl: '/html/compositions/edit/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       }
     ];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state','AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+  if (!AuthService.isSuperAdmin()) {
+    $state.transitionTo('404');
+  }
 }

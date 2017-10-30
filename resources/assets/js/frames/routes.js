@@ -6,7 +6,7 @@ angular
     .module('app.frames')
     .run(appRun);
 
-appRun.$inject = ['routerHelper'];
+appRun.$inject = ['routerHelper',];
 
 
 function appRun(routerHelper) {
@@ -27,21 +27,24 @@ function getStates() {
           state: 'frames.list',
           config: {
               url: '/list',
-              templateUrl: '/html/frames/list/index.html'
+              templateUrl: '/html/frames/list/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       },
       {
           state: 'frames.add',
           config: {
               url: '/add/',
-              templateUrl: '/html/frames/add/index.html'
+              templateUrl: '/html/frames/add/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       },
       {
           state: 'frames.edit',
           config: {
               url: '/edit/{frame_id}',
-              templateUrl: '/html/frames/edit/index.html'
+              templateUrl: '/html/frames/edit/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       },
       {
@@ -52,4 +55,13 @@ function getStates() {
           }
       }
     ];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state','AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+  if (!AuthService.isSuperAdmin()) {
+    $state.transitionTo('404');
+  }
 }

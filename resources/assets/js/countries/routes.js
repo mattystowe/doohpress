@@ -19,8 +19,18 @@ function getStates() {
           state: 'countries',
           config: {
               url: '/countries',
-              templateUrl: '/html/countries/index.html'
+              templateUrl: '/html/countries/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
           }
       }
     ];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state','AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+  if (!AuthService.isSuperAdmin()) {
+    $state.transitionTo('404');
+  }
 }
