@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Wemockup;
 
 class Job extends Model
 {
@@ -32,6 +33,17 @@ class Job extends Model
   public function sku() {
     return $this->belongsTo('App\Sku');
   }
+
+
+  //Load the wemockup sku for this job
+  //
+  //
+  //
+  public function loadWemockupSku() {
+    $wemockup = new Wemockup;
+    $this->wemockup_sku = $wemockup->getSku($this->sku->wemockup_sku);
+  }
+
 
 
 }

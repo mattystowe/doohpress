@@ -48,4 +48,57 @@ class JobsController extends Controller
       return true;
     }
 
+
+
+
+
+    //load the job
+    //
+    //
+    public function getJob($job_id) {
+        $jobs = Job::find($job_id)->with([
+          'sku',
+          'sku.skutype',
+          'sku.composition.outputtype',
+          'sku.composition.compositioncategory',
+          'sku.composition.frames'
+        ])->get();
+        if ($jobs) {
+          $job = $jobs[0];
+          //
+          //check that job belongs to a team that the user is on....
+          if ($this->job_is_on_users_team($job)) {
+
+            //if status PENDINGSETUP return the wemockup sku input items
+            //
+            //
+            //
+            if ($job->status == 'PENDINGSETUP') {
+              $job->loadWemockupSku();
+            }
+
+            return $job;
+
+          } else {
+            return response('Job not found on any of users teams.', 404);
+          }
+        } else {
+          return response('Job not found', 404);
+        }
+    }
+
+
+    //Checks that a Job belongs to a team that the user is on
+    //
+    //
+    public function job_is_on_users_team(Job $job) {
+      $user = Auth::user();
+      foreach ($user->teams as $team) {
+        if ($job->team_id == $team->id) {
+          return true;
+        }
+      }
+      return false;
+    }
+
 }

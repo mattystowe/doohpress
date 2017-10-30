@@ -115,6 +115,39 @@ class Wemockup
 
 
 
+    public function getSku($wemockup_sku_id) {
+      $method = 'sku/get/' . $wemockup_sku_id;
+      $request_url = $this->api_endpoint . $method . '?api_key=' . $this->api_key;
+      try {
+          $response = $this->client->request('GET', $request_url);
+
+
+          if ($response->getStatusCode() == '200') {
+
+            //Job created - save the render street jobid into the itemjob
+            $body = json_decode($response->getBody());
+            return $body;
+
+          } else {
+            Log::error('wemockup::getSku : status ' . $response->getStatusCode());
+            return array();
+          }
+
+
+
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+              Log::error('wemockup::getSku : ' . $e->getMessage());
+              return array();
+            } else {
+              Log::error('wemockup::getSku');
+              return array();
+            }
+        }
+    }
+
+
+
     /**
        * Returns the default guzzle client with the default settings configured
        *

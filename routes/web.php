@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/owners/getall/','OwnersController@getAll');
 
   $this->post('/jobs/create/','JobsController@createJob');
+  $this->get('/jobs/get/{job_id}','JobsController@getJob');
 
 
   Route::middleware(['superadmin'])->group(function () {
