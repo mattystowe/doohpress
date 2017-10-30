@@ -91817,7 +91817,117 @@ __webpack_require__("./resources/assets/js/core/index.js");
 
 angular.module('app.owners', ['app.core']);
 
+__webpack_require__("./resources/assets/js/owners/routes.js");
 __webpack_require__("./resources/assets/js/owners/owners.service.js");
+__webpack_require__("./resources/assets/js/owners/owners.controller.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/owners/owners.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.owners').controller('OwnersController', OwnersController);
+
+OwnersController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'OwnerService'];
+
+/* @ngInject */
+function OwnersController($scope, $rootScope, $state, $stateParams, AuthService, toastr, OwnerService) {
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.owners = [];
+  vm.owner = {};
+
+  vm.isOwnerValid = isOwnerValid;
+  vm.saveOwner = saveOwner;
+  vm.updateOwner = updateOwner;
+  vm.handleLogo = handleLogo;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+      if (toState.name == 'owners.edit') {
+        loadOwner(toParams.owner_id);
+      }
+      if (toState.name == 'owners.add') {
+        vm.owner = {};
+      }
+      if (toState.name == 'owners.list') {
+        getOwners();
+      }
+    });
+
+    if ($state.current.name == 'owners.edit') {
+      loadOwner($stateParams.owner_id);
+    }
+    if ($state.current.name == 'owners.list') {
+      getOwners();
+    }
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+  function getOwners() {
+    OwnerService.getAll().then(function (data) {
+      //
+      vm.owners = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading owners');
+    });
+  }
+
+  function loadOwner(owner_id) {
+    OwnerService.load(owner_id).then(function (data) {
+      //
+      vm.owner = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading owner');
+    });
+  }
+
+  function saveOwner() {
+    OwnerService.add(vm.owner).then(function (data) {
+      //
+      toastr.success('Success', 'Owner saved');
+      $state.go('owners.list', {}, { reload: true });
+    }, function (data) {
+      toastr.error('Error', 'There was an error saving owner');
+    });
+  }
+
+  function updateOwner() {
+    OwnerService.update(vm.owner).then(function (data) {
+      //
+      toastr.success('Success', 'Owner updated');
+    }, function (data) {
+      toastr.error('Error', 'There was an error updating owner');
+    });
+  }
+
+  function isOwnerValid() {
+    var valid = true;
+
+    return valid;
+  }
+
+  function handleLogo(file) {
+    vm.owner.logo = file;
+    $scope.$apply();
+  }
+}
 
 /***/ }),
 
@@ -91837,21 +91947,121 @@ OwnerService.$inject = ['$http'];
 /* @ngInject */
 function OwnerService($http) {
 
-    var api = {
-        getAll: getAll
-    };
-    return api;
+  var api = {
+    load: load,
+    getAll: getAll,
+    add: add,
+    update: update
+  };
+  return api;
 
-    ////////////
+  ////////////
+  function load(owner_id) {
+    return $http({
+      url: '/owners/load/' + owner_id,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
-    function getAll() {
-        return $http({
-            url: '/owners/getall/',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+  function getAll() {
+    return $http({
+      url: '/owners/getall/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function add(owner) {
+    var ownerjson = angular.toJson(owner);
+    return $http({
+      url: '/owners/add/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        owner: ownerjson
+      }
+    });
+  }
+
+  function update(owner) {
+    var ownerjson = angular.toJson(owner);
+    return $http({
+      url: '/owners/update/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        owner: ownerjson
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/owners/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.owners').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureDefaults('/owners', '/owners/list');
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'owners',
+        config: {
+            url: '/owners',
+            templateUrl: '/html/owners/index.html'
+        }
+    }, {
+        state: 'owners.list',
+        config: {
+            url: '/list',
+            templateUrl: '/html/owners/list/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
+        }
+    }, {
+        state: 'owners.add',
+        config: {
+            url: '/add',
+            templateUrl: '/html/owners/add/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
+        }
+    }, {
+        state: 'owners.edit',
+        config: {
+            url: '/edit/{owner_id}',
+            templateUrl: '/html/owners/edit/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
+        }
+    }];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state', 'AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+    if (!AuthService.isSuperAdmin()) {
+        $state.transitionTo('404');
     }
 }
 

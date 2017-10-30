@@ -72,6 +72,11 @@ Route::middleware(['auth'])->group(function () {
 
     $this->post('/tags/addtocomposition/','TagsController@AddToComposition');
     $this->post('/tags/removefromcomposition/','TagsController@RemoveFromComposition');
+
+
+    $this->post('/owners/add/','OwnersController@add');
+    $this->post('/owners/update/','OwnersController@update');
+    $this->get('/owners/load/{owner_id}','OwnersController@load');
   });
 
 });

@@ -1,0 +1,72 @@
+<div class="row">
+
+  <div class="col-md-6 col-lg-6">
+      <div class="card-box">
+        <h4>Details</h4>
+
+        <form class="form-horizontal m-t-20">
+
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.owner.name" type="text" class="form-control" name="owner_name" placeholder="Name" required autofocus>
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.owner.website" type="text" class="form-control" name="owner_website" placeholder="Website" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.owner.social_twitter" type="text" class="form-control" name="owner_social_twitter" placeholder="Twitter" required autofocus>
+
+                </div>
+            </div>
+
+            <hr />
+
+
+
+
+        </form>
+
+
+
+      </div>
+
+
+      <div class="card-box">
+        <button ng-disabled="!vm.isOwnerValid()" ng-click="vm.updateOwner()" class="btn btn-lg btn-primary">Update Owner</button>
+      </div>
+
+
+
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+
+
+    <div class="card-box">
+      <h4>Logo</h4>
+      <imagepicker dimx="200" dimy="200" aspect="1/1" path="'/owners/logos/'" callback="vm.handleLogo(file);"></imagepicker>
+      <img class="img img-fluid" src="{{vm.owner.logo}}"/>
+
+    </div>
+
+
+
+
+  </div>
+
+
+
+
+
+<!-- end row -->
+</div>

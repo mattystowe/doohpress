@@ -1,0 +1,76 @@
+<div class="row">
+
+  <div class="col-md-12 col-lg-12">
+      <div class="card-box">
+
+
+
+        <div class="bootstrap-table">
+
+          <div class="fixed-table-toolbar">
+            <div class="columns columns-right btn-group pull-right">
+              <a ui-sref="owners.add">
+                <button class="btn btn-default" type="button">
+                  <i class="fa fa-caret-square-o-down icon-chevron-down"></i> Add
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <div class="fixed-table-container" style="padding-bottom: 0px;">
+
+            <table class="table-bordered table table-hover" style="display: table;">
+              <thead>
+                <tr>
+
+                  <th>
+                    <div class="th-inner ">Name</div>
+                    <div class="fht-cell"></div>
+                  </th>
+                  <th>
+                    <div class="th-inner ">Logo</div>
+                    <div class="fht-cell"></div>
+                  </th>
+                  <th>
+                    <div class="th-inner ">Website</div>
+                    <div class="fht-cell"></div>
+                  </th>
+                  <th>
+                    <div class="th-inner ">Options</div>
+                    <div class="fht-cell"></div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="owner in vm.owners">
+                  <td>{{owner.name}}</td>
+                  <td>
+
+                      <img class="img img-fluid" src="{{owner.logo}}">
+
+                  </td>
+                  <td>
+                    <a href="" target="_blank">
+                      {{owner.website}}
+                    </a>
+                  </td>
+                  <td>
+                    <a ui-sref="owners.edit({owner_id: owner.id})">
+                    <button class="btn btn-xs btn-info">
+                      <span class="fa fa-pencil">Edit</span>
+                    </button>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+</div>

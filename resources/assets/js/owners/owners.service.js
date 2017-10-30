@@ -14,11 +14,24 @@ var angular = require('angular');
     function OwnerService($http) {
 
       var api = {
-        getAll:getAll
+        load:load,
+        getAll:getAll,
+        add:add,
+        update:update
       };
       return api;
 
       ////////////
+      function load(owner_id) {
+        return $http({
+              url : '/owners/load/' + owner_id,
+              method : 'GET',
+              headers : {
+                'Content-Type' : 'application/json'
+              }
+          });
+      }
+
 
       function getAll() {
         return $http({
@@ -26,6 +39,35 @@ var angular = require('angular');
               method : 'GET',
               headers : {
                 'Content-Type' : 'application/json'
+              }
+          });
+      }
+
+      function add(owner) {
+        var ownerjson = angular.toJson(owner);
+        return $http({
+              url : '/owners/add/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                owner: ownerjson
+              }
+          });
+      }
+
+
+      function update(owner) {
+        var ownerjson = angular.toJson(owner);
+        return $http({
+              url : '/owners/update/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                owner: ownerjson
               }
           });
       }
