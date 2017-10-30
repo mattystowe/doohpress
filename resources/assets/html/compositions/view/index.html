@@ -56,7 +56,7 @@
           <td align="right">
 
             <div class="btn-group dropdown">
-                <button type="button" class="btn btn-success waves-effect waves-light">
+                <button ng-click="vm.setupJob(sku,'setup_now');" type="button" class="btn btn-success waves-effect waves-light">
                   <span class="btn-label">
                     <i class="fa fa-check"></i>
                   </span>
@@ -64,7 +64,7 @@
                 </button>
                 <button type="button" class="btn btn-success dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false"><i class="caret"></i></button>
                 <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(103px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                  <a class="dropdown-item">Add to my jobs</a>
+                  <a href="" class="dropdown-item" ng-click="vm.setupJob(sku,'add_to_my_jobs');">Add to my jobs</a>
                 </div>
             </div>
 

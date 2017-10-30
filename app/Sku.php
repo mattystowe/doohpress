@@ -22,4 +22,8 @@ class Sku extends Model
       return $this->belongsTo('App\Composition');
     }
 
+    public function jobs() {
+      return $this->hasMany('App\Job');
+    }
+
 }

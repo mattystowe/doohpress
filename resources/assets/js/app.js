@@ -15,6 +15,7 @@ require('./countries');
 require('./compositions');
 require('./frames');
 require('./owners');
+require('./jobs');
 
 angular.module('app', [
   'app.core',
@@ -25,7 +26,8 @@ angular.module('app', [
   'app.countries',
   'app.compositions',
   'app.frames',
-  'app.owners'
+  'app.owners',
+  'app.jobs'
 ]);
 
 var authblock = angular.module('blocks.auth')

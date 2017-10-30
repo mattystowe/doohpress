@@ -50,6 +50,9 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/tags/search/{query}','TagsController@search');
   $this->get('/owners/getall/','OwnersController@getAll');
 
+  $this->post('/jobs/create/','JobsController@createJob');
+
+
   Route::middleware(['superadmin'])->group(function () {
 
     $this->post('/countries/add/','CountriesController@addNew');

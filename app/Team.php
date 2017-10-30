@@ -17,4 +17,8 @@ class Team extends Model
   public function invitations() {
     return $this->hasMany('App\Invitation');
   }
+
+  public function jobs() {
+    return $this->hasMany('App\Job');
+  }
 }

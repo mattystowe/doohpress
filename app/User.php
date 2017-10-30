@@ -35,4 +35,8 @@ class User extends Authenticatable
       return $this->belongsToMany('App\Team')->withPivot('role_id');
     }
 
+    public function jobs() {
+      return $this->hasMany('App\Job');
+    }
+
 }

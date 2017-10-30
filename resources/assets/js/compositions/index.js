@@ -6,7 +6,8 @@ require('../core');
 
 angular.module('app.compositions', [
   'app.core',
-  'app.frames'
+  'app.frames',
+  'app.jobs'
 ]);
 
 require('./routes');

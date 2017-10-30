@@ -88685,8 +88685,9 @@ __webpack_require__("./resources/assets/js/countries/index.js");
 __webpack_require__("./resources/assets/js/compositions/index.js");
 __webpack_require__("./resources/assets/js/frames/index.js");
 __webpack_require__("./resources/assets/js/owners/index.js");
+__webpack_require__("./resources/assets/js/jobs/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions', 'app.frames', 'app.owners']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions', 'app.frames', 'app.owners', 'app.jobs']);
 
 var authblock = angular.module('blocks.auth');
 authblock.run(runBlock);
@@ -90423,15 +90424,18 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.compositions').controller('CompositionsViewController', CompositionsViewController);
 
-CompositionsViewController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', '$stateParams'];
+CompositionsViewController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', '$stateParams', 'JobService'];
 
 /* @ngInject */
-function CompositionsViewController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams) {
+function CompositionsViewController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams, JobService) {
+
   var vm = this;
 
   vm.Auth = Auth;
 
   vm.composition = {};
+
+  vm.setupJob = setupJob;
 
   /////////////////////////////////////////////////
   activate();
@@ -90457,6 +90461,35 @@ function CompositionsViewController($scope, $state, AuthService, toastr, SweetAl
       }
     });
   }
+
+  //Process request for setting up a new job now and direct to setup straight away.
+  //
+  //
+  function setupJob(sku, method) {
+    var job = {
+      team_id: Auth().currentTeam().id,
+      user_id: Auth().currentUser().id,
+      sku_id: sku.id
+    };
+    JobService.create(job).then(function (data) {
+      //
+
+
+      if (method == 'setup_now') {
+        toastr.success('Success!', 'Your job is ready for setup now!');
+        $state.go('jobs.view', { job_id: data.data.id }, { reload: true });
+      }
+      if (method == 'add_to_my_jobs') {
+        toastr.success('Success!', 'View your jobs to see jobs awaiting setup.');
+      }
+    }, function (data) {
+      if (data.status == 404) {
+        $state.go('404');
+      } else {
+        toastr.error('Error', 'There was an error creating the job.');
+      }
+    });
+  }
 }
 
 /***/ }),
@@ -90471,7 +90504,7 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 __webpack_require__("./resources/assets/js/core/index.js");
 
-angular.module('app.compositions', ['app.core', 'app.frames']);
+angular.module('app.compositions', ['app.core', 'app.frames', 'app.jobs']);
 
 __webpack_require__("./resources/assets/js/compositions/routes.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.service.js");
@@ -91764,6 +91797,109 @@ function getStates() {
             templateUrl: '/html/home/index.html'
         }
     }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/jobs/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.jobs', ['app.core']);
+
+__webpack_require__("./resources/assets/js/jobs/jobs.service.js");
+__webpack_require__("./resources/assets/js/jobs/routes.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/jobs/jobs.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.jobs').service('JobService', JobService);
+
+JobService.$inject = ['$http'];
+
+/* @ngInject */
+function JobService($http) {
+
+  var api = {
+    create: create
+  };
+  return api;
+
+  ////////////
+
+
+  function create(job) {
+    var jobjson = angular.toJson(job);
+    return $http({
+      url: '/jobs/create/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        job: jobjson
+      }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/jobs/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.jobs').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureDefaults('/jobs', '/jobs/myjobs');
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'jobs',
+        config: {
+            url: '/jobs',
+            templateUrl: '/html/jobs/index.html'
+        }
+    }, {
+        state: 'jobs.view',
+        config: {
+            url: '/view/{job_id}',
+            templateUrl: '/html/jobs/view/index.html'
+        }
+    }];
+}
+
+Redirect_If_Not_SuperAdmin.$inject = ['$state', 'AuthService'];
+
+/* @ngInject */
+function Redirect_If_Not_SuperAdmin($state, AuthService) {
+    if (!AuthService.isSuperAdmin()) {
+        $state.transitionTo('404');
+    }
 }
 
 /***/ }),
