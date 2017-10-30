@@ -1,0 +1,78 @@
+<div class="card-box">
+  <h2>Follow the steps below..</h2>
+  <p>
+    Our magical mockup monkeys will take care of the rest...
+  </p>
+</div>
+
+<div ng-repeat="inputoption in vm.job.wemockup_sku.product.inputoptions" class="card-box">
+  <h3>
+    <span class="label label-default">{{$index+1}}</span>
+    <span ng-show="inputoption.value" class="label label-success"><i class="fa fa-check"></i></span>
+    {{inputoption.name}}
+  </h3>
+  <img class="img img-fluid" src="{{inputoption.image}}" />
+  <div><p>{{vm.getSafeHTML(inputoption.description);}}</p></div>
+
+
+
+    <!-- Image Upload !-->
+    <div ng-if="inputoption.input_type=='imageupload'" >
+      <imagepicker
+      dimx="{{inputoption.data.image_min_x}}"
+      dimy="{{inputoption.data.image_min_y}}"
+      aspect="{{inputoption.data.imagecropratio}}"
+      path="'/jobs/inputfiles/'" callback="vm.handleFileUpload(file,inputoption);">
+      </imagepicker>
+      <div>
+        <img class="img img-fluid" ng-if="inputoption.value" src="{{vm.getResponsiveImageUrl(inputoption.value,500,400);}}"/>
+      </div>
+    </div>
+
+
+    <!-- Video Upload !-->
+    <div ng-if="inputoption.input_type=='videoupload'" >
+
+    </div>
+
+    <!-- Text !-->
+    <div ng-if="inputoption.input_type=='text'" >
+      <form class="form-horizontal">
+        <div class="form-group">
+
+          <div class="col-md-6">
+            <input ng-model="inputoption.value"  type="text" class="form-control" placeholder="Custom Text Input">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Dropdown !-->
+    <div ng-if="inputoption.input_type=='dropdown'" >
+      <form class="form-horizontal">
+        <div class="form-group">
+
+          <div class="col-md-6">
+            <select class="form-control" ng-model="inputoption.value" ng-options="item.value as item.value for item in inputoption.data.options">
+              <option selected value="">
+                {{inputoption.data.dropdowntitle}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  <hr />
+</div>
+
+<div class="card-box">
+  <h3>
+    <span class="label label-default">{{vm.job.wemockup_sku.product.inputoptions.length + 1}}</span> Confirm your settings.
+  </h3>
+  <p>
+    When you are ready.. We're ready.
+  </p>
+  <button ng-disabled="!vm.submitValid();" class="btn btn-lg btn-success" ng-click="vm.submitItem();">Press my DOOH!</button>
+
+</div>

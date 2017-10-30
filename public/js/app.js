@@ -89142,10 +89142,10 @@ __webpack_require__("./resources/assets/js/blocks/example/example.directive.js")
       templateUrl: '/html/blocks/filepicker/imagepicker.partial.html',
       scope: {
         callback: '&',
-        dimx: '=',
-        dimy: '=',
+        dimx: '@',
+        dimy: '@',
         path: '=',
-        aspect: '='
+        aspect: '@'
       },
       controller: ImagePickerController,
       controllerAs: 'vm',
@@ -89171,6 +89171,7 @@ __webpack_require__("./resources/assets/js/blocks/example/example.directive.js")
 
 
     function openPicker() {
+      var aspectRatio = Number(eval(vm.aspect));
       console.log('opening picker');
       client.pick({
         fromSources: ['local_file_system', 'facebook', 'googledrive', 'imagesearch', 'dropbox', 'webcam'],
@@ -89178,8 +89179,8 @@ __webpack_require__("./resources/assets/js/blocks/example/example.directive.js")
         maxFiles: 1,
         maxSize: 5 * 1024 * 1024,
         //startUploadingWhenMaxFilesReached: true,
-        imageMax: [vm.dimx, vm.dimy],
-        imageMin: [vm.dimx, vm.dimy],
+        imageMax: [Number(vm.dimx), Number(vm.dimy)],
+        imageMin: [Number(vm.dimx), Number(vm.dimy)],
         storeTo: {
           location: 's3',
           path: vm.path,
@@ -89187,7 +89188,7 @@ __webpack_require__("./resources/assets/js/blocks/example/example.directive.js")
         },
         transformations: {
           crop: {
-            aspectRatio: vm.aspect,
+            aspectRatio: aspectRatio,
             force: true
           }
         }
@@ -91814,7 +91815,127 @@ __webpack_require__("./resources/assets/js/core/index.js");
 angular.module('app.jobs', ['app.core']);
 
 __webpack_require__("./resources/assets/js/jobs/jobs.service.js");
+__webpack_require__("./resources/assets/js/jobs/jobs.controller.js");
 __webpack_require__("./resources/assets/js/jobs/routes.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/jobs/jobs.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.jobs').controller('JobsController', JobsController);
+
+JobsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'JobService', '$sce'];
+
+/* @ngInject */
+function JobsController($scope, $rootScope, $state, $stateParams, AuthService, toastr, JobService, $sce) {
+
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.job = {};
+  vm.getStageInclude = getStageInclude;
+  vm.handleFileUpload = handleFileUpload;
+
+  vm.filestackprocessingurl = 'https://process.filestackapi.com/AVYahdTpfRL2K66BOAfvKz/';
+  vm.getResponsiveImageUrl = getResponsiveImageUrl;
+
+  vm.getSafeHTML = getSafeHTML;
+  vm.submitValid = submitValid;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    loadJob($stateParams.job_id);
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function submitValid() {
+    var valid = true;
+    vm.job.wemockup_sku.product.inputoptions.forEach(function (inputoption) {
+      if (!inputoption.value) {
+        valid = false;
+      }
+    });
+
+    if (vm.submitting) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  function getSafeHTML(html) {
+    var trusted_html = $sce.trustAsHtml(html);
+    return trusted_html;
+  }
+
+  function handleFileUpload(file, inputoption) {
+    inputoption.value = file;
+    $scope.$apply();
+  }
+
+  function getResponsiveImageUrl(url, maxwidth, maxheight) {
+
+    return vm.filestackprocessingurl + 'resize=width:' + maxwidth + ',height:' + maxheight + ',fit:clip/' + url;
+  }
+
+  function loadJob(job_id) {
+    JobService.load(job_id).then(function (data) {
+      //
+      vm.job = data.data;
+    }, function (data) {
+      if (data.status == 404) {
+        $state.go('404');
+      } else {
+        toastr.error('Error', 'There was an error loading the job');
+      }
+    });
+  }
+
+  /**
+   * Return the include path for the current item stage display
+   *
+   *
+   *
+   * @return {[type]} [description]
+   */
+  function getStageInclude() {
+    switch (vm.job.status) {
+      case 'PENDINGSETUP':
+        return '/html/jobs/view/partials/setup.html';
+      case 'PROCESSING_MEDIA':
+        return '/html/jobs/view/partials/processing_media.html';
+      case 'RENDERING':
+        return '/html/jobs/view/partials/rendering.html';
+      case 'COMPLETE':
+        return '/html/jobs/view/partials/complete.html';
+        break;
+      case 'FAILED':
+        return '/html/jobs/view/partials/failed.html';
+        break;
+      case 'CANCELLED':
+        return '/html/jobs/view/partials/cancelled.html';
+        break;
+      default:
+        return '/html/jobs/view/partials/blank.html';
+
+    }
+  }
+}
 
 /***/ }),
 
@@ -91835,12 +91956,23 @@ JobService.$inject = ['$http'];
 function JobService($http) {
 
   var api = {
-    create: create
+    create: create,
+    load: load
   };
   return api;
 
   ////////////
 
+
+  function load(job_id) {
+    return $http({
+      url: '/jobs/get/' + job_id,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
   function create(job) {
     var jobjson = angular.toJson(job);

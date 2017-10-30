@@ -1,1 +1,51 @@
-Your job here
+<div ng-controller="JobsController as vm">
+
+  <!-- Page-Title -->
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item">Jobs</li>
+                      <li class="breadcrumb-item active">View</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">View Job</h4>
+          </div>
+      </div>
+  </div>
+  <!-- end page title end breadcrumb -->
+
+
+  <div class="row">
+
+    <div class="col-md-5 col-lg-5">
+      <div class="card-box">
+
+        <div class="media">
+          <img class="d-flex mr-3 rounded" src="{{vm.job.sku.composition.thumbnail}}" height="100">
+          <div class="media-body">
+            <h5 class="mt-0">{{vm.job.sku.composition.name}}</h5>
+            {{vm.job.sku.composition.description}}<br>
+            {{vm.job.sku.composition.outputtype.name}}, {{vm.job.sku.composition.compositioncategory.name}}<br>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="card-box">
+        {{vm.job.sku.skutype.name}}
+      </div>
+
+    </div>
+
+
+
+    <div class="col-md-7 col-lg-7">
+      <div ng-include="vm.getStageInclude();" class="my-fade-animation"></div>
+    </div>
+
+  </div>
+
+</div>

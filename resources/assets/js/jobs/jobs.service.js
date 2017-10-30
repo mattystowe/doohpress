@@ -14,12 +14,23 @@ var angular = require('angular');
     function JobService($http) {
 
       var api = {
-        create:create
+        create:create,
+        load:load
       };
       return api;
 
       ////////////
 
+
+      function load(job_id) {
+        return $http({
+              url : '/jobs/get/' + job_id,
+              method : 'GET',
+              headers : {
+                'Content-Type' : 'application/json'
+              }
+          });
+      }
 
       function create(job) {
         var jobjson = angular.toJson(job);

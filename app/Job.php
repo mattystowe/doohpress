@@ -42,6 +42,21 @@ class Job extends Model
   public function loadWemockupSku() {
     $wemockup = new Wemockup;
     $this->wemockup_sku = $wemockup->getSku($this->sku->wemockup_sku);
+
+    //convert wemockup image data to doohpress compatible data
+    foreach($this->wemockup_sku->product->inputoptions as $inputoption) {
+        if ($inputoption->input_type == 'imageupload') {
+          if ($inputoption->data->imagedimmin) {
+            $dim = explode(',',$inputoption->data->imagedimmin);
+            $inputoption->data->image_min_x = $dim[0];
+            $inputoption->data->image_min_y = $dim[1];
+          }
+        
+        }
+
+    }
+
+
   }
 
 

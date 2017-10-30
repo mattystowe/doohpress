@@ -25,10 +25,10 @@
             templateUrl: '/html/blocks/filepicker/imagepicker.partial.html',
             scope: {
               callback: '&',
-              dimx: '=',
-              dimy: '=',
+              dimx: '@',
+              dimy: '@',
               path: '=',
-              aspect: '='
+              aspect: '@'
             },
             controller: ImagePickerController,
             controllerAs: 'vm',
@@ -62,6 +62,7 @@
 
 
         function openPicker() {
+          var aspectRatio = Number(eval(vm.aspect));
           console.log('opening picker');
           client.pick({
             fromSources: [
@@ -76,8 +77,8 @@
             maxFiles: 1,
             maxSize: 5 * 1024 * 1024,
             //startUploadingWhenMaxFilesReached: true,
-            imageMax:[vm.dimx,vm.dimy],
-            imageMin:[vm.dimx,vm.dimy],
+            imageMax:[Number(vm.dimx),Number(vm.dimy)],
+            imageMin:[Number(vm.dimx),Number(vm.dimy)],
             storeTo: {
               location: 's3',
               path: vm.path,
@@ -85,7 +86,7 @@
             },
             transformations: {
               crop: {
-                aspectRatio: vm.aspect,
+                aspectRatio: aspectRatio,
                 force: true
               }
             }
