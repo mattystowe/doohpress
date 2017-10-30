@@ -59,6 +59,9 @@
           orderChanged: SkuOrderChanged
         }
 
+        vm.handleThumbnail = handleThumbnail;
+        vm.handleImage = handleImage;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -73,6 +76,17 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        function handleThumbnail(file) {
+          vm.composition.thumbnail = file;
+          $scope.$apply();
+        }
+
+        function handleImage(file) {
+          vm.composition.image = file;
+          $scope.$apply();
+        }
 
 
         function SkuOrderChanged(event) {

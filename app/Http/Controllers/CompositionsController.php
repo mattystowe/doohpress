@@ -71,6 +71,8 @@ class CompositionsController extends Controller
         //examples
         $composition->examples;
 
+        //category
+        $composition->compositioncategory;
 
         return $composition;
       } else {

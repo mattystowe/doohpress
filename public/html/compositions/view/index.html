@@ -1,3 +1,81 @@
 <div ng-controller="CompositionsViewController as vm">
-View composition goes here
+
+<div class="row">
+
+  <div class="col-md-6 col-lg-6">
+    <div class="card-box">
+
+      <div class="media">
+        <img class="d-flex mr-3 rounded" src="{{vm.composition.image}}" height="100">
+        <div class="media-body">
+          <h5 class="mt-0">{{vm.composition.name}}</h5>
+          {{vm.composition.description}}<br>
+          {{vm.composition.outputtype.name}}, {{vm.composition.compositioncategory.name}}<br>
+          <span ng-repeat="tag in vm.composition.tags" class="label label-default">{{tag.name}}</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="card-box">
+      <div ng-repeat="example in vm.composition.examples">
+        <example showtitle="false" exampletitle="example.title" exampleurl="example.url" exampletype="example.exampletype"></example>
+      </div>
+    </div>
+
+
+    <div class="card-box">
+      <locationpicker marker="vm.composition"></locationpicker>
+    </div>
+
+    <div class="card-box">
+      <h4>Included Frames</h4>
+
+      <table class="table table-striped">
+        <tr ng-repeat="frame in vm.composition.frames">
+          <td>
+            <img class="img img-fluid" src="{{frame.thumbnail}}"/>
+          </td>
+          <td>
+            [{{frame.id}}] - {{frame.name}}
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+    <div class="card-box">
+      <h4>Select your output</h4>
+      <table class="table table-striped">
+        <tr ng-repeat="sku in vm.composition.skus">
+          <td align="left">{{sku.skutype.name}}</td>
+          <td align="right">
+
+            <div class="btn-group dropdown">
+                <button type="button" class="btn btn-success waves-effect waves-light">
+                  <span class="btn-label">
+                    <i class="fa fa-check"></i>
+                  </span>
+                  Setup Now
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false"><i class="caret"></i></button>
+                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(103px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                  <a class="dropdown-item">Add to my jobs</a>
+                </div>
+            </div>
+
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+
 </div>

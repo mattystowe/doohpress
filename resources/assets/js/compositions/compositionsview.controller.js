@@ -23,8 +23,7 @@
         activate();
 
         function activate() {
-          console.log($stateParams.composition_id);
-
+          loadComposition($stateParams.composition_id);
         }
 
         function Auth() {
@@ -32,7 +31,22 @@
         }
         /////////////////////////////////////////////////
 
-
+        function loadComposition(composition_id) {
+          CompositionService.load(composition_id)
+          .then(
+            function(data) {
+            //
+            vm.composition = data.data;
+            },
+            function(data) {
+              if (data.status == 404) {
+                $state.go('404');
+              } else {
+              toastr.error('Error','There was an error loading the composition');
+              }
+            }
+          );
+        }
 
 
     }

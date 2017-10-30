@@ -90075,9 +90075,13 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
 
   vm.dragControlListeners = {
     orderChanged: SkuOrderChanged
+  };
 
-    /////////////////////////////////////////////////
-  };activate();
+  vm.handleThumbnail = handleThumbnail;
+  vm.handleImage = handleImage;
+
+  /////////////////////////////////////////////////
+  activate();
 
   function activate() {
     loadComposition($stateParams.composition_id);
@@ -90091,6 +90095,16 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   }
   /////////////////////////////////////////////////
 
+
+  function handleThumbnail(file) {
+    vm.composition.thumbnail = file;
+    $scope.$apply();
+  }
+
+  function handleImage(file) {
+    vm.composition.image = file;
+    $scope.$apply();
+  }
 
   function SkuOrderChanged(event) {
 
@@ -90413,24 +90427,36 @@ CompositionsViewController.$inject = ['$scope', '$state', 'AuthService', 'toastr
 
 /* @ngInject */
 function CompositionsViewController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams) {
-    var vm = this;
+  var vm = this;
 
-    vm.Auth = Auth;
+  vm.Auth = Auth;
 
-    vm.composition = {};
+  vm.composition = {};
 
-    /////////////////////////////////////////////////
-    activate();
+  /////////////////////////////////////////////////
+  activate();
 
-    function activate() {
-        console.log($stateParams.composition_id);
-    }
+  function activate() {
+    loadComposition($stateParams.composition_id);
+  }
 
-    function Auth() {
-        return AuthService;
-    }
-    /////////////////////////////////////////////////
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
 
+  function loadComposition(composition_id) {
+    CompositionService.load(composition_id).then(function (data) {
+      //
+      vm.composition = data.data;
+    }, function (data) {
+      if (data.status == 404) {
+        $state.go('404');
+      } else {
+        toastr.error('Error', 'There was an error loading the composition');
+      }
+    });
+  }
 }
 
 /***/ }),
