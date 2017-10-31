@@ -15,7 +15,8 @@ var angular = require('angular');
 
       var api = {
         getAvailable:getAvailable,
-        save:save
+        save:save,
+        remove:remove
       };
       return api;
 
@@ -31,6 +32,19 @@ var angular = require('angular');
               },
               data : {
                 preprocess: jsondata
+              }
+          });
+      }
+
+      function remove(preprocess_id) {
+        return $http({
+              url : '/compositions/preprocess/remove/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                preprocess_id: preprocess_id
               }
           });
       }

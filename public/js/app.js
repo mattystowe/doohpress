@@ -90167,6 +90167,9 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   vm.getAvailablePreProcesses = getAvailablePreProcesses;
   vm.isPreProcessValid = isPreProcessValid;
   vm.savePreProcess = savePreProcess;
+  vm.resolveFrameFromId = resolveFrameFromId;
+  vm.resolveInputoptionFromId = resolveInputoptionFromId;
+  vm.removePreprocess = removePreprocess;
 
   /////////////////////////////////////////////////
   activate();
@@ -90183,6 +90186,26 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   }
   /////////////////////////////////////////////////
 
+  function resolveFrameFromId(frame_id) {
+    var resolvedframe = {};
+    vm.composition.frames.forEach(function (frame) {
+      if (frame.id == frame_id) {
+        resolvedframe = frame;
+      }
+    });
+    return resolvedframe;
+  }
+
+  function resolveInputoptionFromId(inputoption_id) {
+    var resolvedoption = {};
+    vm.composition.wemockup_product.inputoptions.forEach(function (inputoption) {
+      if (inputoption.id == inputoption_id) {
+        resolvedoption = inputoption;
+      }
+    });
+
+    return resolvedoption;
+  }
 
   function addPreProcessOpen() {
     vm.preprocess = {};
@@ -90220,6 +90243,16 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
       vm.composition.preprocesses.push(data.data);
     }, function (data) {
       toastr.error('Error', 'Could not save preprocess.');
+    });
+  }
+
+  function removePreprocess(preprocess_id, index) {
+    PreprocessService.remove(preprocess_id).then(function (data) {
+      //
+      toastr.success('Success', 'Preprocess removed');
+      vm.composition.preprocesses.splice(index, 1);
+    }, function (data) {
+      toastr.error('Error', 'Could not remove preprocess.');
     });
   }
 
@@ -90660,7 +90693,8 @@ function PreprocessService($http) {
 
   var api = {
     getAvailable: getAvailable,
-    save: save
+    save: save,
+    remove: remove
   };
   return api;
 
@@ -90676,6 +90710,19 @@ function PreprocessService($http) {
       },
       data: {
         preprocess: jsondata
+      }
+    });
+  }
+
+  function remove(preprocess_id) {
+    return $http({
+      url: '/compositions/preprocess/remove/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        preprocess_id: preprocess_id
       }
     });
   }

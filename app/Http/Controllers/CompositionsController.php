@@ -10,6 +10,7 @@ use App\Sku;
 use App\Frame;
 use App\Wemockup;
 use App\Example;
+use App\Preprocess;
 
 use Log;
 use DB;
@@ -73,6 +74,9 @@ class CompositionsController extends Controller
 
         //category
         $composition->compositioncategory;
+
+        //preprocesses
+        $composition->preprocesses;
 
         return $composition;
       } else {
@@ -243,15 +247,43 @@ class CompositionsController extends Controller
     }
 
 
-
+    //Add pre process to composition
+    //
+    //
+    //
     public function addPreprocess(Request $request) {
       $preprocess_data = json_decode($request->input('preprocess'));
-      //
-      //
-      //TODO 
-      //
-      //
-      //
+
+      $preprocess = Preprocess::create([
+            'composition_id'=>$preprocess_data->composition_id,
+            'frame_id'=>$preprocess_data->frame_id,
+            'wemockup_inputoption_id'=>$preprocess_data->wemockup_inputoption_id,
+            'process_type'=>$preprocess_data->process_type
+      ]);
+
+      if ($preprocess) {
+        return $preprocess;
+      } else {
+        return response('Could not save preprocess', 422);
+      }
+
+    }
+
+    //Remove a preprocess from a composition 
+    //
+    //
+    //
+    public function removePreprocess(Request $request) {
+      $preprocess = Preprocess::find($request->input('preprocess_id'));
+      if ($preprocess) {
+        if ($preprocess->delete()) {
+          return response('Preprocess deleted', 200);
+        } else {
+          return response('Preprocess not deleted', 422);
+        }
+      } else {
+        return response('Preprocess not found', 404);
+      }
     }
 
 

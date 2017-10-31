@@ -76,7 +76,8 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/compositions/removeexample/','CompositionsController@removeExample');
     $this->post('/compositions/skuorder/','CompositionsController@saveSkuOrder');
     $this->post('/compositions/preprocess/add/','CompositionsController@addPreprocess');
-    
+    $this->post('/compositions/preprocess/remove/','CompositionsController@removePreprocess');
+
     $this->post('/tags/addtocomposition/','TagsController@AddToComposition');
     $this->post('/tags/removefromcomposition/','TagsController@RemoveFromComposition');
 

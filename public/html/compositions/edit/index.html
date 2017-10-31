@@ -246,6 +246,31 @@
         <div class="card-box">
           <h4>PreProcessing</h4>
           <button ng-click="vm.addPreProcessOpen();" class="btn btn-primary">Add</button>
+
+          <div class="card-box" ng-repeat="preprocess in vm.composition.preprocesses">
+
+            <div class="media">
+              <img class="d-flex mr-3 rounded" src="{{vm.resolveInputoptionFromId(preprocess.wemockup_inputoption_id).image}}" height="100">
+              <div class="media-body">
+                <h5 class="mt-0">{{vm.resolveInputoptionFromId(preprocess.wemockup_inputoption_id).name}}</h5>
+                [Type: {{vm.resolveInputoptionFromId(preprocess.wemockup_inputoption_id).input_type}}] [Variable: {{vm.resolveInputoptionFromId(preprocess.wemockup_inputoption_id).variable_name}}]
+              </div>
+            </div>
+
+            <div class="media">
+              <img class="d-flex mr-3 rounded" src="{{vm.resolveFrameFromId(preprocess.frame_id).thumbnail}}" height="100">
+              <div class="media-body">
+                <h5 class="mt-0">{{vm.resolveFrameFromId(preprocess.frame_id).name}}</h5>
+              </div>
+            </div>
+
+
+            <div class="label label-primary">{{preprocess.process_type}}</div>
+
+            <button ng-click="vm.removePreprocess(preprocess.id,$index);" class="btn btn-danger">Remove</button>
+
+          </div>
+
         </div>
 
 

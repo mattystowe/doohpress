@@ -95,6 +95,9 @@
         vm.getAvailablePreProcesses = getAvailablePreProcesses;
         vm.isPreProcessValid = isPreProcessValid;
         vm.savePreProcess = savePreProcess;
+        vm.resolveFrameFromId = resolveFrameFromId;
+        vm.resolveInputoptionFromId = resolveInputoptionFromId;
+        vm.removePreprocess = removePreprocess;
 
         /////////////////////////////////////////////////
         activate();
@@ -111,6 +114,26 @@
         }
         /////////////////////////////////////////////////
 
+        function resolveFrameFromId(frame_id) {
+          var resolvedframe = {};
+          vm.composition.frames.forEach(function(frame) {
+            if (frame.id == frame_id) {
+              resolvedframe = frame;
+            }
+          })
+          return resolvedframe;
+        }
+
+        function resolveInputoptionFromId(inputoption_id) {
+          var resolvedoption = {};
+          vm.composition.wemockup_product.inputoptions.forEach(function(inputoption) {
+            if (inputoption.id == inputoption_id) {
+              resolvedoption = inputoption;
+            }
+          });
+
+          return resolvedoption;
+        }
 
 
         function addPreProcessOpen() {
@@ -149,6 +172,21 @@
             }
           );
 
+        }
+
+
+        function removePreprocess(preprocess_id, index) {
+          PreprocessService.remove(preprocess_id)
+          .then(
+            function(data) {
+            //
+            toastr.success('Success','Preprocess removed');
+            vm.composition.preprocesses.splice(index,1);
+            },
+            function(data) {
+              toastr.error('Error','Could not remove preprocess.');
+            }
+          );
         }
 
 
