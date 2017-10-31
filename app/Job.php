@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Wemockup;
+use Carbon\Carbon;
 
 class Job extends Model
 {
@@ -51,12 +52,22 @@ class Job extends Model
             $inputoption->data->image_min_x = $dim[0];
             $inputoption->data->image_min_y = $dim[1];
           }
-        
+
         }
 
     }
 
 
+  }
+
+
+
+
+
+  public function markAsQueued() {
+    $this->status = 'QUEUED';
+    $this->date_queued = Carbon::now();
+    $this->save();
   }
 
 

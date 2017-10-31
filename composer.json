@@ -11,6 +11,7 @@
         "filestack/filestack-php": "^1.1",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
+        "nesbot/carbon": "^1.22",
         "ramsey/uuid": "^3.7"
     },
     "require-dev": {

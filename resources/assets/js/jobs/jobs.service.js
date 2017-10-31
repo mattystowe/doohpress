@@ -15,11 +15,28 @@ var angular = require('angular');
 
       var api = {
         create:create,
-        load:load
+        load:load,
+        submitJob:submitJob
       };
       return api;
 
       ////////////
+
+
+      function submitJob(job) {
+        var jobjson = angular.toJson(job);
+        return $http({
+              url : '/jobs/submit/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                job: jobjson
+              }
+          });
+      }
+
 
 
       function load(job_id) {

@@ -92069,6 +92069,8 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
   vm.getSafeHTML = getSafeHTML;
   vm.submitValid = submitValid;
 
+  vm.submitJob = submitJob;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -92081,6 +92083,20 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
   }
   /////////////////////////////////////////////////
 
+
+  function submitJob() {
+    JobService.submitJob(vm.job).then(function (data) {
+      //
+      //vm.job = data.data;
+      toastr.success('Job Submitted Successfully', 'Success');
+    }, function (data) {
+      if (data.status == 404) {
+        $state.go('404');
+      } else {
+        toastr.error('Error', 'There was an error submitting your job.');
+      }
+    });
+  }
 
   function submitValid() {
     var valid = true;
@@ -92178,12 +92194,27 @@ function JobService($http) {
 
   var api = {
     create: create,
-    load: load
+    load: load,
+    submitJob: submitJob
   };
   return api;
 
   ////////////
 
+
+  function submitJob(job) {
+    var jobjson = angular.toJson(job);
+    return $http({
+      url: '/jobs/submit/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        job: jobjson
+      }
+    });
+  }
 
   function load(job_id) {
     return $http({

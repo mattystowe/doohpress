@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
 
   $this->post('/jobs/create/','JobsController@createJob');
   $this->get('/jobs/get/{job_id}','JobsController@getJob');
+  $this->post('/jobs/submit/','JobsController@submit');
 
 
   Route::middleware(['superadmin'])->group(function () {

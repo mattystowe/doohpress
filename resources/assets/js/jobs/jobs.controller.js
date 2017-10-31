@@ -46,6 +46,7 @@
         vm.getSafeHTML = getSafeHTML;
         vm.submitValid = submitValid;
 
+        vm.submitJob = submitJob;
 
         /////////////////////////////////////////////////
         activate();
@@ -58,6 +59,25 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+        function submitJob() {
+          JobService.submitJob(vm.job)
+          .then(
+            function(data) {
+            //
+            //vm.job = data.data;
+            toastr.success('Job Submitted Successfully','Success');
+            },
+            function(data) {
+              if (data.status == 404) {
+                $state.go('404');
+              } else {
+              toastr.error('Error','There was an error submitting your job.');
+              }
+            }
+          );
+        }
 
 
         function submitValid() {

@@ -4,12 +4,55 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Job;
+use App\Jobinput;
 use App\Sku;
 use Auth;
 
 
 class JobsController extends Controller
 {
+
+
+    //Handle submission of a job
+    //
+    //
+    //
+    public function submit(Request $request) {
+      $job_data = json_decode($request->input('job'));
+      $job = Job::find($job_data->id);
+      if ($job) {
+        //
+        //
+        //
+        //save job inputs
+        foreach($job_data->wemockup_sku->product->inputoptions as $inputoption) {
+          $jobinput = Jobinput::create([
+            'job_id'=>$job->id,
+            'inputoption_id'=>$inputoption->id,
+            'input_type'=>$inputoption->input_type,
+            'variable_name'=>$inputoption->variable_name,
+            'value'=>$inputoption->value
+          ]);
+        }
+
+
+        //queue processing of job
+        $j = (new \App\Jobs\ProcessJobSubmission($job))->onQueue(env('QUEUE_JOBS'));
+        dispatch($j);
+
+        //mark as queued
+        $job->markAsQueued();
+
+
+        //return exactly same format of job UI expects
+        return $this->getJob($job->id);
+
+      } else {
+        return response('Job not found', 404);
+      }
+    }
+
+
 
 
     public function createJob(Request $request) {
