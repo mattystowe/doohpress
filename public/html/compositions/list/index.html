@@ -49,7 +49,7 @@
                   <td>{{composition.id}}</td>
                   <td>{{composition.name}}</td>
                   <td>
-                    [image]
+                    <img class="img img-fluid rounded" width="100" src="{{composition.thumbnail}}">
                   </td>
                   <td>
                     <span class="label label-primary" ng-repeat="tag in composition.tags">{{tag.name}}</span>
@@ -57,7 +57,7 @@
                   <td>
                     <a ui-sref="compositions.edit({composition_id: composition.id})">
                     <button class="btn btn-xs btn-info">
-                      <span class="fa fa-pencil">Edit</span>
+                      <span class="fa fa-pencil"></span> Edit
                     </button>
                   </a>
                     <a ui-sref="compositions.view({composition_id: composition.id})">

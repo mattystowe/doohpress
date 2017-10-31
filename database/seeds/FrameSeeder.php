@@ -61,7 +61,7 @@ class FrameSeeder extends Seeder
 
 
           $Frame = new Frame;
-          $Frame->name = 'The Screen @ Canaery Wharf';
+          $Frame->name = 'The Screen @ Canary Wharf';
           $Frame->description = 'The screen description goes here';
           $Frame->owner_id = $Owner_Ocean_Outdoor->id;
           $Frame->city_id = $City_London->id;
@@ -71,8 +71,8 @@ class FrameSeeder extends Seeder
           $Frame->longitude = '-0.01955867';
           $Frame->frametype_id = $Frametype_DOOH->id;
           $Frame->frameformat_id = $Frameformat_1->id;
-          $Frame->image = 'someimage';
-          $Frame->thumbnail = 'somethumbnail';
+          $Frame->image = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/images/wamn8D1CToKN8bekRV6D_Screen%20Shot%202017-10-30%20at%2014.31.03.png';
+          $Frame->thumbnail = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/thumbnails/QjItLqEmS2g3hgZzuWJg_Screen%20Shot%202017-10-30%20at%2014.31.03.png';
           $Frame->save();
 
 
@@ -108,8 +108,8 @@ class FrameSeeder extends Seeder
             'latitude'=>'51.50460217',
             'longitude'=>'-0.01955867',
             'published'=>true,
-            'image'=>'someimage',
-            'thumbnail'=>'somethumbnail',
+            'image'=>'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/images/wamn8D1CToKN8bekRV6D_Screen%20Shot%202017-10-30%20at%2014.31.03.png',
+            'thumbnail'=>'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/thumbnails/QjItLqEmS2g3hgZzuWJg_Screen%20Shot%202017-10-30%20at%2014.31.03.png',
             'wemockup_product_id'=>4
           ]);
 

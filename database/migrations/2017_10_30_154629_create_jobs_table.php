@@ -19,7 +19,9 @@ class CreateJobsTable extends Migration
             $table->integer('user_id');
             $table->integer('sku_id');
             $table->string('status',255);
+            $table->integer('wemockup_item_id')->nullable();
             $table->integer('progress')->nullable();
+            $table->timestamp('date_queued')->nullable();
             $table->timestamp('date_processing_media')->nullable();
             $table->timestamp('date_rendering')->nullable();
             $table->timestamp('date_complete')->nullable();

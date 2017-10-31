@@ -92136,6 +92136,8 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
     switch (vm.job.status) {
       case 'PENDINGSETUP':
         return '/html/jobs/view/partials/setup.html';
+      case 'QUEUED':
+        return '/html/jobs/view/partials/queued.html';
       case 'PROCESSING_MEDIA':
         return '/html/jobs/view/partials/processing_media.html';
       case 'RENDERING':
