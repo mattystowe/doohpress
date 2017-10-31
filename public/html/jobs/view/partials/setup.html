@@ -3,6 +3,10 @@
   <p>
     Our magical mockup monkeys will take care of the rest...
   </p>
+
+
+
+
 </div>
 
 <div ng-repeat="inputoption in vm.job.wemockup_sku.product.inputoptions" class="card-box">
@@ -12,7 +16,7 @@
     {{inputoption.name}}
   </h3>
   <img class="img img-fluid" src="{{inputoption.image}}" />
-  <div><p>{{vm.getSafeHTML(inputoption.description);}}</p></div>
+  <div ng-bind-html="vm.getSafeHTML(inputoption.description);"></div>
 
 
 
@@ -32,7 +36,14 @@
 
     <!-- Video Upload !-->
     <div ng-if="inputoption.input_type=='videoupload'" >
-
+      <videopicker
+      path="'/jobs/inputfiles/'" callback="vm.handleFileUpload(file,inputoption);">
+      </videopicker>
+      <div>
+        <span ng-if="inputoption.value" class="label label-success">
+          <i class="fa fa-check"></i>
+        </span>
+      </div>
     </div>
 
     <!-- Text !-->

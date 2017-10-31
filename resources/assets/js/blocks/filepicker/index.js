@@ -7,3 +7,4 @@ angular.module('blocks.filepicker', []);
 
 require('./profilepicker.directive');
 require('./imagepicker.directive');
+require('./videopicker.directive');
