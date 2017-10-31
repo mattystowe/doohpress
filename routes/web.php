@@ -11,6 +11,8 @@
 |
 */
 
+$this->get('/test','TestController@test');
+
 
 $this->get('/', 'IndexController@index');
 Auth::routes();
