@@ -90109,10 +90109,11 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.compositions').controller('CompositionsEditController', CompositionsEditController);
 
-CompositionsEditController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'SkuService', 'WemockupService', 'FrameService', 'TagService', '$stateParams'];
+CompositionsEditController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', 'SkuService', 'WemockupService', 'FrameService', 'TagService', '$stateParams', 'PreprocessService'];
 
 /* @ngInject */
-function CompositionsEditController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, SkuService, WemockupService, FrameService, TagService, $stateParams) {
+function CompositionsEditController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, SkuService, WemockupService, FrameService, TagService, $stateParams, PreprocessService) {
+
   var vm = this;
 
   vm.Auth = Auth;
@@ -90161,6 +90162,12 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   vm.handleThumbnail = handleThumbnail;
   vm.handleImage = handleImage;
 
+  vm.preprocess = {};
+  vm.addPreProcessOpen = addPreProcessOpen;
+  vm.getAvailablePreProcesses = getAvailablePreProcesses;
+  vm.isPreProcessValid = isPreProcessValid;
+  vm.savePreProcess = savePreProcess;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -90176,6 +90183,45 @@ function CompositionsEditController($scope, $state, AuthService, toastr, SweetAl
   }
   /////////////////////////////////////////////////
 
+
+  function addPreProcessOpen() {
+    vm.preprocess = {};
+    $('#preprocessmodal').modal('show');
+  }
+
+  function getAvailablePreProcesses() {
+    return PreprocessService.getAvailable();
+  }
+
+  function isPreProcessValid() {
+    var valid = true;
+    if (vm.preprocess.frame == null) {
+      valid = false;
+    }
+    if (vm.preprocess.inputoption == null) {
+      valid = false;
+    }
+    if (vm.preprocess.process_type == null) {
+      valid = false;
+    }
+    return valid;
+  }
+
+  function savePreProcess() {
+    var preprocess = {
+      composition_id: vm.composition.id,
+      frame_id: vm.preprocess.frame.id,
+      wemockup_inputoption_id: vm.preprocess.inputoption.id,
+      process_type: vm.preprocess.process_type
+    };
+    PreprocessService.save(preprocess).then(function (data) {
+      //
+      toastr.success('Success', 'Preprocess saved');
+      vm.composition.preprocesses.push(data.data);
+    }, function (data) {
+      toastr.error('Error', 'Could not save preprocess.');
+    });
+  }
 
   function handleThumbnail(file) {
     vm.composition.thumbnail = file;
@@ -90589,9 +90635,56 @@ angular.module('app.compositions', ['app.core', 'app.frames', 'app.jobs']);
 __webpack_require__("./resources/assets/js/compositions/routes.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.service.js");
 __webpack_require__("./resources/assets/js/compositions/skus.service.js");
+__webpack_require__("./resources/assets/js/compositions/preprocesses.service.js");
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsedit.controller.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/compositions/preprocesses.service.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').service('PreprocessService', PreprocessService);
+
+PreprocessService.$inject = ['$http'];
+
+/* @ngInject */
+function PreprocessService($http) {
+
+  var api = {
+    getAvailable: getAvailable,
+    save: save
+  };
+  return api;
+
+  ////////////
+
+  function save(preprocess) {
+    var jsondata = angular.toJson(preprocess);
+    return $http({
+      url: '/compositions/preprocess/add/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        preprocess: jsondata
+      }
+    });
+  }
+
+  function getAvailable() {
+    var availablePreprocesses = ['Video_Transcode_FitToFrame', 'Image_Convert_RenderPDF_toJpeg'];
+    return availablePreprocesses;
+  }
+}
 
 /***/ }),
 

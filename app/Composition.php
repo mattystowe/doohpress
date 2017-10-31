@@ -45,6 +45,10 @@ class Composition extends Model
       return $this->hasMany('App\Example');
     }
 
+    public function preprocesses() {
+      return $this->hasMany('App\Preprocess');
+    }
+
 
 
 }

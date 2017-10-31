@@ -7,10 +7,38 @@
         .module('app.compositions')
         .controller('CompositionsEditController', CompositionsEditController);
 
-    CompositionsEditController.$inject = ['$scope','$state','AuthService','toastr','SweetAlert','CompositionService','SkuService','WemockupService','FrameService','TagService','$stateParams'];
+    CompositionsEditController.$inject = [
+      '$scope',
+      '$state',
+      'AuthService',
+      'toastr',
+      'SweetAlert',
+      'CompositionService',
+      'SkuService',
+      'WemockupService',
+      'FrameService',
+      'TagService',
+      '$stateParams',
+      'PreprocessService'
+    ];
 
     /* @ngInject */
-    function CompositionsEditController($scope, $state, AuthService,toastr,SweetAlert,CompositionService,SkuService,WemockupService,FrameService,TagService,$stateParams) {
+    function CompositionsEditController(
+      $scope,
+      $state,
+      AuthService,
+      toastr,
+      SweetAlert,
+      CompositionService,
+      SkuService,
+      WemockupService,
+      FrameService,
+      TagService,
+      $stateParams,
+      PreprocessService
+    ) {
+
+
         var vm = this;
 
         vm.Auth = Auth;
@@ -62,6 +90,12 @@
         vm.handleThumbnail = handleThumbnail;
         vm.handleImage = handleImage;
 
+        vm.preprocess = {};
+        vm.addPreProcessOpen = addPreProcessOpen;
+        vm.getAvailablePreProcesses = getAvailablePreProcesses;
+        vm.isPreProcessValid = isPreProcessValid;
+        vm.savePreProcess = savePreProcess;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -76,6 +110,48 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+
+
+        function addPreProcessOpen() {
+          vm.preprocess = {};
+          $('#preprocessmodal').modal('show');
+        }
+
+        function getAvailablePreProcesses() {
+          return PreprocessService.getAvailable();
+        }
+
+        function isPreProcessValid() {
+          var valid = true;
+          if (vm.preprocess.frame == null) { valid = false; }
+          if (vm.preprocess.inputoption == null) { valid = false; }
+          if (vm.preprocess.process_type == null) { valid = false; }
+          return valid;
+        }
+
+        function savePreProcess() {
+          var preprocess = {
+            composition_id: vm.composition.id,
+            frame_id: vm.preprocess.frame.id,
+            wemockup_inputoption_id: vm.preprocess.inputoption.id,
+            process_type: vm.preprocess.process_type
+          }
+          PreprocessService.save(preprocess)
+          .then(
+            function(data) {
+            //
+            toastr.success('Success','Preprocess saved');
+            vm.composition.preprocesses.push(data.data);
+            },
+            function(data) {
+              toastr.error('Error','Could not save preprocess.');
+            }
+          );
+
+        }
+
+
 
 
         function handleThumbnail(file) {

@@ -244,6 +244,13 @@
 
 
         <div class="card-box">
+          <h4>PreProcessing</h4>
+          <button ng-click="vm.addPreProcessOpen();" class="btn btn-primary">Add</button>
+        </div>
+
+
+
+        <div class="card-box">
           <button ng-disabled="!vm.isCompositionValid()" ng-click="vm.saveComposition()" class="btn btn-lg btn-primary">Save Composition</button>
         </div>
 
@@ -357,6 +364,51 @@
 
 
 
+
+            <div id="preprocessmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="preprocessModal" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title mt-0" id="myModalLabel">Add Pre-Processing stage</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                </div>
+                                <div class="modal-body">
+                                  <form class="form-horizontal m-t-20">
+                                    <small>Select Frame</small>
+                                    <select class="form-control" ng-model="vm.preprocess.frame" ng-options="frame as frame.name for frame in vm.composition.frames"></select>
+                                    <div class="media" ng-if="vm.preprocess.frame">
+                                      <img class="d-flex mr-3 rounded" src="{{vm.preprocess.frame.thumbnail}}" height="100">
+                                      <div class="media-body">
+                                        <h5 class="mt-0">{{vm.preprocess.frame.name}}</h5>
+                                      </div>
+                                    </div>
+
+                                    <hr/>
+                                    <small>Select Inputoption</small>
+                                    <select class="form-control" ng-model="vm.preprocess.inputoption" ng-options="inputoption as inputoption.name for inputoption in vm.composition.wemockup_product.inputoptions"></select>
+
+                                    <div class="media" ng-if="vm.preprocess.inputoption">
+                                      <img class="d-flex mr-3 rounded" src="{{vm.preprocess.inputoption.image}}" height="100">
+                                      <div class="media-body">
+                                        <h5 class="mt-0">{{vm.preprocess.inputoption.name}}</h5>
+                                        [Type: {{vm.preprocess.inputoption.input_type}}] [Variable: {{vm.preprocess.inputoption.variable_name}}]
+                                      </div>
+                                    </div>
+
+                                    <hr/>
+                                    <small>Select Process Type</small>
+                                    <select class="form-control" ng-model="vm.preprocess.process_type" ng-options="preprocess as preprocess for preprocess in vm.getAvailablePreProcesses()"></select>
+
+
+                                  </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                                    <button ng-disabled="!vm.isPreProcessValid()" ng-click="vm.savePreProcess();" type="button" class="btn btn-primary waves-effect" data-dismiss="modal">Save</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div>
 
 
   <!-- end row -->
