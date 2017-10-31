@@ -56,7 +56,7 @@ class JobsController extends Controller
     //
     //
     public function getJob($job_id) {
-        $jobs = Job::find($job_id)->with([
+        $jobs = Job::where('id','=',$job_id)->with([
           'sku',
           'sku.skutype',
           'sku.composition.outputtype',
