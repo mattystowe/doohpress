@@ -35,5 +35,29 @@ class Jobpreprocess extends Model
     $this->save();
   }
 
+  public function markAsProcessing() {
+    if ($this->status != 'PROCESSING') {
+      $this->status = 'PROCESSING';
+      $this->date_processing = Carbon::now();
+      $this->save();
+    }
+  }
+
+  public function markAsComplete() {
+    if ($this->status != 'COMPLETE') {
+      $this->status = 'COMPLETE';
+      $this->date_complete = Carbon::now();
+      $this->save();
+    }
+  }
+
+  public function markAsFailed() {
+    if ($this->status != 'FAILED') {
+      $this->status = 'FAILED';
+      $this->date_failed = Carbon::now();
+      $this->save();
+    }
+  }
+
 
 }

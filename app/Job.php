@@ -74,6 +74,14 @@ class Job extends Model
     $this->save();
   }
 
+  public function markAsProcessingMedia() {
+    if ($this->status != 'PROCESSING_MEDIA') {
+      $this->status = 'PROCESSING_MEDIA';
+      $this->date_processing_media = Carbon::now();
+      $this->save();
+    }
+  }
+
 
 
 }

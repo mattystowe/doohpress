@@ -23,6 +23,7 @@ class CreateJobpreprocessesTable extends Migration
             $table->timestamp('date_queued')->nullable();
             $table->timestamp('date_processing')->nullable();
             $table->timestamp('date_complete')->nullable();
+            $table->timestamp('date_failed')->nullable();
             $table->timestamps();
         });
     }

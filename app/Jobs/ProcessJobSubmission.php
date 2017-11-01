@@ -39,6 +39,8 @@ class ProcessJobSubmission implements ShouldQueue
     public function handle()
     {
         DoohpressLogger::Job('debug',$this->Job,'ProcessJobSubmission');
+
+        $hasPreprocessingStages = false;
         //
         //check if job has any pre processing stages -
         foreach ($this->Job->jobinputs as $jobinput) {
@@ -64,6 +66,8 @@ class ProcessJobSubmission implements ShouldQueue
                 $jobPreProcess->markAsQueued();
                 $j = (new \App\Jobs\PreProcess($jobPreProcess))->onQueue(env('QUEUE_JOBS'));
                 dispatch($j);
+
+                $hasPreprocessingStages = true;
               }
             }
 
@@ -72,11 +76,10 @@ class ProcessJobSubmission implements ShouldQueue
 
 
         ///otherwise if no preprocesses - just submit job to wemockup
-        //
-        //
-        //
-        //
-        //
+        if (!$hasPreprocessingStages) {
+          $j = (new \App\Jobs\SubmitJobToWemockup($this->Job))->onQueue(env('QUEUE_JOBS'));
+          dispatch($j);
+        }
 
 
     }

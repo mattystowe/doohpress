@@ -22,8 +22,9 @@ class TestController extends Controller
           'title'                 => 'test Filestack video conversion'
       ];
 
-      $uuid = $client->convertVideo($external_url, 'mov', $output_options);
-      return $uuid;
+      $result = $client->convertVideo($external_url, 'mov', $output_options);
+      //$conversion_url = $result['conversion_url'];
+      return $result;
     }
 
 
