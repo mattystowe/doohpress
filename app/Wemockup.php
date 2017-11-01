@@ -13,6 +13,8 @@ use Exception;
 use Log;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use App\Job;
+use App\DoohpressLogger;
 
 class Wemockup
 {
@@ -144,6 +146,101 @@ class Wemockup
               return array();
             }
         }
+    }
+
+
+
+    //Submit job to wemockup
+    //
+    //
+    //
+    //
+    //
+    public function submit($job) {
+
+
+
+
+
+      /*
+      //fill out the basic structure
+      $request = [
+        'api_key'=>$this->api_key,
+        'skuid'=>$job->sku->wemockup_sku,
+        'webhookurl'=>env('APP_URL') . '/wemockupjobs/resultwebhook/' . $job->id,
+        'inputoptions'=>[]
+      ];
+
+      //populate the input options
+      foreach($job->jobinputs as $jobinput) {
+        $input_option = [
+          'id'=>$jobinput->inputoption_id,
+          'variable_name'=>$jobinput->variable_name,
+          'input_type'=>$jobinput->input_type,
+          'value'=>$jobinput->value,
+          'filename'=>basename($jobinput->value)
+        ];
+        $request['inputoptions'][] = $input_option;
+      }
+      */
+
+
+      $request = new \stdClass();
+      $request->api_key = $this->api_key;
+      $request->skuid = $job->sku->wemockup_sku;
+      $request->webhookurl = env('APP_URL') . '/wemockupjobs/resultwebhook/' . $job->id;
+      $request->inputoptions = array();
+
+      foreach($job->jobinputs as $jobinput) {
+        $inputoption = new \stdClass();
+        $inputoption->id = $jobinput->inputoption_id;
+        $inputoption->variable_name = $jobinput->variable_name;
+        $inputoption->input_type = $jobinput->input_type;
+        $inputoption->value = $jobinput->value;
+        $inputoption->filename = basename($jobinput->value);
+
+        $request->inputoptions[] = $inputoption;
+      }
+
+
+
+      DoohpressLogger::Job('debug',$job,json_encode($request));
+
+      //send request to wemockup
+      $method = 'order/new';
+      $request_url = $this->api_endpoint . $method;
+      try {
+          $response = $this->client->request('POST', $request_url,[
+            'body'=>json_encode($request),
+            'headers' => [ 'Content-Type' => 'application/json' ]
+          ]);
+
+
+          if ($response->getStatusCode() == '200') {
+
+            //Job created - save the wemockup job id into the job
+            $body = json_decode($response->getBody());
+            $job->wemockup_item_id = $body->id;
+            $job->save();
+            return true;
+
+          } else {
+            Log::error('wemockup::submit : status ' . $response->getStatusCode());
+            return false;
+          }
+
+
+
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+              Log::error('wemockup::submit : ' . $e->getMessage());
+              return false;
+            } else {
+              Log::error('wemockup::submit');
+              return false;
+            }
+        }
+
     }
 
 

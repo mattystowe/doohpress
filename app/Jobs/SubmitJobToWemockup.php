@@ -9,6 +9,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use App\DoohpressLogger;
+use App\Wemockup;
+
 class SubmitJobToWemockup implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -33,10 +36,23 @@ class SubmitJobToWemockup implements ShouldQueue
     public function handle()
     {
 
+        DoohpressLogger::Job('debug',$this->Job,'SubmitJobToWemockup(): Sending....');
+        $wemockup = new Wemockup;
+        if ($wemockup->submit($this->Job)) {
+          DoohpressLogger::Job('debug',$this->Job,'SubmitJobToWemockup(): Sent successfully.');
+          //mark job as rendering
+          $this->Job->markAsRendering();
+        } else {
+          DoohpressLogger::Job('error',$this->Job,'SubmitJobToWemockup(): Error submitting');
+          throw new Exception('Submission to Wemockup failed');
+        }
+
+
     }
 
     public function failed()
     {
+      $this->Job->markAsFailed();
       throw new Exception('Submission to Wemockup failed');
     }
 }

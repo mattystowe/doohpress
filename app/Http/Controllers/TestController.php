@@ -7,6 +7,8 @@ use Filestack\FilestackClient;
 use Filestack\Filelink;
 use Filestack\FilestackException;
 use App\DoohpressLogger;
+use App\Wemockup;
+use App\Job;
 
 class TestController extends Controller
 {
@@ -31,10 +33,14 @@ class TestController extends Controller
 
 
     public function testjob() {
-      $job = \App\Job::find(3);
+      $job = Job::find(3);
+
       //DoohpressLogger::Job('debug',$job,'Test');
-      $processJob = new \App\Jobs\ProcessJobSubmission($job);
-      $processJob->handle();
+      //$processJob = new \App\Jobs\ProcessJobSubmission($job);
+      //$processJob->handle();
+      $wemockupjob = new \App\Jobs\SubmitJobToWemockup($job);
+      $wemockupjob->handle();
+      return response('ok',200);
 
     }
 }

@@ -82,6 +82,22 @@ class Job extends Model
     }
   }
 
+  public function markAsRendering() {
+    if ($this->status != 'RENDERING') {
+      $this->status = 'RENDERING';
+      $this->date_rendering = Carbon::now();
+      $this->save();
+    }
+  }
+
+  public function markAsFailed() {
+    if ($this->status != 'FAILED') {
+      $this->status = 'FAILED';
+      $this->date_failed = Carbon::now();
+      $this->save();
+    }
+  }
+
 
 
 }
