@@ -35,6 +35,10 @@ class Job extends Model
     return $this->belongsTo('App\Sku');
   }
 
+  public function jobinputs() {
+    return $this->hasMany('App\Jobinput');
+  }
+
 
   //Load the wemockup sku for this job
   //

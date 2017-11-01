@@ -25,4 +25,14 @@ class TestController extends Controller
       $uuid = $client->convertVideo($external_url, 'mov', $output_options);
       return $uuid;
     }
+
+
+
+    
+    public function testjob() {
+      $job = \App\Job::find(3);
+      $processJob = new \App\Jobs\ProcessJobSubmission($job);
+      $processJob->handle();
+
+    }
 }

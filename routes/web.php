@@ -12,6 +12,7 @@
 */
 
 $this->get('/test','TestController@test');
+$this->get('/testjob','TestController@testjob');
 
 
 $this->get('/', 'IndexController@index');
