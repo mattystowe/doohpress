@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Preprocess;
 use App\Jobpreprocess;
 use Log;
+use App\DoohpressLogger;
 
 
 class ProcessJobSubmission implements ShouldQueue
@@ -37,7 +38,7 @@ class ProcessJobSubmission implements ShouldQueue
      */
     public function handle()
     {
-
+        DoohpressLogger::Job('debug',$this->Job,'ProcessJobSubmission');
         //
         //check if job has any pre processing stages -
         foreach ($this->Job->jobinputs as $jobinput) {

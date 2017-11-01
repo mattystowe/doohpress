@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Filestack\FilestackClient;
 use Filestack\Filelink;
 use Filestack\FilestackException;
-
+use App\DoohpressLogger;
 
 class TestController extends Controller
 {
@@ -28,9 +28,10 @@ class TestController extends Controller
 
 
 
-    
+
     public function testjob() {
       $job = \App\Job::find(3);
+      //DoohpressLogger::Job('debug',$job,'Test');
       $processJob = new \App\Jobs\ProcessJobSubmission($job);
       $processJob->handle();
 

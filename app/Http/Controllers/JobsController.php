@@ -7,6 +7,7 @@ use App\Job;
 use App\Jobinput;
 use App\Sku;
 use Auth;
+use App\DoohpressLogger;
 
 
 class JobsController extends Controller
@@ -21,6 +22,7 @@ class JobsController extends Controller
       $job_data = json_decode($request->input('job'));
       $job = Job::find($job_data->id);
       if ($job) {
+        DoohpressLogger::Job('debug',$job,'Job submitted');
         //
         //
         //
@@ -71,6 +73,7 @@ class JobsController extends Controller
             $job->status = 'PENDINGSETUP';
 
             if ($job->save()) {
+              DoohpressLogger::Job('debug',$job,'Job created');
               return $job;
             } else {
               return response('Could not save job', 422);
