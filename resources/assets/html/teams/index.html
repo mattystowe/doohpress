@@ -63,7 +63,7 @@
                     <div class="list-group b-0 mail-list" align="left">
                         <a ng-repeat="team in vm.Auth().currentUser().teams" class="list-group-item" ng-click="vm.changeTeam(team);">
                           <span>
-                            <img src="{{team.profilepic}}" style="width:35px; height:35px;" class="rounded-circle">
+                            <img ng-src="{{team.profilepic}}" style="width:35px; height:35px;" class="rounded-circle">
                           {{team.name}}
                         </span>
                         <span class="pull-right">

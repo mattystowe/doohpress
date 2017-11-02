@@ -1,0 +1,29 @@
+<div class="card-box">
+  <h2>Your creation is ready!</h2>
+  <p>
+    Download the output files below
+  </p>
+</div>
+
+<div class="card-box">
+<blockquote ng-repeat="outputfile in vm.job.wemockup_item.outputfiles">
+  <p>
+    <span class="fa fa-file-image-o"></span>
+    <a href="{{outputfile.link}}" target="_blank">
+      <button class="btn btn-success">Download</button>
+    </a>
+  </p>
+
+  <div ng-if="vm.isImage(outputfile.filename)">
+    <a href="{{outputfile.link}}" target="_blank">
+      <img class="img img-fluid" ng-src="{{vm.getResponsiveFileUrl(outputfile.link,600,600);}}"/>
+    </a>
+  </div>
+
+  <div ng-if="vm.isVideo(outputfile.filename)">
+    <a href="{{outputfile.link}}" target="_blank">
+      [Video player goes here]
+    </a>
+  </div>
+</blockquote>
+</div>

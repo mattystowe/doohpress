@@ -92071,6 +92071,10 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
 
   vm.submitJob = submitJob;
 
+  vm.isImage = isImage;
+  vm.isVideo = isVideo;
+  vm.getResponsiveFileUrl = getResponsiveFileUrl;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -92083,6 +92087,46 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
   }
   /////////////////////////////////////////////////
 
+
+  /**
+   * Returns bool for whether a filename is an image or not for display purposes only.
+   *
+   *
+   *
+   * @param  {[type]}  filename [description]
+   * @return {Boolean}          [description]
+   */
+  function isImage(filename) {
+    var isImage = false;
+    var imageTypes = ['png', 'jpg', 'jpeg'];
+    imageTypes.forEach(function (type) {
+      if (filename.includes(type)) {
+        isImage = true;
+      }
+    });
+
+    return isImage;
+  }
+
+  function isVideo(filename) {
+    var isVideo = false;
+    var videoTypes = ['mov', 'mp4'];
+    videoTypes.forEach(function (type) {
+      if (filename.includes(type)) {
+        isVideo = true;
+      }
+    });
+
+    return isVideo;
+  }
+
+  function getResponsiveFileUrl(url, maxwidth, maxheight) {
+    if (url) {
+      return vm.filestackprocessingurl + 'resize=width:' + maxwidth + ',height:' + maxheight + ',fit:clip/' + url;
+    } else {
+      return '';
+    }
+  }
 
   function submitJob() {
     JobService.submitJob(vm.job).then(function (data) {

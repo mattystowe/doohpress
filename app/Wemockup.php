@@ -150,6 +150,39 @@ class Wemockup
 
 
 
+    public function getItem($item_id) {
+      $method = 'item/get/' . $item_id;
+      $request_url = $this->api_endpoint . $method . '?api_key=' . $this->api_key;
+      try {
+          $response = $this->client->request('GET', $request_url);
+
+
+          if ($response->getStatusCode() == '200') {
+
+            //Job created - save the render street jobid into the itemjob
+            $body = json_decode($response->getBody());
+            return $body;
+
+          } else {
+            Log::error('wemockup::getItem : status ' . $response->getStatusCode());
+            return false;
+          }
+
+
+
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+              Log::error('wemockup::getItem : ' . $e->getMessage());
+              return false;
+            } else {
+              Log::error('wemockup::getItem');
+              return false;
+            }
+        }
+    }
+
+
+
     //Submit job to wemockup
     //
     //
@@ -188,7 +221,8 @@ class Wemockup
       $request = new \stdClass();
       $request->api_key = $this->api_key;
       $request->skuid = $job->sku->wemockup_sku;
-      $request->webhookurl = env('APP_URL') . '/wemockupjobs/resultwebhook/' . $job->id;
+      $request->webhookurl = env('APP_URL') . '/wemockupwebhooks/itemfinished/' . $job->id;
+      $request->progresswebhookurl = env('APP_URL') . '/wemockupwebhooks/itemprogress/' . $job->id;
       $request->inputoptions = array();
 
       foreach($job->jobinputs as $jobinput) {

@@ -65,6 +65,13 @@ class Job extends Model
   }
 
 
+  //Load the wemockup item
+  public function loadWemockupItem() {
+    $wemockup = new Wemockup;
+    $this->wemockup_item = $wemockup->getItem($this->wemockup_item_id);
+  }
+
+
 
 
 
@@ -94,6 +101,24 @@ class Job extends Model
     if ($this->status != 'FAILED') {
       $this->status = 'FAILED';
       $this->date_failed = Carbon::now();
+      $this->save();
+    }
+  }
+
+
+  public function markAsComplete() {
+    if ($this->status != 'COMPLETE') {
+      $this->status = 'COMPLETE';
+      $this->progress = 100;
+      $this->date_complete = Carbon::now();
+      $this->save();
+    }
+  }
+
+  public function markAsCancelled() {
+    if ($this->status != 'CANCELLED') {
+      $this->status = 'CANCELLED';
+      $this->date_cancelled = Carbon::now();
       $this->save();
     }
   }

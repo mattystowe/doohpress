@@ -91,6 +91,9 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+//wemockup webhook handlers
+$this->post('/wemockupwebhooks/itemfinished/{job_id}','WemockupWebhooksController@itemFinished');
+$this->post('/wemockupwebhooks/itemprogress/{job_id}','WemockupWebhooksController@itemProgress');
 
 //Team invitation responses
 $this->get('/team/join/{invitation_uuid}','TeamController@join');

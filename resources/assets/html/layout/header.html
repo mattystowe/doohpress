@@ -39,7 +39,7 @@
                     <li class="list-inline-item dropdown notification-list">
 
                         <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                            {{vm.Auth().currentUser().firstname}} [ <img src="{{vm.Auth().currentTeam().profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" /> {{vm.Auth().currentTeam().name}}]
+                            {{vm.Auth().currentUser().firstname}} [ <img ng-src="{{vm.Auth().currentTeam().profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" /> {{vm.Auth().currentTeam().name}}]
                             <img src="{{vm.Auth().currentUser().profilepic}}" class="rounded-circle">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
@@ -56,7 +56,7 @@
                             <hr>
 
                             <a href="" class="dropdown-item notify-item" ng-repeat="team in vm.Auth().currentUser().teams" ng-click="vm.changeTeam(team);">
-                                <img src="{{team.profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" />
+                                <img ng-src="{{team.profilepic}}" style="width:20px; height:20px" class="img img-responsive rounded-circle" />
                                 <span>{{team.name}}</span>
 
                             </a>
