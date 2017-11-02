@@ -1,5 +1,6 @@
 <div class="card-box">
-  <h2>Your creation is ready!</h2>
+  <h2><button class="btn btn-success"><i class="fa fa-check"/></button>
+    Your creation is ready!</h2>
   <p>
     Download the output files below
   </p>
@@ -8,7 +9,6 @@
 <div class="card-box">
 <blockquote ng-repeat="outputfile in vm.job.wemockup_item.outputfiles">
   <p>
-    <span class="fa fa-file-image-o"></span>
     <a href="{{outputfile.link}}" target="_blank">
       <button class="btn btn-success">Download</button>
     </a>
@@ -21,9 +21,12 @@
   </div>
 
   <div ng-if="vm.isVideo(outputfile.filename)">
-    <a href="{{outputfile.link}}" target="_blank">
-      [Video player goes here]
-    </a>
+
+    <video class="img img-fluid" controls>
+      <source ng-src="{{outputfile.link}}" type="video/mp4">
+        Your browser does not support HTML5 video. But don't worry you can download from the link above.
+    </video>
+
   </div>
 </blockquote>
 </div>
