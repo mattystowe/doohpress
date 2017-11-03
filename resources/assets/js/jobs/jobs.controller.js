@@ -15,7 +15,8 @@
       'AuthService',
       'toastr',
       'JobService',
-      '$sce'
+      '$sce',
+      '$interval'
     ];
 
     /* @ngInject */
@@ -27,7 +28,8 @@
       AuthService,
       toastr,
       JobService,
-      $sce
+      $sce,
+      $interval
     ) {
 
 
@@ -45,13 +47,15 @@
 
         vm.getSafeHTML = getSafeHTML;
         vm.submitValid = submitValid;
-
+        vm.submitting = false;
         vm.submitJob = submitJob;
 
         vm.isImage = isImage;
         vm.isVideo = isVideo;
         vm.getResponsiveFileUrl = getResponsiveFileUrl;
 
+        vm.pollingPromise = null;
+        vm.polling = false;
 
         /////////////////////////////////////////////////
         activate();
@@ -115,14 +119,20 @@
 
 
         function submitJob() {
+          vm.submitting = true;
+          vm.job.status == 'QUEUED';
           JobService.submitJob(vm.job)
           .then(
             function(data) {
-            //
-            //vm.job = data.data;
-            toastr.success('Job Submitted Successfully','Success');
+              vm.submitting = false;
+              //
+              vm.job = data.data;
+              toastr.success('Job Submitted Successfully','Success');
+
+              startUpdatePolling();
             },
             function(data) {
+              vm.submitting = false;
               if (data.status == 404) {
                 $state.go('404');
               } else {
@@ -135,14 +145,14 @@
 
         function submitValid() {
           var valid = true;
-          vm.job.wemockup_sku.product.inputoptions.forEach(function(inputoption) {
-            if (!inputoption.value) {
-              valid = false;
-            }
-          });
-
           if (vm.submitting) {
             valid = false;
+          } else {
+            vm.job.wemockup_sku.product.inputoptions.forEach(function(inputoption) {
+              if (!inputoption.value) {
+                valid = false;
+              }
+            });
           }
 
           return valid;
@@ -175,6 +185,19 @@
             function(data) {
             //
             vm.job = data.data;
+
+              //start polling service
+                  if (vm.job.status == 'QUEUED' || vm.job.status == 'PROCESSING_MEDIA' || vm.job.status == 'RENDERING') {
+                    startUpdatePolling();
+                    $scope.$on('$destroy', function () {
+                      $interval.cancel(vm.pollingPromise); // remove the polling if leaving page
+                    });
+                  }
+                  if (vm.job.status == 'COMPLETE' || vm.job.status == 'FAILED' || vm.job.status == 'CANCELLED') {
+                    $interval.cancel(vm.pollingPromise);
+                  }
+
+
             },
             function(data) {
               if (data.status == 404) {
@@ -184,6 +207,18 @@
               }
             }
           );
+        }
+
+
+        function startUpdatePolling() {
+          if (vm.polling == false) {
+            vm.pollingPromise = $interval(pollForUpdates, 5000); // 5 seconds update
+            vm.polling = true;
+          }
+        }
+
+        function pollForUpdates() {
+          loadJob($stateParams.job_id);
         }
 
 

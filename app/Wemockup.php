@@ -230,7 +230,13 @@ class Wemockup
         $inputoption->id = $jobinput->inputoption_id;
         $inputoption->variable_name = $jobinput->variable_name;
         $inputoption->input_type = $jobinput->input_type;
-        $inputoption->value = $jobinput->value;
+
+        //url encode the value
+        $str = $jobinput->value;
+        $pos = strrpos($str, '/') + 1;
+        $url_encoded_fileurl = substr($str, 0, $pos) . urlencode(substr($str, $pos));
+
+        $inputoption->value = $url_encoded_fileurl;
         $inputoption->filename = basename($jobinput->value);
 
         $request->inputoptions[] = $inputoption;

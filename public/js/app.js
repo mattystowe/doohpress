@@ -92050,10 +92050,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.jobs').controller('JobsController', JobsController);
 
-JobsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'JobService', '$sce'];
+JobsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'JobService', '$sce', '$interval'];
 
 /* @ngInject */
-function JobsController($scope, $rootScope, $state, $stateParams, AuthService, toastr, JobService, $sce) {
+function JobsController($scope, $rootScope, $state, $stateParams, AuthService, toastr, JobService, $sce, $interval) {
 
   var vm = this;
 
@@ -92068,12 +92068,15 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
 
   vm.getSafeHTML = getSafeHTML;
   vm.submitValid = submitValid;
-
+  vm.submitting = false;
   vm.submitJob = submitJob;
 
   vm.isImage = isImage;
   vm.isVideo = isVideo;
   vm.getResponsiveFileUrl = getResponsiveFileUrl;
+
+  vm.pollingPromise = null;
+  vm.polling = false;
 
   /////////////////////////////////////////////////
   activate();
@@ -92129,11 +92132,17 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
   }
 
   function submitJob() {
+    vm.submitting = true;
+    vm.job.status == 'QUEUED';
     JobService.submitJob(vm.job).then(function (data) {
+      vm.submitting = false;
       //
-      //vm.job = data.data;
+      vm.job = data.data;
       toastr.success('Job Submitted Successfully', 'Success');
+
+      startUpdatePolling();
     }, function (data) {
+      vm.submitting = false;
       if (data.status == 404) {
         $state.go('404');
       } else {
@@ -92144,14 +92153,14 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
 
   function submitValid() {
     var valid = true;
-    vm.job.wemockup_sku.product.inputoptions.forEach(function (inputoption) {
-      if (!inputoption.value) {
-        valid = false;
-      }
-    });
-
     if (vm.submitting) {
       valid = false;
+    } else {
+      vm.job.wemockup_sku.product.inputoptions.forEach(function (inputoption) {
+        if (!inputoption.value) {
+          valid = false;
+        }
+      });
     }
 
     return valid;
@@ -92176,6 +92185,17 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
     JobService.load(job_id).then(function (data) {
       //
       vm.job = data.data;
+
+      //start polling service
+      if (vm.job.status == 'QUEUED' || vm.job.status == 'PROCESSING_MEDIA' || vm.job.status == 'RENDERING') {
+        startUpdatePolling();
+        $scope.$on('$destroy', function () {
+          $interval.cancel(vm.pollingPromise); // remove the polling if leaving page
+        });
+      }
+      if (vm.job.status == 'COMPLETE' || vm.job.status == 'FAILED' || vm.job.status == 'CANCELLED') {
+        $interval.cancel(vm.pollingPromise);
+      }
     }, function (data) {
       if (data.status == 404) {
         $state.go('404');
@@ -92183,6 +92203,17 @@ function JobsController($scope, $rootScope, $state, $stateParams, AuthService, t
         toastr.error('Error', 'There was an error loading the job');
       }
     });
+  }
+
+  function startUpdatePolling() {
+    if (vm.polling == false) {
+      vm.pollingPromise = $interval(pollForUpdates, 5000); // 5 seconds update
+      vm.polling = true;
+    }
+  }
+
+  function pollForUpdates() {
+    loadJob($stateParams.job_id);
   }
 
   /**

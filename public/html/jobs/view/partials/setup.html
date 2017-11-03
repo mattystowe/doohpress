@@ -15,7 +15,7 @@
     <span ng-show="inputoption.value" class="label label-success"><i class="fa fa-check"></i></span>
     {{inputoption.name}}
   </h3>
-  <img class="img img-fluid" src="{{inputoption.image}}" />
+  <img class="img img-fluid" ng-src="{{inputoption.image}}" />
   <div ng-bind-html="vm.getSafeHTML(inputoption.description);"></div>
 
 
@@ -84,6 +84,6 @@
   <p>
     When you are ready.. We're ready.
   </p>
-  <button ng-disabled="!vm.submitValid();" class="btn btn-lg btn-success" ng-click="vm.submitJob();">Press my DOOH!</button>
+  <button ng-disabled="!vm.submitValid();" class="btn btn-lg btn-success" ng-click="vm.submitJob();"><i ng-show="vm.submitting" class="fa fa-spin fa-cog"></i>Press my DOOH!</button>
 
 </div>

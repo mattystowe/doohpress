@@ -22,8 +22,8 @@ class CreateCompositionsTable extends Migration
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->boolean('published')->default(true);
-            $table->string('image',255);
-            $table->string('thumbnail',255);
+            $table->string('image',1000);
+            $table->string('thumbnail',1000);
             $table->integer('wemockup_product_id');
             $table->timestamps();
         });

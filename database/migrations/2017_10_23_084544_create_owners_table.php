@@ -16,7 +16,7 @@ class CreateOwnersTable extends Migration
         Schema::create('owners', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('logo')->nullable();
+            $table->text('logo')->nullable();
             $table->string('website')->nullable();
             $table->string('social_twitter')->nullable();
             $table->timestamps();

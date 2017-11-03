@@ -19,7 +19,7 @@ class CreateJobinputsTable extends Migration
             $table->integer('inputoption_id');
             $table->string('input_type');
             $table->string('variable_name');
-            $table->string('value')->nullable();
+            $table->string('value',1000)->nullable();
             $table->timestamps();
         });
     }

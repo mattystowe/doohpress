@@ -18,7 +18,7 @@ class CreateExamplesTable extends Migration
             $table->integer('composition_id');
             $table->string('title')->nullable();
             $table->string('exampletype');
-            $table->string('url');
+            $table->string('url',1000);
             $table->timestamps();
         });
     }
