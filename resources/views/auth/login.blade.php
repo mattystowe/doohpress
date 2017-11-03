@@ -80,6 +80,16 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-12 text-center">
+
+          <div>
+              <small><span class="badge badge-inverse">{{config('app.version')}}</span></small>
+          </div>
+
+        </div>
+    </div>
+
 </div>
 
 
