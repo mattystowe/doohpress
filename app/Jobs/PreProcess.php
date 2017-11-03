@@ -12,6 +12,7 @@ use Log;
 use App\DoohpressLogger;
 use App\VideoConverter;
 use DB;
+use Artisan;
 
 class PreProcess implements ShouldQueue
 {
@@ -36,47 +37,54 @@ class PreProcess implements ShouldQueue
      */
     public function handle()
     {
+      Artisan::call('cache:clear');
+      $this->preprocess->fresh(['job']);
+      if ($this->preprocess->job->status != 'FAILED' && $this->preprocess->job->status != 'CANCELLED') {
+              //mark the job as PROCESSING_MEDIA
+              $this->preprocess->job->markAsProcessingMedia();
 
-      //mark the job as PROCESSING_MEDIA
-      $this->preprocess->job->markAsProcessingMedia();
-
-      //mark the preprocess as processing
-      $this->preprocess->markAsProcessing();
-
-
-      //Handle the right process
-      //
-      //
-      //
-      switch ($this->preprocess->process_type) {
-        case 'Video_Transcode_FitToFrame':
-          $this->handle_Video_Transcode_FitToFrame();
-          break;
-        //
-        //
-        //
-        //
-        //Add more types to handle here when needed.
-      }
+              //mark the preprocess as processing
+              $this->preprocess->markAsProcessing();
 
 
-      //mark process as comolete
-      $this->preprocess->markAsComplete();
+              //Handle the right process
+              //
+              //
+              //
+              switch ($this->preprocess->process_type) {
+                case 'Video_Transcode_FitToFrame':
+                  $this->handle_Video_Transcode_FitToFrame();
+                  break;
+                //
+                //
+                //
+                //
+                //Add more types to handle here when needed.
+              }
 
-      //check for any more preprocesses outstanding on this job-
-      //and if none, then queue send to wemockup job
-      //
-      //
-      //
-      //
-      $remaining_preprocesses = DB::table('jobpreprocesses')
-                                ->where('job_id','=',$this->preprocess->job->id)
-                                ->whereIn('status',['PENDINGSETUP','QUEUED','PROCESSING'])
-                                ->get();
-      if ($remaining_preprocesses->isEmpty()) {
-        $j = (new \App\Jobs\SubmitJobToWemockup($this->preprocess->job))->onQueue(env('QUEUE_JOBS'));
-        dispatch($j);
-      }
+
+              //mark process as comolete
+              $this->preprocess->markAsComplete();
+
+              //check for any more preprocesses outstanding on this job-
+              //and if none, then queue send to wemockup job
+              //
+              //
+              //
+              //
+              $remaining_preprocesses = DB::table('jobpreprocesses')
+                                        ->where('job_id','=',$this->preprocess->job->id)
+                                        ->whereIn('status',['PENDINGSETUP','QUEUED','PROCESSING'])
+                                        ->get();
+              if ($remaining_preprocesses->isEmpty()) {
+                $j = (new \App\Jobs\SubmitJobToWemockup($this->preprocess->job))->onQueue(env('QUEUE_JOBS'));
+                dispatch($j);
+              }
+
+
+        } else {
+          DoohpressLogger::Job('debug',$this->preprocess->job,'PreProcess:: Not processing : Status = ' . $this->preprocess->job->status);
+        }
 
 
     }
@@ -126,6 +134,6 @@ class PreProcess implements ShouldQueue
 
     public function failed()
     {
-      throw new Exception('Job preprocess failed');
+      DoohpressLogger::Job('error',$this->preprocess->job,'PreProcess:: - Failed');
     }
 }
