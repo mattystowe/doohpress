@@ -100,3 +100,7 @@ $this->get('/team/join/{invitation_uuid}','TeamController@join');
 $this->get('/team/joined/{invitation_uuid}','TeamController@joined')->middleware('auth');
 $this->get('/register/withinvite/{invitation_uuid}','Auth\RegisterController@withInvite');
 $this->post('/register/handlewithinvite/','Auth\RegisterController@handleWithInvite');
+
+
+//cron and scheduled
+$this->get('/scheduledtasks/schedulerun','ScheduledTasksController@scheduleRun');

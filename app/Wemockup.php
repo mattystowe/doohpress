@@ -37,6 +37,59 @@ class Wemockup
 
 
 
+
+  //handle polling of these jobs $jobs and handle results
+  //
+  //
+  //
+  public function processJobsToPoll($jobs) {
+    //
+    //
+    //get results for an array of wemockup_item_id's
+    $wemockup_item_ids = array();
+    foreach($jobs as $job) {
+      $wemockup_item_ids[] = $job->wemockup_item_id;
+    }
+    $wemockup_item_results = $this->getItems($wemockup_item_ids);
+    //Log::debug(print_r($wemockup_item_results,true));
+    //match results to job in jobs and handle
+
+    foreach ($wemockup_item_results as $result) {
+      foreach ($jobs as $job) {
+        if ($job->wemockup_item_id == $result->id) {
+          //handle result
+          switch($result->status) {
+            case 'COMPLETE':
+              $job->markAsComplete();
+              break;
+            case 'FAILED':
+              $job->markAsFailed();
+              break;
+            case 'CANCELLED':
+              $job->markAsCancelled();
+              break;
+
+              default:
+              //
+              //
+              //just update progress
+              $job->progress = $result->progress;
+              $job->save();
+              break;
+          }
+        }
+      }
+
+
+    }
+
+
+  }
+
+
+
+
+
     //Search wemockup for products with query
     //
     //
@@ -176,6 +229,46 @@ class Wemockup
               return false;
             } else {
               Log::error('wemockup::getItem');
+              return false;
+            }
+        }
+    }
+
+
+    public function getItems($item_ids) {
+      $method = 'items/get';
+      $request_url = $this->api_endpoint . $method;
+      $body = [
+        'api_key'=>$this->api_key,
+        'items'=>$item_ids
+      ];
+      Log::debug(print_r($body,true));
+      try {
+          $response = $this->client->request('POST', $request_url,[
+            'body'=>json_encode($body),
+            'headers' => [ 'Content-Type' => 'application/json' ]
+          ]);
+
+
+          if ($response->getStatusCode() == '200') {
+
+            //Job created - save the render street jobid into the itemjob
+            $body = json_decode($response->getBody());
+            return $body;
+
+          } else {
+            Log::error('wemockup::getItems : status ' . $response->getStatusCode());
+            return false;
+          }
+
+
+
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+              Log::error('wemockup::getItems : ' . $e->getMessage());
+              return false;
+            } else {
+              Log::error('wemockup::getItems');
               return false;
             }
         }
