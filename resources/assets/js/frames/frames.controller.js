@@ -19,7 +19,6 @@
 
         vm.frames = [];
         vm.frametypes = [];
-        vm.frameformats = [];
         vm.owners = [];
         vm.countries = [];
 
@@ -36,7 +35,6 @@
         function activate() {
           getFrames();
           getFrameTypes();
-          getFrameFormats();
           getOwners();
           getCities();
 
@@ -127,19 +125,6 @@
         }
 
 
-        function getFrameFormats() {
-          FrameService.getFrameFormats()
-          .then(
-            function(data) {
-            //
-            //saved - send user somewhere
-            vm.frameformats = data.data
-            },
-            function(data) {
-              toastr.error('Error','There was an error loading frame formats');
-            }
-          );
-        }
 
         function getFrameTypes() {
           FrameService.getFrameTypes()

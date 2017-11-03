@@ -123,7 +123,7 @@ class JobsController extends Controller
               $job->loadWemockupSku();
             }
 
-            if ($job->status != 'CANCELLED' && $job->status != 'FAILED' && $job->status != 'PENDINGSETUP' && $job->status != 'QUEUED') {
+            if ($job->status != 'CANCELLED' && $job->status != 'FAILED' && $job->status != 'PENDINGSETUP' && $job->status != 'QUEUED'  && $job->status != 'PROCESSING_MEDIA') {
               $job->loadWemockupItem();
             }
 

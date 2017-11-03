@@ -62,13 +62,37 @@
                 </div>
             </div>
 
+            <hr />
+
             <div class="form-group">
                 <div class="col-12">
-                  <small>Frame Format:</small>
-                  <select ng-options="frameformat.id as frameformat.name for frameformat in vm.frameformats" class="form-control" ng-model="vm.frame.frameformat_id">
-                  </select>
+                    <input ng-model="vm.frame.width" type="text" class="form-control" name="frame_width" placeholder="Width" required autofocus>
+
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.height" type="text" class="form-control" name="frame_height" placeholder="Height" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.fps" type="text" class="form-control" name="frame_fps" placeholder="Frames/Sec (fps)" required autofocus>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                    <input ng-model="vm.frame.max_bitrate" type="text" class="form-control" name="frame_max_bitrate" placeholder="Max bitrate (eg 4000)" required autofocus>
+
+                </div>
+            </div>
+
+
 
 
 

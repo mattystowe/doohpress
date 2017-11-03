@@ -19,7 +19,6 @@ var angular = require('angular');
         removeFrameFromComposition:removeFrameFromComposition,
         getAll:getAll,
         getFrameTypes:getFrameTypes,
-        getFrameFormats:getFrameFormats,
         add:add,
         load:load,
         save:save
@@ -76,15 +75,6 @@ var angular = require('angular');
           });
       }
 
-      function getFrameFormats() {
-        return $http({
-              url : '/frames/getformats/',
-              method : 'GET',
-              headers : {
-                'Content-Type' : 'application/json'
-              }
-          });
-      }
 
       function getAll() {
         return $http({

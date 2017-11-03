@@ -18,7 +18,10 @@ class Frame extends Model
       'latitude',
       'longitude',
       'frametype_id',
-      'frameformat_id',
+      'width',
+      'height',
+      'fps',
+      'max_bitrate',
       'image',
       'thumbnail'
   ];
@@ -29,10 +32,6 @@ class Frame extends Model
 
     public function frametype() {
       return $this->belongsTo('App\Frametype');
-    }
-
-    public function frameformat() {
-      return $this->belongsTo('App\Frameformat');
     }
 
     public function city() {

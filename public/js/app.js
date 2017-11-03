@@ -91573,7 +91573,6 @@ function FramesController($scope, $rootScope, $state, $stateParams, AuthService,
 
   vm.frames = [];
   vm.frametypes = [];
-  vm.frameformats = [];
   vm.owners = [];
   vm.countries = [];
 
@@ -91590,7 +91589,6 @@ function FramesController($scope, $rootScope, $state, $stateParams, AuthService,
   function activate() {
     getFrames();
     getFrameTypes();
-    getFrameFormats();
     getOwners();
     getCities();
 
@@ -91661,16 +91659,6 @@ function FramesController($scope, $rootScope, $state, $stateParams, AuthService,
     $scope.$apply();
   }
 
-  function getFrameFormats() {
-    FrameService.getFrameFormats().then(function (data) {
-      //
-      //saved - send user somewhere
-      vm.frameformats = data.data;
-    }, function (data) {
-      toastr.error('Error', 'There was an error loading frame formats');
-    });
-  }
-
   function getFrameTypes() {
     FrameService.getFrameTypes().then(function (data) {
       //
@@ -91736,7 +91724,6 @@ function FrameService($http) {
     removeFrameFromComposition: removeFrameFromComposition,
     getAll: getAll,
     getFrameTypes: getFrameTypes,
-    getFrameFormats: getFrameFormats,
     add: add,
     load: load,
     save: save
@@ -91786,16 +91773,6 @@ function FrameService($http) {
   function getFrameTypes() {
     return $http({
       url: '/frames/gettypes/',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
-
-  function getFrameFormats() {
-    return $http({
-      url: '/frames/getformats/',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

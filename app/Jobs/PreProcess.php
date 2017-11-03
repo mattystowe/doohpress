@@ -92,14 +92,19 @@ class PreProcess implements ShouldQueue
       DoohpressLogger::Job('debug',$this->preprocess->job,'PreProcess::handle_Video_Transcode_FitToFrame - Starting');
       $VideoConverter = new VideoConverter;
       $VideoConverter->setSourceUrl($this->preprocess->jobinput->value);
+      if ($this->preprocess->frame->max_bitrate == '') {
+        $bitrate = 4000;
+      } else {
+        $bitrate = $this->preprocess->frame->max_bitrate;
+      }
       $VideoConverter->setOutputOptions([
         'access'                => 'public',
         'aspect_mode'           => 'crop',
         'fps'                   => 30,
-        'width'                 => $this->preprocess->frame->frameformat->dim_x,
-        'height'                => $this->preprocess->frame->frameformat->dim_y,
-        'title'                 => $this->preprocess->job->sku->composition->name
-        //'video_bitrate'         => 1024,
+        'width'                 => $this->preprocess->frame->width,
+        'height'                => $this->preprocess->frame->height,
+        'title'                 => $this->preprocess->job->sku->composition->name,
+        'video_bitrate'         => $bitrate,
       ]);
       $converted_video_url = $VideoConverter->process();
       if ($converted_video_url) {

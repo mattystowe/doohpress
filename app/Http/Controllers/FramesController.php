@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Frame;
 use App\Composition;
 use App\Frametype;
-use App\Frameformat;
 
 class FramesController extends Controller
 {
@@ -42,7 +41,7 @@ class FramesController extends Controller
 
 
     public function getAll(Request $request) {
-      $frames = Frame::with(['owner','frametype','frameformat','city.country'])->get();
+      $frames = Frame::with(['owner','frametype','city.country'])->get();
       return $frames;
     }
 
@@ -52,10 +51,6 @@ class FramesController extends Controller
       return $types;
     }
 
-    public function getAllFormats() {
-      $formats = Frameformat::all();
-      return $formats;
-    }
 
     public function add(Request $request) {
       $frame_data = json_decode($request->input('frame'));
@@ -69,7 +64,10 @@ class FramesController extends Controller
         'latitude'=>$frame_data->latitude,
         'longitude'=>$frame_data->longitude,
         'frametype_id'=>$frame_data->frametype_id,
-        'frameformat_id'=>$frame_data->frameformat_id,
+        'width'=>$frame_data->width,
+        'height'=>$frame_data->height,
+        'fps'=>$frame_data->fps,
+        'max_bitrate'=>$frame_data->max_bitrate,
         'image'=>$frame_data->image,
         'thumbnail'=>$frame_data->thumbnail
       ]);
@@ -94,7 +92,10 @@ class FramesController extends Controller
         $frame->latitude = $frame_data->latitude;
         $frame->longitude = $frame_data->longitude;
         $frame->frametype_id = $frame_data->frametype_id;
-        $frame->frameformat_id = $frame_data->frameformat_id;
+        $frame->width = $frame_data->width;
+        $frame->height = $frame_data->height;
+        $frame->fps = $frame_data->fps;
+        $frame->max_bitrate = $frame_data->max_bitrate;
         $frame->image = $frame_data->image;
         $frame->thumbnail = $frame_data->thumbnail;
 
@@ -113,7 +114,6 @@ class FramesController extends Controller
       $frame = Frame::find($frame_id);
       if ($frame) {
         $frame->frametype;
-        $frame->frameformat;
         $frame->city;
         $frame->owner;
 

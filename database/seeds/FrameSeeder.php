@@ -47,12 +47,6 @@ class FrameSeeder extends Seeder
           $Owner_Ocean_Outdoor->save();
 
 
-          $Frameformat_1 = new Frameformat;
-          $Frameformat_1->name = 'Standard 16:9 1080p';
-          $Frameformat_1->dim_x = '1920';
-          $Frameformat_1->dim_y = '1080';
-          $Frameformat_1->fps = '25';
-          $Frameformat_1->save();
 
           $Frametype_DOOH = new Frametype;
           $Frametype_DOOH->name = 'Digital';
@@ -70,7 +64,10 @@ class FrameSeeder extends Seeder
           $Frame->latitude = '51.50460217';
           $Frame->longitude = '-0.01955867';
           $Frame->frametype_id = $Frametype_DOOH->id;
-          $Frame->frameformat_id = $Frameformat_1->id;
+          $Frame->width = '640';
+          $Frame->height = '352';
+          $Frame->fps = '25';
+          $Frame->max_bitrate = '4000';
           $Frame->image = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/images/wamn8D1CToKN8bekRV6D_Screen%20Shot%202017-10-30%20at%2014.31.03.png';
           $Frame->thumbnail = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/thumbnails/QjItLqEmS2g3hgZzuWJg_Screen%20Shot%202017-10-30%20at%2014.31.03.png';
           $Frame->save();
