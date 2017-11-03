@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\DoohpressLogger;
 use App\Wemockup;
+use App\Host;
 
 class SubmitJobToWemockup implements ShouldQueue
 {
@@ -35,6 +36,8 @@ class SubmitJobToWemockup implements ShouldQueue
      */
     public function handle()
     {
+      $host = new Host;
+      $host->setInstanceScaleProtection(true);
 
         DoohpressLogger::Job('debug',$this->Job,'SubmitJobToWemockup(): Sending....');
         $wemockup = new Wemockup;
@@ -47,12 +50,14 @@ class SubmitJobToWemockup implements ShouldQueue
           throw new Exception('Submission to Wemockup failed');
         }
 
+        $host->setInstanceScaleProtection(false);
 
     }
 
     public function failed()
     {
       $this->Job->markAsFailed();
-      throw new Exception('Submission to Wemockup failed');
+      $host = new Host;
+      $host->setInstanceScaleProtection(false);
     }
 }

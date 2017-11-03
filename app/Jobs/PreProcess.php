@@ -13,6 +13,7 @@ use App\DoohpressLogger;
 use App\VideoConverter;
 use DB;
 use Artisan;
+use App\Host;
 
 class PreProcess implements ShouldQueue
 {
@@ -38,7 +39,11 @@ class PreProcess implements ShouldQueue
     public function handle()
     {
       Artisan::call('cache:clear');
+      $host = new Host;
+      $host->setInstanceScaleProtection(true);
       $this->preprocess->fresh(['job']);
+
+
       if ($this->preprocess->job->status != 'FAILED' && $this->preprocess->job->status != 'CANCELLED') {
               //mark the job as PROCESSING_MEDIA
               $this->preprocess->job->markAsProcessingMedia();
@@ -86,6 +91,8 @@ class PreProcess implements ShouldQueue
           DoohpressLogger::Job('debug',$this->preprocess->job,'PreProcess:: Not processing : Status = ' . $this->preprocess->job->status);
         }
 
+
+        $host->setInstanceScaleProtection(false);
 
     }
 
@@ -135,5 +142,8 @@ class PreProcess implements ShouldQueue
     public function failed()
     {
       DoohpressLogger::Job('error',$this->preprocess->job,'PreProcess:: - Failed');
+      $this->preprocess->job->markAsFailed();
+      $host = new Host;
+      $host->setInstanceScaleProtection(false);
     }
 }

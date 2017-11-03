@@ -13,6 +13,7 @@ use App\Preprocess;
 use App\Jobpreprocess;
 use Log;
 use App\DoohpressLogger;
+use App\Host;
 
 
 class ProcessJobSubmission implements ShouldQueue
@@ -38,6 +39,9 @@ class ProcessJobSubmission implements ShouldQueue
      */
     public function handle()
     {
+      $host = new Host;
+      $host->setInstanceScaleProtection(true);
+
         DoohpressLogger::Job('debug',$this->Job,'ProcessJobSubmission');
 
         $hasPreprocessingStages = false;
@@ -81,6 +85,7 @@ class ProcessJobSubmission implements ShouldQueue
           dispatch($j);
         }
 
+        $host->setInstanceScaleProtection(false);
 
     }
 
@@ -91,6 +96,8 @@ class ProcessJobSubmission implements ShouldQueue
 
     public function failed()
     {
-      throw new Exception('Job processing failed');
+      $this->Job->markAsFailed();
+      $host = new Host;
+      $host->setInstanceScaleProtection(false);
     }
 }
