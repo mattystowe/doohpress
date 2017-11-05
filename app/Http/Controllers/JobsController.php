@@ -13,6 +13,60 @@ use App\DoohpressLogger;
 class JobsController extends Controller
 {
 
+    public function getList(Request $request) {
+      $user = Auth::user();
+        switch ($request->input('display')) {
+          case 'myjobs':
+            return $this->getJobsForUserOnTeam($user->id, $request->input('team_id'));
+            break;
+          case 'teamjobs':
+            return $this->getJobsForTeam($request->input('team_id'));
+            break;
+
+          default:
+            return array();
+            break;
+        }
+    }
+
+    private function getJobsForUserOnTeam($user_id, $team_id) {
+      $jobs = Job::where('team_id','=',$team_id)
+                  ->where('user_id','=',$user_id)
+                  ->with([
+                    'sku',
+                    'sku.skutype',
+                    'sku.composition.outputtype',
+                    'sku.composition.compositioncategory',
+                    'user'
+                  ])
+                  ->orderBy('created_at','desc')
+                  ->get();
+      return $jobs;
+    }
+
+    private function getJobsForTeam($team_id) {
+      //1.check user is on team
+      $user = Auth::user();
+      if ($user->is_on_team($team_id)) {
+        $jobs = Job::where('team_id','=',$team_id)
+                    ->orderBy('created_at','desc')
+                    ->with([
+                      'sku',
+                      'sku.skutype',
+                      'sku.composition.outputtype',
+                      'sku.composition.compositioncategory',
+                      'user'
+                    ])
+                    ->get();
+        return $jobs;
+      } else {
+        //user is not on the requested team
+        return response('Invalid request', 422);
+      }
+    }
+
+
+
 
     //Handle submission of a job
     //
@@ -109,7 +163,7 @@ class JobsController extends Controller
           'sku.composition.compositioncategory',
           'sku.composition.frames'
         ])->get();
-        if ($jobs) {
+        if ($jobs->isNotEmpty()) {
           $job = $jobs[0];
           //
           //check that job belongs to a team that the user is on....

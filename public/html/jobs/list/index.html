@@ -1,0 +1,66 @@
+<div ng-controller="JobsListController as vm">
+  <!-- Page-Title -->
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item">Jobs</li>
+                      <li class="breadcrumb-item">List</li>
+                      <li ng-if="vm.display=='myjobs'" class="breadcrumb-item active">My Jobs</li>
+                      <li ng-if="vm.display=='teamjobs'" class="breadcrumb-item active">Team Jobs</li>
+                  </ol>
+              </div>
+              <h4 ng-if="vm.display=='myjobs'" class="page-title">My Jobs</h4>
+              <h4 ng-if="vm.display=='teamjobs'" class="page-title">Team Jobs</h4>
+          </div>
+      </div>
+  </div>
+  <!-- end page title end breadcrumb -->
+
+
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card card-box">
+            <table class="table table-responsive table-striped">
+              <thead class="thead-default">
+                <tr>
+                  <th>Job #</th>
+                  <th>User</th>
+                  <th></th>
+                  <th>Composition</th>
+                  <th>Status</th>
+                  <th>Progress</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="job in vm.jobs">
+                  <td>{{job.id}}</td>
+                  <td><img ng-src="{{job.user.profilepic}}" style="width:30px; height:30px" class="img img-responsive rounded-circle" /></td>
+                  <td><img class="img img-fluid rounded" width="100" ng-src="{{job.sku.composition.thumbnail}}"></td>
+                  <td>{{job.sku.composition.name}}</td>
+                  <td>
+                    <div class="{{vm.getStatusClass(job.status)}}">{{job.status}}</div>
+                  </td>
+                  <td>
+                    <div class="progress">
+                        <div class="progress-bar progress-lg progress-bar-success progress-bar-striped active progress-animated wow animated " role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%;">
+                            <span >{{job.progress}} %</span>
+                        </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a ui-sref="jobs.view({job_id:job.id})" ui-sref-opts="{reload: true}">
+                    <button class="btn btn-success">View</button>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+  </div>
+
+
+</div>

@@ -16,7 +16,8 @@ var angular = require('angular');
       var api = {
         create:create,
         load:load,
-        submitJob:submitJob
+        submitJob:submitJob,
+        getJobs:getJobs
       };
       return api;
 
@@ -33,6 +34,20 @@ var angular = require('angular');
               },
               data : {
                 job: jobjson
+              }
+          });
+      }
+
+      function getJobs(params) {
+        return $http({
+              url : '/jobs/getlist/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                team_id: params.team_id,
+                display: params.display
               }
           });
       }

@@ -85,23 +85,35 @@
                 <ul class="navigation-menu">
 
                     <li class="has-submenu">
-                        <a ui-sref='home'><i class="md md-dashboard"></i>Home</a>
+                        <a ui-sref="home" ui-sref-opts="{reload: true}"><i class="md md-dashboard"></i>Home</a>
                     </li>
 
                     <li ng-if="vm.Auth().isSuperAdmin()" class="has-submenu">
                         <a><i class="md md-dashboard"></i>Admin</a>
                         <ul class="submenu">
                             <li>
-                                <a ui-sref="countries">Countries/Cities</a>
+                                <a ui-sref="countries" ui-sref-opts="{reload: true}">Countries/Cities</a>
                             </li>
                             <li>
-                                <a ui-sref="compositions">Compositions</a>
+                                <a ui-sref="compositions" ui-sref-opts="{reload: true}">Compositions</a>
                             </li>
                             <li>
-                                <a ui-sref="frames">Frames</a>
+                                <a ui-sref="frames" ui-sref-opts="{reload: true}">Frames</a>
                             </li>
                             <li>
-                                <a ui-sref="owners">Owners</a>
+                                <a ui-sref="owners" ui-sref-opts="{reload: true}">Owners</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a><i class="fa fa-youtube-play"></i>Jobs</a>
+                        <ul class="submenu">
+                            <li>
+                                <a ui-sref="jobs.list({display:'myjobs'})" ui-sref-opts="{reload: true}">My Jobs</a>
+                            </li>
+                            <li>
+                                <a ui-sref="jobs.list({display:'teamjobs'})" ui-sref-opts="{reload: true}">Team Jobs</a>
                             </li>
                         </ul>
                     </li>

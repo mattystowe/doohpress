@@ -11,4 +11,5 @@ angular.module('app.jobs', [
 
 require('./jobs.service');
 require('./jobs.controller');
+require('./jobslist.controller');
 require('./routes');

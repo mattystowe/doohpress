@@ -92012,6 +92012,7 @@ angular.module('app.jobs', ['app.core']);
 
 __webpack_require__("./resources/assets/js/jobs/jobs.service.js");
 __webpack_require__("./resources/assets/js/jobs/jobs.controller.js");
+__webpack_require__("./resources/assets/js/jobs/jobslist.controller.js");
 __webpack_require__("./resources/assets/js/jobs/routes.js");
 
 /***/ }),
@@ -92247,7 +92248,8 @@ function JobService($http) {
   var api = {
     create: create,
     load: load,
-    submitJob: submitJob
+    submitJob: submitJob,
+    getJobs: getJobs
   };
   return api;
 
@@ -92264,6 +92266,20 @@ function JobService($http) {
       },
       data: {
         job: jobjson
+      }
+    });
+  }
+
+  function getJobs(params) {
+    return $http({
+      url: '/jobs/getlist/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        team_id: params.team_id,
+        display: params.display
       }
     });
   }
@@ -92290,6 +92306,94 @@ function JobService($http) {
         job: jobjson
       }
     });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/jobs/jobslist.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.jobs').controller('JobsListController', JobsListController);
+
+JobsListController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'JobService', '$sce', '$interval'];
+
+/* @ngInject */
+function JobsListController($scope, $rootScope, $state, $stateParams, AuthService, toastr, JobService, $sce, $interval) {
+
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.display = 'myjobs'; // default display mode
+  vm.jobs = [];
+  vm.getJobs = getJobs;
+
+  vm.getStatusClass = getStatusClass;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    if ($stateParams.display != null) {
+      vm.display = $stateParams.display;
+    }
+    getJobs();
+
+    $scope.$watch(AuthService.currentTeam, function (currentTeam) {
+      vm.getJobs();
+    });
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function getJobs() {
+    var params = {
+      display: vm.display,
+      team_id: Auth().currentTeam().id
+    };
+
+    JobService.getJobs(params).then(function (data) {
+      //
+      vm.jobs = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading jobs.');
+    });
+  }
+
+  function getStatusClass(status) {
+    switch (status) {
+      case 'PENDINGSETUP':
+        return 'label label-inverse';
+        break;
+      case 'PROCESSING_MEDIA':
+        return 'label label-primary';
+        break;
+      case 'RENDERING':
+        return 'label label-warning';
+        break;
+      case 'COMPLETE':
+        return 'label label-success';
+        break;
+      case 'CANCELLED':
+        return 'label label-white';
+        break;
+      case 'FAILED':
+        return 'label label-danger';
+        break;
+      default:
+        return 'label label-inverse';
+    }
   }
 }
 
@@ -92325,6 +92429,12 @@ function getStates() {
         config: {
             url: '/view/{job_id}',
             templateUrl: '/html/jobs/view/index.html'
+        }
+    }, {
+        state: 'jobs.list',
+        config: {
+            url: '/list/{display}',
+            templateUrl: '/html/jobs/list/index.html'
         }
     }];
 }

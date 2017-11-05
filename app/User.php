@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Log;
 
 class User extends Authenticatable
 {
@@ -37,6 +38,18 @@ class User extends Authenticatable
 
     public function jobs() {
       return $this->hasMany('App\Job');
+    }
+
+
+
+
+    public function is_on_team($team_id) {
+      $team_result = $this->teams()->where('teams.id','=',$team_id)->count();
+      if ($team_result > 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
 }

@@ -29,6 +29,13 @@ function getStates() {
               url: '/view/{job_id}',
               templateUrl: '/html/jobs/view/index.html'
           }
+      },
+      {
+          state: 'jobs.list',
+          config: {
+              url: '/list/{display}',
+              templateUrl: '/html/jobs/list/index.html'
+          }
       }
     ];
 }
