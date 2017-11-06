@@ -116,6 +116,11 @@ class FramesController extends Controller
         $frame->frametype;
         $frame->city;
         $frame->owner;
+        foreach($frame->compositions as $composition) {
+          $composition->outputtype;
+          $composition->compositioncategory;
+          $composition->tags;
+        }
 
         return $frame;
       } else {

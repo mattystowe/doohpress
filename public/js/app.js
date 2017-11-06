@@ -91884,6 +91884,53 @@ function FrameService($http) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/frames/framesview.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.frames').controller('FramesViewController', FramesViewController);
+
+FramesViewController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', 'FrameService', 'OwnerService', 'CityService'];
+
+/* @ngInject */
+function FramesViewController($scope, $rootScope, $state, $stateParams, AuthService, toastr, FrameService, OwnerService, CityService) {
+
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.frame = {};
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    loadFrame($stateParams.frame_id);
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function loadFrame(frame_id) {
+    FrameService.load(frame_id).then(function (data) {
+      //
+      vm.frame = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frame');
+    });
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/frames/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -91898,6 +91945,7 @@ angular.module('app.frames', ['app.core', 'app.compositions', 'app.owners', 'app
 
 __webpack_require__("./resources/assets/js/frames/routes.js");
 __webpack_require__("./resources/assets/js/frames/frames.controller.js");
+__webpack_require__("./resources/assets/js/frames/framesview.controller.js");
 __webpack_require__("./resources/assets/js/frames/frames.service.js");
 
 /***/ }),

@@ -13,4 +13,5 @@ angular.module('app.frames', [
 
 require('./routes');
 require('./frames.controller');
+require('./framesview.controller');
 require('./frames.service');

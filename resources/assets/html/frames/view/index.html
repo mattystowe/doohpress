@@ -1,1 +1,104 @@
-view
+<div ng-controller="FramesViewController as vm">
+
+<div class="row">
+
+  <div class="col-md-6 col-lg-6">
+    <div class="card-box">
+
+      <div class="media">
+        <img class="d-flex mr-3 rounded" src="{{vm.frame.image}}" height="100">
+        <div class="media-body">
+          <h5 class="mt-0">{{vm.frame.name}}</h5>
+          {{vm.frame.description}}<br>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-box">
+
+      <div class="media">
+        <img class="d-flex mr-3 rounded" src="{{vm.frame.owner.logo}}" height="100">
+        <div class="media-body">
+          <h5 class="mt-0">{{vm.frame.owner.name}}</h5>
+          <a ng-if="vm.frame.owner.social_twitter" href="{{vm.frame.owner.social_twitter}}" target="_blank">
+            <button type="button" class="btn btn-twitter waves-effect waves-light">
+                <i class="fa fa-twitter"></i>
+            </button>
+          </a><br>
+          <a href="{{vm.frame.owner.website}}" target="_blank">
+            {{vm.frame.owner.website}}
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div class="card-box">
+      <locationpicker marker="vm.frame"></locationpicker>
+    </div>
+
+
+
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+
+    <div class="card card-box">
+      <h4>
+        Compositions available
+      </h4>
+    </div>
+    
+    <div class="card card-box my-fade-animation" ng-repeat="composition in vm.frame.compositions">
+      <div class="row">
+        <div class="col-sm-4">
+          <img ng-src="{{composition.thumbnail}}" class="img img-fluid rounded" width="200"/>
+        </div>
+        <div class="col-sm-8">
+
+          <div class="media">
+                          <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                            <img class="d-flex mr-3 rounded-circle" ng-src="{{frame.owner_logo}}" height="64">
+                          </a>
+                          <div class="media-body">
+                            <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                              <h5 class="mt-0">{{composition.name}}</h5>
+                            </a>
+                            <p>{{composition.description}}</p><br>
+
+                              <div class="label label-success">
+                                <i class="fa fa-file-video-o"></i> {{composition.outputtype.name}}
+                              </div>
+                              <div class="label label-primary">
+                                <i class="fa fa-file-video-o"></i> {{composition.compositioncategory.name}}
+                              </div><br>
+                              <span ng-repeat="tag in composition.tags" class="label label-default">{{tag.name}}</span>
+
+
+                            <div class="pull-right">
+                              <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                                <button class="btn btn-primary">
+                                  View
+                                </button>
+                              </a>
+                            </div>
+
+                          </div>
+                      </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+</div>
