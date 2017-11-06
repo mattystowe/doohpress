@@ -16,6 +16,8 @@ require('./compositions');
 require('./frames');
 require('./owners');
 require('./jobs');
+require('./search');
+
 
 angular.module('app', [
   'app.core',
@@ -27,7 +29,8 @@ angular.module('app', [
   'app.compositions',
   'app.frames',
   'app.owners',
-  'app.jobs'
+  'app.jobs',
+  'app.search'
 ]);
 
 var authblock = angular.module('blocks.auth')

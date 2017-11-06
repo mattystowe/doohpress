@@ -123,4 +123,13 @@ class FramesController extends Controller
       }
     }
 
+
+    public function searchFiltered(Request $request) {
+      $filters = json_decode($request->input('filters'));
+
+      $frame = new Frame;
+      return $frame->search($filters);
+
+    }
+
 }

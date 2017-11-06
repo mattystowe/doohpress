@@ -15,17 +15,39 @@ var angular = require('angular');
 
       var api = {
         search:search,
+        searchFiltered:searchFiltered,
         addFrameToComposition:addFrameToComposition,
         removeFrameFromComposition:removeFrameFromComposition,
         getAll:getAll,
         getFrameTypes:getFrameTypes,
         add:add,
         load:load,
-        save:save
+        save:save,
+        getFrameTypeIcon:getFrameTypeIcon
       };
       return api;
 
       ////////////
+
+
+      function getFrameTypeIcon(frametype_id) {
+        switch (frametype_id) {
+          case 1:
+            return {
+              icon: 'fa fa-youtube-play',
+              styleclass: 'label label-success'
+            };
+          
+            break;
+          default:
+            return {
+              icon: 'fa fa-newspaper-o',
+              styleclass: 'label label-invert'
+            };
+            break;
+
+        }
+      }
 
       function add(frame) {
         var framejson = angular.toJson(frame);
@@ -92,6 +114,20 @@ var angular = require('angular');
               method : 'GET',
               headers : {
                 'Content-Type' : 'application/json'
+              }
+          });
+      }
+
+      function searchFiltered(filters) {
+        var filtersjson = angular.toJson(filters);
+        return $http({
+              url : '/frames/searchfiltered/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                filters: filtersjson
               }
           });
       }

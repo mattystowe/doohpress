@@ -88686,8 +88686,9 @@ __webpack_require__("./resources/assets/js/compositions/index.js");
 __webpack_require__("./resources/assets/js/frames/index.js");
 __webpack_require__("./resources/assets/js/owners/index.js");
 __webpack_require__("./resources/assets/js/jobs/index.js");
+__webpack_require__("./resources/assets/js/search/index.js");
 
-angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions', 'app.frames', 'app.owners', 'app.jobs']);
+angular.module('app', ['app.core', 'app.layout', 'app.home', 'app.profile', 'app.teams', 'app.countries', 'app.compositions', 'app.frames', 'app.owners', 'app.jobs', 'app.search']);
 
 var authblock = angular.module('blocks.auth');
 authblock.run(runBlock);
@@ -91720,17 +91721,39 @@ function FrameService($http) {
 
   var api = {
     search: search,
+    searchFiltered: searchFiltered,
     addFrameToComposition: addFrameToComposition,
     removeFrameFromComposition: removeFrameFromComposition,
     getAll: getAll,
     getFrameTypes: getFrameTypes,
     add: add,
     load: load,
-    save: save
+    save: save,
+    getFrameTypeIcon: getFrameTypeIcon
   };
   return api;
 
   ////////////
+
+
+  function getFrameTypeIcon(frametype_id) {
+    switch (frametype_id) {
+      case 1:
+        return {
+          icon: 'fa fa-youtube-play',
+          styleclass: 'label label-success'
+        };
+
+        break;
+      default:
+        return {
+          icon: 'fa fa-newspaper-o',
+          styleclass: 'label label-invert'
+        };
+        break;
+
+    }
+  }
 
   function add(frame) {
     var framejson = angular.toJson(frame);
@@ -91796,6 +91819,20 @@ function FrameService($http) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function searchFiltered(filters) {
+    var filtersjson = angular.toJson(filters);
+    return $http({
+      url: '/frames/searchfiltered/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        filters: filtersjson
       }
     });
   }
@@ -92941,6 +92978,177 @@ function getStates() {
             templateUrl: '/html/profile/index.html'
         }
     }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/search/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+__webpack_require__("./resources/assets/js/core/index.js");
+
+angular.module('app.search', ['app.core', 'app.compositions', 'app.frames']);
+
+__webpack_require__("./resources/assets/js/search/searchframes.controller.js");
+__webpack_require__("./resources/assets/js/search/routes.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/search/routes.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.search').run(appRun);
+
+appRun.$inject = ['routerHelper'];
+
+function appRun(routerHelper) {
+    routerHelper.configureDefaults('/search', '/search/frames');
+    routerHelper.configureStates(getStates());
+}
+
+function getStates() {
+    return [{
+        state: 'search',
+        config: {
+            url: '/search',
+            templateUrl: '/html/search/index.html'
+        }
+    }, {
+        state: 'search.frames',
+        config: {
+            url: '/frames',
+            templateUrl: '/html/search/frames/index.html'
+        }
+    }, {
+        state: 'search.compositions',
+        config: {
+            url: '/compositions',
+            templateUrl: '/html/search/compositions/index.html'
+        }
+    }];
+}
+
+/***/ }),
+
+/***/ "./resources/assets/js/search/searchframes.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.search').controller('SearchFramesController', SearchFramesController);
+
+SearchFramesController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', 'AuthService', 'toastr', '$sce', '$interval', 'FrameService', 'CityService', 'OwnerService'];
+
+/* @ngInject */
+function SearchFramesController($scope, $rootScope, $state, $stateParams, AuthService, toastr, $sce, $interval, FrameService, CityService, OwnerService) {
+
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.display = 'list'; // list or map view mode
+
+  vm.filters = {
+    query: '',
+    owner_id: null,
+    city_id: null,
+    frametype_id: null
+  };
+  vm.clearFilters = clearFilters;
+
+  vm.frametypes = [];
+  vm.cities = [];
+  vm.owners = [];
+
+  vm.doSearch = doSearch;
+
+  vm.getFrameTypeIcon = getFrameTypeIcon;
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    getFrameTypes();
+    getOwners();
+    getCities();
+    //
+    doSearch();
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function getFrameTypeIcon(frametype_id) {
+    return FrameService.getFrameTypeIcon(frametype_id);
+  }
+
+  function getFrameTypes() {
+    FrameService.getFrameTypes().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.frametypes = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frame types');
+    });
+  }
+
+  function getCities() {
+    CityService.getAllGroupedByCountry().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.countries = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading countries and cities');
+    });
+  }
+
+  function getOwners() {
+    OwnerService.getAll().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.owners = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading owners');
+    });
+  }
+
+  function clearFilters() {
+    vm.filters = {
+      query: '',
+      owner_id: null,
+      city_id: null,
+      frametype_id: null
+    };
+    doSearch();
+  }
+
+  function doSearch() {
+    FrameService.searchFiltered(vm.filters).then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.frames = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error loading frames');
+    });
+  }
 }
 
 /***/ }),
