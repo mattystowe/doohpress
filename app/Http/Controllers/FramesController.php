@@ -116,6 +116,7 @@ class FramesController extends Controller
         $frame->frametype;
         $frame->city;
         $frame->owner;
+        $frame->specfiles;
         foreach($frame->compositions as $composition) {
           $composition->outputtype;
           $composition->compositioncategory;

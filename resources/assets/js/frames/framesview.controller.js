@@ -41,7 +41,7 @@
 
         vm.frame = {};
 
-
+        vm.getSpecfileIcon = getSpecfileIcon;
 
         /////////////////////////////////////////////////
         activate();
@@ -70,6 +70,13 @@
           );
         }
 
+
+        function getSpecfileIcon(specfile) {
+          var fileExt = specfile.urllink.split('.').pop();
+          if (fileExt.includes('pdf')) { return 'fa fa-file-pdf-o'; }
+          if (fileExt.includes('png')) { return 'fa fa-file-image-o'; }
+          return 'fa fa-file-o';
+        }
 
 
 

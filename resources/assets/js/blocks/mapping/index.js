@@ -11,3 +11,4 @@ angular.module('blocks.mapping', [
 
 require('./config');
 require('./locationpicker.directive');
+require('./locationdisplay.directive');

@@ -89417,6 +89417,73 @@ angular.module('blocks.mapping', ['uiGmapgoogle-maps']);
 
 __webpack_require__("./resources/assets/js/blocks/mapping/config.js");
 __webpack_require__("./resources/assets/js/blocks/mapping/locationpicker.directive.js");
+__webpack_require__("./resources/assets/js/blocks/mapping/locationdisplay.directive.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/blocks/mapping/locationdisplay.directive.js":
+/***/ (function(module, exports) {
+
+(function () {
+  'use strict';
+
+  angular.module('blocks.mapping').directive('locationdisplay', locationdisplay);
+
+  /* @ngInject */
+  function locationdisplay() {
+    var directive = {
+      restrict: 'EA',
+      templateUrl: '/html/blocks/mapping/locationdisplay.partial.html',
+      scope: {
+        marker: '='
+      },
+      controller: LocationDisplayController,
+      controllerAs: 'vm',
+      bindToController: true
+    };
+
+    return directive;
+  }
+
+  LocationDisplayController.$inject = ['$scope', 'uiGmapGoogleMapApi'];
+
+  /* @ngInject */
+  function LocationDisplayController($scope, uiGmapGoogleMapApi) {
+    var vm = this;
+
+    vm.marker = {
+      latitude: 51.50104924156018, //default london
+      longitude: -0.12441158294677734
+    };
+
+    vm.map = {
+      zoom: 14,
+      center: {
+        latitude: 51.50104924156018, //default london
+        longitude: -0.12441158294677734
+      },
+      options: {
+        scrollwheel: false
+      }
+    };
+
+    ///////////////////////////////////////////////
+
+
+    uiGmapGoogleMapApi.then(function (maps) {
+      activate();
+    });
+
+    function activate() {
+      if (vm.marker.latitude != null) {
+        vm.map.center.latitude = vm.marker.latitude;
+        vm.map.center.longitude = vm.marker.longitude;
+      }
+    }
+    /////////////////////////////////////////////
+
+  }
+})();
 
 /***/ }),
 
@@ -91906,6 +91973,8 @@ function FramesViewController($scope, $rootScope, $state, $stateParams, AuthServ
 
   vm.frame = {};
 
+  vm.getSpecfileIcon = getSpecfileIcon;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -91926,6 +91995,17 @@ function FramesViewController($scope, $rootScope, $state, $stateParams, AuthServ
     }, function (data) {
       toastr.error('Error', 'There was an error loading frame');
     });
+  }
+
+  function getSpecfileIcon(specfile) {
+    var fileExt = specfile.urllink.split('.').pop();
+    if (fileExt.includes('pdf')) {
+      return 'fa fa-file-pdf-o';
+    }
+    if (fileExt.includes('png')) {
+      return 'fa fa-file-image-o';
+    }
+    return 'fa fa-file-o';
   }
 }
 

@@ -15,6 +15,7 @@ use App\Composition;
 use App\Sku;
 use App\Tag;
 use App\Example;
+use App\Specfile;
 
 
 class FrameSeeder extends Seeder
@@ -72,7 +73,16 @@ class FrameSeeder extends Seeder
           $Frame->thumbnail = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/frames/thumbnails/QjItLqEmS2g3hgZzuWJg_Screen%20Shot%202017-10-30%20at%2014.31.03.png';
           $Frame->save();
 
-
+          $Specfile = Specfile::create([
+            'frame_id'=>$Frame->id,
+            'urllink'=>'someurllink.pdf',
+            'name'=>'Technical spec'
+          ]);
+          $Specfile = Specfile::create([
+            'frame_id'=>$Frame->id,
+            'urllink'=>'someurllink.png',
+            'name'=>'Image spec example'
+          ]);
 
           $Skutype_still_medium = Skutype::create(['name'=>'Still Image - Medium']);
           $Skutype_still_large = Skutype::create(['name'=>'Still Image - Large']);

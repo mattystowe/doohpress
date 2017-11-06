@@ -43,6 +43,10 @@ class Frame extends Model
       return $this->belongsToMany('App\Composition');
     }
 
+    public function specfiles() {
+      return $this->hasMany('App\Specfile');
+    }
+
 
 
     public function search($filters) {

@@ -35,10 +35,35 @@
 
     </div>
 
+    <div class="card-box">
+      <h4>Technical details</h4>
+      <div class="row">
 
+
+        <div class="col-sm-6">
+          <strong>Width: </strong>{{vm.frame.width}}<br>
+          <strong>Height: </strong>{{vm.frame.height}}<br>
+          <strong>Frames/sec: </strong>{{vm.frame.fps}}<br>
+          <strong>Max bitrate (video): </strong>{{vm.frame.max_bitrate}}<br>
+        </div>
+
+        <div class="col-sm-6">
+
+
+          <div class="media" ng-repeat="specfile in vm.frame.specfiles">
+            <a href="{{specfile.urllink}}" target="_blank">
+              <span class="h5"><i class="{{vm.getSpecfileIcon(specfile)}}"></i> {{specfile.name}}</span>
+            </a>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
 
     <div class="card-box">
-      <locationpicker marker="vm.frame"></locationpicker>
+      <locationdisplay marker="vm.frame"></locationdisplay>
     </div>
 
 
@@ -52,7 +77,7 @@
         Compositions available
       </h4>
     </div>
-    
+
     <div class="card card-box my-fade-animation" ng-repeat="composition in vm.frame.compositions">
       <div class="row">
         <div class="col-sm-4">
