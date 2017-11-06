@@ -129,6 +129,58 @@
 
     </div>
 
+    <div class="card-box">
+      <h4>Specification Files</h4>
+      <button class="btn btn-primary" ng-click="vm.addNewSpecfile();">Add</button>
+
+      <div class="media" ng-repeat="specfile in vm.frame.specfiles">
+        <a href="{{specfile.urllink}}" target="_blank">
+          <span class="h5"><i class="{{vm.getSpecfileIcon(specfile)}}"></i> {{specfile.name}}</span>
+        </a>
+        <button ng-click="vm.removeSpecFile(specfile,$index);" class="btn btn-danger">Remove</button>
+      </div>
+    </div>
+
+
+
+
+    <div id="newSpecFileModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newSpecFileModal" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title mt-0" id="myModalLabel">Add new specification file</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="form-horizontal m-t-20">
+
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <input type="text" ng-model="vm.newSpecFile.name" placeholder="Name" class="form-control" />
+                                </div>
+                            </div>
+
+                            <filepicker path="'/frames/specfiles/'" callback="vm.handleSpecFile(file);"></filepicker>
+
+                            <div class="media" ng-if="vm.newSpecFile.urllink">
+                              <a href="{{vm.newSpecFile.urllink}}" target="_blank">
+                                {{vm.newSpecFile.name}}
+                              </a>
+                            </div>
+
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" ng-disabled="!vm.isNewSpecFileValid()" ng-click="vm.saveNewSpecFile();" class="btn btn-primary waves-effect">Save</button>
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+
+
+
 
 
     <div class="card-box">

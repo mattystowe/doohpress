@@ -89114,6 +89114,83 @@ __webpack_require__("./resources/assets/js/blocks/example/example.directive.js")
 
 /***/ }),
 
+/***/ "./resources/assets/js/blocks/filepicker/filepicker.directive.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+(function () {
+    'use strict';
+    //
+    //
+    //CONFIG FILESTACK AND STORAGE
+    //
+    //
+
+    var filestack = __webpack_require__("./node_modules/filestack-js/dist/filestack.es2015.js").default;
+    var client = filestack.init('AVYahdTpfRL2K66BOAfvKz');
+    var s3prefix = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage';
+    //
+    //
+    //
+    //
+    //
+    //
+    angular.module('blocks.filepicker').directive('filepicker', filepicker);
+
+    /* @ngInject */
+    function filepicker() {
+        var directive = {
+            restrict: 'EA',
+            templateUrl: '/html/blocks/filepicker/filepicker.partial.html',
+            scope: {
+                callback: '&',
+                path: '='
+            },
+            controller: FilePickerController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return directive;
+    }
+
+    FilePickerController.$inject = ['$scope'];
+
+    /* @ngInject */
+    function FilePickerController($scope) {
+        var vm = this;
+
+        vm.openPicker = openPicker;
+
+        ///////////////////////////////////////////////
+        activate();
+
+        function activate() {}
+        /////////////////////////////////////////////
+
+
+        function openPicker() {
+            var aspectRatio = Number(eval(vm.aspect));
+            console.log('opening picker');
+            client.pick({
+                fromSources: ['local_file_system', 'facebook', 'googledrive', 'imagesearch', 'dropbox', 'webcam'],
+                maxFiles: 1,
+                maxSize: 5 * 1024 * 1024,
+                storeTo: {
+                    location: 's3',
+                    path: vm.path,
+                    access: 'public'
+                }
+            }).then(function (result) {
+                //console.log(result.filesUploaded);
+                vm.callback({ file: s3prefix + '/' + result.filesUploaded[0].key });
+                //addFilesToField(result.filesUploaded);
+            });
+        }
+    }
+})();
+
+/***/ }),
+
 /***/ "./resources/assets/js/blocks/filepicker/imagepicker.directive.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -89217,6 +89294,7 @@ angular.module('blocks.filepicker', []);
 __webpack_require__("./resources/assets/js/blocks/filepicker/profilepicker.directive.js");
 __webpack_require__("./resources/assets/js/blocks/filepicker/imagepicker.directive.js");
 __webpack_require__("./resources/assets/js/blocks/filepicker/videopicker.directive.js");
+__webpack_require__("./resources/assets/js/blocks/filepicker/filepicker.directive.js");
 
 /***/ }),
 
@@ -91667,6 +91745,15 @@ function FramesController($scope, $rootScope, $state, $stateParams, AuthService,
   vm.saveFrame = saveFrame;
   vm.updateFrame = updateFrame;
 
+  vm.getSpecfileIcon = getSpecfileIcon;
+  vm.removeSpecFile = removeSpecFile;
+  vm.handleSpecFile = handleSpecFile;
+  vm.addNewSpecfile = addNewSpecfile;
+
+  vm.newSpecFile = {};
+  vm.isNewSpecFileValid = isNewSpecFileValid;
+  vm.saveNewSpecFile = saveNewSpecFile;
+
   /////////////////////////////////////////////////
   activate();
 
@@ -91695,6 +91782,63 @@ function FramesController($scope, $rootScope, $state, $stateParams, AuthService,
   }
   /////////////////////////////////////////////////
 
+  function removeSpecFile(specfile, index) {
+    FrameService.removeSpecFile(specfile).then(function (data) {
+      //
+      vm.frame.specfiles.splice(index, 1);
+      toastr.success('Success', 'File removed');
+    }, function (data) {
+      toastr.error('Error', 'There was an error removing file');
+    });
+  }
+
+  function addNewSpecfile() {
+    vm.newSpecFile = {
+      frame_id: vm.frame.id,
+      name: null,
+      urllink: null
+    };
+    $('#newSpecFileModal').modal('show');
+  }
+
+  function handleSpecFile(file) {
+    vm.newSpecFile.urllink = file;
+    $scope.$apply();
+  }
+
+  function isNewSpecFileValid() {
+    var valid = true;
+    if (vm.newSpecFile.name == null) {
+      valid = false;
+    }
+    if (vm.newSpecFile.urllink == null) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  function saveNewSpecFile() {
+    $('#newSpecFileModal').modal('hide');
+    FrameService.addSpecFile(vm.newSpecFile).then(function (data) {
+      //
+      vm.frame.specfiles.push(data.data);
+      toastr.success('Success', 'File added');
+    }, function (data) {
+      toastr.error('Error', 'There was an error adding file');
+    });
+  }
+
+  function getSpecfileIcon(specfile) {
+    var fileExt = specfile.urllink.split('.').pop();
+    if (fileExt.includes('pdf')) {
+      return 'fa fa-file-pdf-o';
+    }
+    if (fileExt.includes('png')) {
+      return 'fa fa-file-image-o';
+    }
+    return 'fa fa-file-o';
+  }
 
   function loadFrame(frame_id) {
     FrameService.load(frame_id).then(function (data) {
@@ -91812,12 +91956,41 @@ function FrameService($http) {
     add: add,
     load: load,
     save: save,
-    getFrameTypeIcon: getFrameTypeIcon
+    getFrameTypeIcon: getFrameTypeIcon,
+    removeSpecFile: removeSpecFile,
+    addSpecFile: addSpecFile
   };
   return api;
 
   ////////////
 
+
+  function removeSpecFile(specfile) {
+    return $http({
+      url: '/frames/removespecfile/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        specfile_id: specfile.id
+      }
+    });
+  }
+
+  function addSpecFile(specfile) {
+    var specfilejson = angular.toJson(specfile);
+    return $http({
+      url: '/frames/addspecfile/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        specfile: specfilejson
+      }
+    });
+  }
 
   function getFrameTypeIcon(frametype_id) {
     switch (frametype_id) {

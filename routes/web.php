@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/frames/add/','FramesController@add');
     $this->post('/frames/update/','FramesController@update');
     $this->post('/frames/removefromcomposition/','FramesController@removeFromComposition');
+    $this->post('/frames/removespecfile/','FramesController@removeSpecFile');
+    $this->post('/frames/addspecfile/','FramesController@addSpecFile');
     $this->post('/compositions/removesku/','SkusController@removeSku');
     $this->post('/compositions/addsku/','SkusController@addSku');
     $this->post('/compositions/updateskutype/','SkusController@updateSkuType');

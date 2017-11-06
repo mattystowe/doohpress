@@ -29,6 +29,15 @@
         vm.saveFrame = saveFrame;
         vm.updateFrame = updateFrame;
 
+        vm.getSpecfileIcon = getSpecfileIcon;
+        vm.removeSpecFile = removeSpecFile;
+        vm.handleSpecFile = handleSpecFile;
+        vm.addNewSpecfile = addNewSpecfile;
+
+        vm.newSpecFile = {};
+        vm.isNewSpecFileValid = isNewSpecFileValid;
+        vm.saveNewSpecFile = saveNewSpecFile;
+
         /////////////////////////////////////////////////
         activate();
 
@@ -58,6 +67,65 @@
           return AuthService;
         }
         /////////////////////////////////////////////////
+
+        function removeSpecFile(specfile,index) {
+          FrameService.removeSpecFile(specfile)
+          .then(
+            function(data) {
+            //
+            vm.frame.specfiles.splice(index,1);
+            toastr.success('Success','File removed');
+            },
+            function(data) {
+              toastr.error('Error','There was an error removing file');
+            }
+          );
+        }
+
+        function addNewSpecfile() {
+          vm.newSpecFile = {
+            frame_id: vm.frame.id,
+            name: null,
+            urllink: null
+          }
+          $('#newSpecFileModal').modal('show');
+        }
+
+        function handleSpecFile(file) {
+          vm.newSpecFile.urllink = file;
+          $scope.$apply();
+        }
+
+        function isNewSpecFileValid() {
+          var valid = true;
+          if (vm.newSpecFile.name == null) { valid = false; }
+          if (vm.newSpecFile.urllink == null) { valid = false; }
+
+          return valid;
+        }
+
+        function saveNewSpecFile() {
+          $('#newSpecFileModal').modal('hide');
+          FrameService.addSpecFile(vm.newSpecFile)
+          .then(
+            function(data) {
+            //
+            vm.frame.specfiles.push(data.data);
+            toastr.success('Success','File added');
+            },
+            function(data) {
+              toastr.error('Error','There was an error adding file');
+            }
+          );
+        }
+
+
+        function getSpecfileIcon(specfile) {
+          var fileExt = specfile.urllink.split('.').pop();
+          if (fileExt.includes('pdf')) { return 'fa fa-file-pdf-o'; }
+          if (fileExt.includes('png')) { return 'fa fa-file-image-o'; }
+          return 'fa fa-file-o';
+        }
 
 
         function loadFrame(frame_id) {

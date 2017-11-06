@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Frame;
 use App\Composition;
 use App\Frametype;
+use App\Specfile;
 
 class FramesController extends Controller
 {
@@ -136,6 +137,35 @@ class FramesController extends Controller
       $frame = new Frame;
       return $frame->search($filters);
 
+    }
+
+
+
+    public function removeSpecFile(Request $request) {
+      $specfile = Specfile::find($request->input('specfile_id'));
+      if ($specfile) {
+        if ($specfile->delete()) {
+          return response('Removed ok',200);
+        } else {
+          return response('Could not remove file', 422);
+        }
+      } else {
+        return response('Not found', 404);
+      }
+    }
+
+    public function addSpecFile(Request $request) {
+      $specfile_data = json_decode($request->input('specfile'));
+      $specfile = Specfile::create([
+        'frame_id'=>$specfile_data->frame_id,
+        'name'=>$specfile_data->name,
+        'urllink'=>$specfile_data->urllink
+      ]);
+      if ($specfile) {
+        return $specfile;
+      } else {
+        return response('Error saving file', 422);
+      }
     }
 
 }

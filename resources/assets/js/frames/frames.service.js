@@ -23,12 +23,41 @@ var angular = require('angular');
         add:add,
         load:load,
         save:save,
-        getFrameTypeIcon:getFrameTypeIcon
+        getFrameTypeIcon:getFrameTypeIcon,
+        removeSpecFile:removeSpecFile,
+        addSpecFile:addSpecFile
       };
       return api;
 
       ////////////
 
+
+      function removeSpecFile(specfile) {
+        return $http({
+              url : '/frames/removespecfile/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                specfile_id: specfile.id
+              }
+          });
+      }
+
+      function addSpecFile(specfile) {
+        var specfilejson = angular.toJson(specfile);
+        return $http({
+              url : '/frames/addspecfile/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                specfile: specfilejson
+              }
+          });
+      }
 
       function getFrameTypeIcon(frametype_id) {
         switch (frametype_id) {
@@ -37,7 +66,7 @@ var angular = require('angular');
               icon: 'fa fa-youtube-play',
               styleclass: 'label label-success'
             };
-          
+
             break;
           default:
             return {
