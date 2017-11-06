@@ -11,4 +11,5 @@ angular.module('app.search', [
 ]);
 
 require('./searchframes.controller');
+require('./searchcompositions.controller');
 require('./routes');

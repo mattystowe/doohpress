@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
   $this->get('/compositions/load/{composition_id}','CompositionsController@load');
   $this->get('/compositions/getoutputtypes/',"CompositionsController@getOutputTypes");
   $this->get('/compositions/getcompositioncategories/',"CompositionsController@getCompositionCategories");
+  $this->post('/compositions/searchfiltered','CompositionsController@searchFiltered');
   $this->get('/frames/search/{query}','FramesController@search');
   $this->post('/frames/searchfiltered/','FramesController@searchFiltered');
   $this->get('/frames/get/{frame_id}','FramesController@load');

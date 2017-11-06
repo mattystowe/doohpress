@@ -269,7 +269,7 @@ class CompositionsController extends Controller
 
     }
 
-    //Remove a preprocess from a composition 
+    //Remove a preprocess from a composition
     //
     //
     //
@@ -286,5 +286,13 @@ class CompositionsController extends Controller
       }
     }
 
+
+
+
+    public function searchFiltered(Request $request) {
+      $filters = json_decode($request->input('filters'));
+      $composition = new Composition;
+      return $composition->search($filters);
+    }
 
 }

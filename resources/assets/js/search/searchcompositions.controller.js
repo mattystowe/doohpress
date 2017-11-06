@@ -5,9 +5,9 @@
 
     angular
         .module('app.search')
-        .controller('SearchFramesController', SearchFramesController);
+        .controller('SearchCompositionsController', SearchCompositionsController);
 
-    SearchFramesController.$inject = [
+    SearchCompositionsController.$inject = [
       '$scope',
       '$rootScope',
       '$state',
@@ -18,11 +18,12 @@
       '$interval',
       'FrameService',
       'CityService',
-      'OwnerService'
+      'OwnerService',
+      'CompositionService'
     ];
 
     /* @ngInject */
-    function SearchFramesController(
+    function SearchCompositionsController(
       $scope,
       $rootScope,
       $state,
@@ -33,7 +34,8 @@
       $interval,
       FrameService,
       CityService,
-      OwnerService
+      OwnerService,
+      CompositionService
     ) {
 
 
@@ -42,18 +44,23 @@
         vm.Auth = Auth;
 
         vm.display = 'list'; // list or map view mode
-        vm.frames = [];
+        vm.compositions = [];
+
         vm.filters = {
           query: '',
           owner_id: null,
           city_id: null,
-          frametype_id: null
+          frametype_id: null,
+          compositioncategory_id: null,
+          outputtype_id: null,
         }
         vm.clearFilters = clearFilters;
 
         vm.frametypes = [];
         vm.cities = [];
         vm.owners = [];
+        vm.compositioncategories = [];
+        vm.outputtypes = [];
 
         vm.doSearch = doSearch;
 
@@ -66,6 +73,8 @@
           getFrameTypes();
           getOwners();
           getCities();
+          getCompositionCategories();
+          getOutputTypes();
           //
           doSearch();
         }
@@ -75,6 +84,34 @@
         }
         /////////////////////////////////////////////////
 
+        function getCompositionCategories() {
+          CompositionService.getCompositionCategories()
+          .then(function(data) {
+            if (data.status == 200) {
+
+              vm.compositioncategories = data.data;
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error getting compositions.');
+            }
+          });
+        }
+
+
+        function getOutputTypes() {
+          CompositionService.getOutputTypes()
+          .then(function(data) {
+            if (data.status == 200) {
+              vm.outputtypes = data.data;
+
+            } else {
+              //
+              //log error
+              toastr.error('Error','There was an error getting compositions.');
+            }
+          });
+        }
 
 
 
@@ -132,7 +169,9 @@
             query: '',
             owner_id: null,
             city_id: null,
-            frametype_id: null
+            frametype_id: null,
+            compositioncategory_id: null,
+            outputtype_id: null,
           }
           doSearch();
         }
@@ -140,15 +179,15 @@
 
 
         function doSearch() {
-          FrameService.searchFiltered(vm.filters)
+          CompositionService.searchFiltered(vm.filters)
           .then(
             function(data) {
             //
             //saved - send user somewhere
-            vm.frames = data.data
+            vm.compositions = data.data
             },
             function(data) {
-              toastr.error('Error','There was an error loading frames');
+              toastr.error('Error','There was an error loading compositions');
             }
           );
         }

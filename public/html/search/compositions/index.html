@@ -1,0 +1,153 @@
+<div ng-controller="SearchCompositionsController as vm">
+  <!-- Page-Title -->
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-title-box">
+              <div class="btn-group pull-right">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                      <li class="breadcrumb-item">Search</li>
+                      <li class="breadcrumb-item active">Compositions</li>
+                  </ol>
+              </div>
+              <h4 class="page-title">Search Compositions</h4>
+          </div>
+      </div>
+  </div>
+  <!-- end page title end breadcrumb -->
+
+
+  <div class="row">
+      <div class="col-sm-3">
+        <div class="card card-box">
+
+          <span>
+            <button ng-click="vm.display='list'" class="btn btn-white">List</button>
+            <button ng-click="vm.display='map'" class="btn btn-white">Map</button>
+          </span>
+          <hr />
+
+          <form>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input ng-model="vm.filters.query" type="text" id="query" name="query" class="form-control" placeholder="Search">
+            </div>
+            <hr />
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Has output:</small>
+                  <select ng-options="outputtype.id as outputtype.name for outputtype in vm.outputtypes" class="form-control" ng-model="vm.filters.outputtype_id">
+                  </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Category:</small>
+                  <select ng-options="compositioncategory.id as compositioncategory.name for compositioncategory in vm.compositioncategories" class="form-control" ng-model="vm.filters.compositioncategory_id">
+                  </select>
+                </div>
+            </div>
+            <hr />
+            <h6>With Frames:</h6>
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Owner:</small>
+                  <select ng-options="owner.id as owner.name for owner in vm.owners" class="form-control" ng-model="vm.filters.owner_id">
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>City:</small>
+                  <select class="form-control" ng-model="vm.filters.city_id">
+                    <optgroup ng-repeat="country in vm.countries" label="{{country.name}}">
+                      <option ng-repeat="city in country.cities" value="{{city.id}}">{{city.name}}</option>
+                    </optgroup>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-12">
+                  <small>Frame Type:</small>
+                  <select ng-options="frametype.id as frametype.name for frametype in vm.frametypes" class="form-control" ng-model="vm.filters.frametype_id">
+                  </select>
+                </div>
+            </div>
+
+
+            <hr />
+            <button ng-click="vm.doSearch();" class="btn btn-success"><i class="fa fa-search"></i> Search</button>
+            <button ng-click="vm.clearFilters();" class="btn btn-white"><i class="fa fa-filter"></i> Clear filters</button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="col-sm-9">
+
+
+              <div ng-if="vm.display=='list'">
+                    <div class="card card-box my-fade-animation" ng-repeat="composition in vm.compositions">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <img ng-src="{{composition.thumbnail}}" class="img img-fluid rounded" width="200"/>
+                        </div>
+                        <div class="col-sm-8">
+
+                          <div class="media">
+                                          <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                                            <img class="d-flex mr-3 rounded-circle" ng-src="{{frame.owner_logo}}" height="64">
+                                          </a>
+                                          <div class="media-body">
+                                            <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                                              <h5 class="mt-0">{{composition.name}}</h5>
+                                            </a>
+                                            <p>{{composition.description}}</p><br>
+                                              <small>{{composition.city_name}}, {{composition.country_name}}</small><br>
+
+                                              <div class="label label-success">
+                                                <i class="fa fa-file-video-o"></i> {{composition.outputtype_name}}
+                                              </div>
+                                              <div class="label label-primary">
+                                                <i class="fa fa-file-video-o"></i> {{composition.compositioncategory_name}}
+                                              </div>
+
+                                            <div class="pull-right">
+                                              <a ui-sref="compositions.view({composition_id:composition.id})" ui-sref-opts="{reload: true}">
+                                                <button class="btn btn-primary">
+                                                  View
+                                                </button>
+                                              </a>
+                                            </div>
+
+                                          </div>
+                                      </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                </div>
+
+
+
+                <div ng-if="vm.display=='map'">
+                  <img class="img img-fluid rounded" width="100%" src="/images/map-placeholder.jpg" />
+                </div>
+
+      </div>
+
+
+
+
+
+  </div>
+
+
+</div>

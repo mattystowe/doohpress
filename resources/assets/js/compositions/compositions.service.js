@@ -22,11 +22,28 @@ var angular = require('angular');
         updateComposition:updateComposition,
         updateProduct:updateProduct,
         removeExample:removeExample,
-        addExample:addExample
+        addExample:addExample,
+        searchFiltered:searchFiltered
       };
       return api;
 
       ////////////
+
+
+      function searchFiltered(filters) {
+        var filtersjson = angular.toJson(filters);
+        return $http({
+              url : '/compositions/searchfiltered/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                filters: filtersjson
+              }
+          });
+      }
+
 
       function removeExample(example) {
         return $http({
