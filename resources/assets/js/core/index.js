@@ -36,7 +36,7 @@ angular.module('app.core', [
     'as.sortable'
 ]);
 
-
+require('./interceptors');
 require('./config');
 require('./constants');
 require('./core.route');

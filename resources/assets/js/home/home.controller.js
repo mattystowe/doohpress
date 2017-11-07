@@ -12,7 +12,8 @@
       '$state',
       'AuthService',
       'CompositionService',
-      'JobService'
+      'JobService',
+      'toastr'
     ];
 
     /* @ngInject */
@@ -21,7 +22,8 @@
       $state,
       AuthService,
       CompositionService,
-      JobService
+      JobService,
+      toastr
     ) {
 
 

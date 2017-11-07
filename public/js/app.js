@@ -91420,11 +91420,38 @@ __webpack_require__("./node_modules/ng-sortable/index.js");
 
 angular.module('app.core', ['ngAnimate', 'blocks.router', 'blocks.auth', 'blocks.filepicker', 'blocks.wemockup', 'blocks.example', 'blocks.mapping', 'ui.router', 'angular-loading-bar', 'toastr', 'oitozero.ngSweetAlert', 'ngTagsInput', 'as.sortable']);
 
+__webpack_require__("./resources/assets/js/core/interceptors.js");
 __webpack_require__("./resources/assets/js/core/config.js");
 __webpack_require__("./resources/assets/js/core/constants.js");
 __webpack_require__("./resources/assets/js/core/core.route.js");
 __webpack_require__("./resources/assets/js/core/filters.js");
 __webpack_require__("./resources/assets/js/core/tags.service.js");
+
+/***/ }),
+
+/***/ "./resources/assets/js/core/interceptors.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+var core = angular.module('app.core');
+
+core.factory('redirectInterceptor', function ($q, $location, $window) {
+  return {
+    'responseError': function responseError(response) {
+      if (response.status == 401) {
+        $window.location.href = "/logout";
+        return $q.reject(response);
+      }
+    }
+  };
+});
+
+core.config(['$httpProvider', function ($httpProvider) {
+  $httpProvider.interceptors.push('redirectInterceptor');
+}]);
 
 /***/ }),
 
@@ -92473,10 +92500,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.home').controller('HomeController', HomeController);
 
-HomeController.$inject = ['$scope', '$state', 'AuthService', 'CompositionService', 'JobService'];
+HomeController.$inject = ['$scope', '$state', 'AuthService', 'CompositionService', 'JobService', 'toastr'];
 
 /* @ngInject */
-function HomeController($scope, $state, AuthService, CompositionService, JobService) {
+function HomeController($scope, $state, AuthService, CompositionService, JobService, toastr) {
 
   var vm = this;
 
