@@ -53,6 +53,14 @@ function getStates() {
               templateUrl: '/html/compositions/edit/index.html',
               onEnter: Redirect_If_Not_SuperAdmin
           }
+      },
+      {
+          state: 'compositions.featured',
+          config: {
+              url: '/featured/',
+              templateUrl: '/html/compositions/featured/index.html',
+              onEnter: Redirect_If_Not_SuperAdmin
+          }
       }
     ];
 }

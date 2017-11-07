@@ -16,6 +16,7 @@ use App\Sku;
 use App\Tag;
 use App\Example;
 use App\Specfile;
+use App\Featuredcomposition;
 
 
 class FrameSeeder extends Seeder
@@ -172,6 +173,21 @@ class FrameSeeder extends Seeder
             'composition_id'=>$Composition_1->id,
             'exampletype'=>'Video_YouTube',
             'url'=>'https://www.youtube.com/embed/IlQnGkfskrQ?rel=0'
+          ]);
+
+
+          //featured compositions
+          $featuredcompositions = Featuredcomposition::create([
+            'composition_id'=>$Composition_1->id,
+            'priority'=>1
+          ]);
+          $featuredcompositions = Featuredcomposition::create([
+            'composition_id'=>$Composition_1->id,
+            'priority'=>2
+          ]);
+          $featuredcompositions = Featuredcomposition::create([
+            'composition_id'=>$Composition_1->id,
+            'priority'=>3
           ]);
 
 

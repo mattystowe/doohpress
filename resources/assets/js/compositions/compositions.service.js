@@ -23,11 +23,23 @@ var angular = require('angular');
         updateProduct:updateProduct,
         removeExample:removeExample,
         addExample:addExample,
-        searchFiltered:searchFiltered
+        searchFiltered:searchFiltered,
+        getFeatured:getFeatured
       };
       return api;
 
       ////////////
+
+      function getFeatured() {
+        return $http({
+              url : '/featuredcompositions/get/',
+              method : 'GET',
+              headers : {
+                'Content-Type' : 'application/json'
+              }
+          });
+      }
+
 
 
       function searchFiltered(filters) {

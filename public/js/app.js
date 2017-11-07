@@ -90125,12 +90125,22 @@ function CompositionService($http) {
     updateProduct: updateProduct,
     removeExample: removeExample,
     addExample: addExample,
-    searchFiltered: searchFiltered
+    searchFiltered: searchFiltered,
+    getFeatured: getFeatured
   };
   return api;
 
   ////////////
 
+  function getFeatured() {
+    return $http({
+      url: '/featuredcompositions/get/',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
   function searchFiltered(filters) {
     var filtersjson = angular.toJson(filters);
@@ -90815,6 +90825,57 @@ function CompositionsViewController($scope, $state, AuthService, toastr, SweetAl
 
 /***/ }),
 
+/***/ "./resources/assets/js/compositions/featuredcompositions.controller.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+var angular = __webpack_require__("./node_modules/angular/index.js");
+
+angular.module('app.compositions').controller('FeaturedCompositionsController', FeaturedCompositionsController);
+
+FeaturedCompositionsController.$inject = ['$scope', '$state', 'AuthService', 'toastr', 'SweetAlert', 'CompositionService', '$stateParams', 'JobService'];
+
+/* @ngInject */
+function FeaturedCompositionsController($scope, $state, AuthService, toastr, SweetAlert, CompositionService, $stateParams, JobService) {
+
+  var vm = this;
+
+  vm.Auth = Auth;
+
+  vm.featuredcompositions = [];
+
+  /////////////////////////////////////////////////
+  activate();
+
+  function activate() {
+    loadFeaturedCompositions();
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function loadFeaturedCompositions() {
+    CompositionService.getFeatured().then(function (data) {
+      //
+      vm.featuredcompositions = data.data;
+    }, function (data) {
+      if (data.status == 404) {
+        $state.go('404');
+      } else {
+        toastr.error('Error', 'There was an error loading featured compositions');
+      }
+    });
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/compositions/index.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -90834,6 +90895,7 @@ __webpack_require__("./resources/assets/js/compositions/preprocesses.service.js"
 __webpack_require__("./resources/assets/js/compositions/compositions.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsview.controller.js");
 __webpack_require__("./resources/assets/js/compositions/compositionsedit.controller.js");
+__webpack_require__("./resources/assets/js/compositions/featuredcompositions.controller.js");
 
 /***/ }),
 
@@ -90947,6 +91009,13 @@ function getStates() {
         config: {
             url: '/edit/{composition_id}',
             templateUrl: '/html/compositions/edit/index.html',
+            onEnter: Redirect_If_Not_SuperAdmin
+        }
+    }, {
+        state: 'compositions.featured',
+        config: {
+            url: '/featured/',
+            templateUrl: '/html/compositions/featured/index.html',
             onEnter: Redirect_If_Not_SuperAdmin
         }
     }];
@@ -92280,28 +92349,45 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.home').controller('HomeController', HomeController);
 
-HomeController.$inject = ['$scope', '$state', 'AuthService'];
+HomeController.$inject = ['$scope', '$state', 'AuthService', 'CompositionService'];
 
 /* @ngInject */
-function HomeController($scope, $state, AuthService) {
-    var vm = this;
+function HomeController($scope, $state, AuthService, CompositionService) {
 
-    vm.Auth = Auth;
+  var vm = this;
 
-    vm.marker = {
-        latitude: 51.212206693388616,
-        longitude: 4.401054382324219
+  vm.Auth = Auth;
 
-        /////////////////////////////////////////////////
-    };activate();
+  vm.marker = {
+    latitude: 51.212206693388616,
+    longitude: 4.401054382324219
+  };
 
-    function activate() {}
+  vm.featuredcompositions = [];
 
-    function Auth() {
-        return AuthService;
-    }
-    /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  activate();
 
+  function activate() {
+
+    getFeaturedCompositions();
+  }
+
+  function Auth() {
+    return AuthService;
+  }
+  /////////////////////////////////////////////////
+
+
+  function getFeaturedCompositions() {
+    CompositionService.getFeatured().then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.featuredcompositions = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error getting featured compositions.');
+    });
+  }
 }
 
 /***/ }),
@@ -92316,7 +92402,7 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 __webpack_require__("./resources/assets/js/core/index.js");
 
-angular.module('app.home', ['app.core']);
+angular.module('app.home', ['app.core', 'app.compositions']);
 
 __webpack_require__("./resources/assets/js/home/routes.js");
 __webpack_require__("./resources/assets/js/home/home.controller.js");

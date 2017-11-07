@@ -9,7 +9,7 @@
                       <li class="breadcrumb-item active">Home</li>
                   </ol>
               </div>
-              <h4 class="page-title">Home</h4>
+              <h4 class="page-title">Home - Featured Compositions</h4>
           </div>
       </div>
   </div>
@@ -20,46 +20,23 @@
 <div class="row">
 
 
-    <div class="col-sm-4">
+    <div class="col-sm-4" ng-repeat="featuredcomposition in vm.featuredcompositions">
       <div class="card m-b-20">
-          <img class="card-img-top img-fluid" src="/images/big/img1.jpg" alt="Card image cap">
+          <a ui-sref="compositions.view({composition_id:featuredcomposition.composition.id})" ui-sref-opts="{reload: true}">
+            <img class="card-img-top img-fluid" ng-src="{{featuredcomposition.composition.image}}" alt="{{featuredcomposition.composition.name}}">
+          </a>
           <div class="card-body">
-            <h4 class="card-title font-18 mt-0">Title of card</h4>
+            <h4 class="card-title font-18 mt-0">
+              <a ui-sref="compositions.view({composition_id:featuredcomposition.composition.id})" ui-sref-opts="{reload: true}">
+                {{featuredcomposition.composition.name}}
+              </a>
+            </h4>
                 <p class="card-text">
-                  This is a longer card with supporting text below as a
-                  Card text goes here
+                  {{featuredcomposition.composition.description}}
                 </p>
           </div>
       </div>
     </div>
-
-    <div class="col-sm-4">
-      <div class="card m-b-20">
-          <img class="card-img-top img-fluid" src="/images/big/img1.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h4 class="card-title font-18 mt-0">Title of card</h4>
-                <p class="card-text">
-                  This is a longer card with supporting text below as a
-                  Card text goes here
-                </p>
-          </div>
-      </div>
-    </div>
-
-    <div class="col-sm-4">
-      <div class="card m-b-20">
-          <img class="card-img-top img-fluid" src="/images/big/img1.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h4 class="card-title font-18 mt-0">Title of card</h4>
-                <p class="card-text">
-                  This is a longer card with supporting text below as a
-                  Card text goes here
-                </p>
-          </div>
-      </div>
-    </div>
-
-
 
 
 

@@ -1,0 +1,27 @@
+<div ng-controller="FeaturedCompositionsController as vm">
+
+  <ul data-as-sortable="vm.dragControlListeners" data-ng-model="vm.featuredcompositions" class="list-unstyled">
+    <li ng-repeat="featuredcomposition in vm.featuredcompositions" data-as-sortable-item>
+      <div class="card card-box" >
+        <div class="row">
+
+          <div class="col-1">
+            <a><span data-as-sortable-item-handle class="fa fa-arrows"></span></a>
+          </div>
+          <div class="col-3">
+            <img class="img img-fluid rounded" width="100" ng-src="{{featuredcomposition.composition.thumbnail}}">
+          </div>
+          <div class="col-3">
+            {{featuredcomposition.composition.name}}
+          </div>
+          <div class="col-5">
+            <button ng-click="vm.removeComposition(featuredcomposition.composition.id, $index)" class="btn btn-danger">Remove</button>
+          </div>
+
+        </div>
+      </div>
+    <li>
+  </ul>
+
+
+</div>

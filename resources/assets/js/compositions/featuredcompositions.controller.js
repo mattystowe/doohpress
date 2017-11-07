@@ -4,36 +4,38 @@
 
 
     angular
-        .module('app.home')
-        .controller('HomeController', HomeController);
+        .module('app.compositions')
+        .controller('FeaturedCompositionsController', FeaturedCompositionsController);
 
-    HomeController.$inject = [
+    FeaturedCompositionsController.$inject = [
       '$scope',
       '$state',
       'AuthService',
-      'CompositionService'
-    ];
+      'toastr',
+      'SweetAlert',
+      'CompositionService',
+      '$stateParams',
+      'JobService'];
 
     /* @ngInject */
-    function HomeController(
+    function FeaturedCompositionsController(
       $scope,
       $state,
       AuthService,
-      CompositionService
-    ) {
+      toastr,
+      SweetAlert,
+      CompositionService,
+      $stateParams,
+      JobService) {
+
+
 
 
         var vm = this;
 
         vm.Auth = Auth;
 
-        vm.marker = {
-          latitude: 51.212206693388616,
-          longitude: 4.401054382324219
-        }
-
         vm.featuredcompositions = [];
-
 
 
 
@@ -41,8 +43,7 @@
         activate();
 
         function activate() {
-
-          getFeaturedCompositions();
+          loadFeaturedCompositions();
         }
 
         function Auth() {
@@ -51,16 +52,19 @@
         /////////////////////////////////////////////////
 
 
-        function getFeaturedCompositions() {
+        function loadFeaturedCompositions() {
           CompositionService.getFeatured()
           .then(
             function(data) {
             //
-            //saved - send user somewhere
             vm.featuredcompositions = data.data;
             },
             function(data) {
-              toastr.error('Error','There was an error getting featured compositions.');
+              if (data.status == 404) {
+                $state.go('404');
+              } else {
+                toastr.error('Error','There was an error loading featured compositions');
+              }
             }
           );
         }
