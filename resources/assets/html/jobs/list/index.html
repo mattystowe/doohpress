@@ -60,6 +60,16 @@
               </tbody>
             </table>
           </div>
+
+          <div class="card card-box" ng-if="vm.jobs.length == 0">
+            <h5>You have no jobs yet...</h5>
+            <p>
+              <a ui-sref="search.compositions" ui-sref-opts="{reload: true}">
+              <button type="button" class="btn btn-success waves-effect waves-light">
+                                                   <span class="btn-label"><i class="fa fa-check"></i>
+                                                   </span>Search compositions</button>
+            </p>
+          </div>
       </div>
   </div>
 
