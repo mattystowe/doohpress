@@ -92473,10 +92473,10 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 angular.module('app.home').controller('HomeController', HomeController);
 
-HomeController.$inject = ['$scope', '$state', 'AuthService', 'CompositionService'];
+HomeController.$inject = ['$scope', '$state', 'AuthService', 'CompositionService', 'JobService'];
 
 /* @ngInject */
-function HomeController($scope, $state, AuthService, CompositionService) {
+function HomeController($scope, $state, AuthService, CompositionService, JobService) {
 
   var vm = this;
 
@@ -92487,7 +92487,11 @@ function HomeController($scope, $state, AuthService, CompositionService) {
     longitude: 4.401054382324219
   };
 
+  vm.getLatestTeamJobs = getLatestTeamJobs;
+  vm.getLatestUserJobs = getLatestUserJobs;
   vm.featuredcompositions = [];
+  vm.latestTeamJobs = [];
+  vm.latestMyJobs = [];
 
   /////////////////////////////////////////////////
   activate();
@@ -92495,6 +92499,13 @@ function HomeController($scope, $state, AuthService, CompositionService) {
   function activate() {
 
     getFeaturedCompositions();
+    getLatestTeamJobs();
+    getLatestUserJobs();
+
+    $scope.$watch(AuthService.currentTeam, function (currentTeam) {
+      vm.getLatestTeamJobs();
+      vm.getLatestUserJobs();
+    });
   }
 
   function Auth() {
@@ -92502,6 +92513,31 @@ function HomeController($scope, $state, AuthService, CompositionService) {
   }
   /////////////////////////////////////////////////
 
+  function getLatestTeamJobs() {
+    JobService.getJobs({
+      display: 'teamjobs',
+      team_id: vm.Auth().currentTeam().id
+    }).then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.latestTeamJobs = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error getting latest team jobs');
+    });
+  }
+
+  function getLatestUserJobs() {
+    JobService.getJobs({
+      display: 'myjobs',
+      team_id: vm.Auth().currentTeam().id
+    }).then(function (data) {
+      //
+      //saved - send user somewhere
+      vm.latestMyJobs = data.data;
+    }, function (data) {
+      toastr.error('Error', 'There was an error getting latest team jobs');
+    });
+  }
 
   function getFeaturedCompositions() {
     CompositionService.getFeatured().then(function (data) {
@@ -92526,7 +92562,7 @@ var angular = __webpack_require__("./node_modules/angular/index.js");
 
 __webpack_require__("./resources/assets/js/core/index.js");
 
-angular.module('app.home', ['app.core', 'app.compositions']);
+angular.module('app.home', ['app.core', 'app.compositions', 'app.jobs']);
 
 __webpack_require__("./resources/assets/js/home/routes.js");
 __webpack_require__("./resources/assets/js/home/home.controller.js");

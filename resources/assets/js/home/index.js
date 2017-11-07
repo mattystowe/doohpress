@@ -6,7 +6,8 @@ require('../core');
 
 angular.module('app.home', [
   'app.core',
-  'app.compositions'
+  'app.compositions',
+  'app.jobs'
 ]);
 
 require('./routes');

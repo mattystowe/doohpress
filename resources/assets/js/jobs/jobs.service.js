@@ -47,7 +47,7 @@ var angular = require('angular');
               },
               data : {
                 team_id: params.team_id,
-                display: params.display
+                display: params.display,
               }
           });
       }

@@ -37,7 +37,8 @@
               <tbody>
                 <tr ng-repeat="job in vm.jobs">
                   <td>{{job.id}}</td>
-                  <td><img ng-src="{{job.user.profilepic}}" style="width:30px; height:30px" class="img img-responsive rounded-circle" /></td>
+                  <td><img ng-src="{{job.user.profilepic}}" style="width:30px; height:30px" class="img img-responsive rounded-circle" />
+                  {{job.user.firstname}} {{job.user.lastname}}</td>
                   <td><img class="img img-fluid rounded" width="100" ng-src="{{job.sku.composition.thumbnail}}"></td>
                   <td>{{job.sku.composition.name}}</td>
                   <td>

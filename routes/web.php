@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/jobs/submit/','JobsController@submit');
   $this->post('/jobs/getlist/','JobsController@getList');
 
+
+
   $this->get('/featuredcompositions/get/','HomeController@getFeaturedCompositions');
 
 

@@ -14,6 +14,7 @@ class JobsController extends Controller
 {
 
     public function getList(Request $request) {
+
       $user = Auth::user();
         switch ($request->input('display')) {
           case 'myjobs':

@@ -11,7 +11,8 @@
       '$scope',
       '$state',
       'AuthService',
-      'CompositionService'
+      'CompositionService',
+      'JobService'
     ];
 
     /* @ngInject */
@@ -19,7 +20,8 @@
       $scope,
       $state,
       AuthService,
-      CompositionService
+      CompositionService,
+      JobService
     ) {
 
 
@@ -32,9 +34,11 @@
           longitude: 4.401054382324219
         }
 
+        vm.getLatestTeamJobs = getLatestTeamJobs;
+        vm.getLatestUserJobs = getLatestUserJobs;
         vm.featuredcompositions = [];
-
-
+        vm.latestTeamJobs = [];
+        vm.latestMyJobs = [];
 
 
         /////////////////////////////////////////////////
@@ -43,6 +47,14 @@
         function activate() {
 
           getFeaturedCompositions();
+          getLatestTeamJobs();
+          getLatestUserJobs();
+
+          $scope.$watch( AuthService.currentTeam, function ( currentTeam ) {
+            vm.getLatestTeamJobs();
+            vm.getLatestUserJobs();
+          });
+
         }
 
         function Auth() {
@@ -50,6 +62,39 @@
         }
         /////////////////////////////////////////////////
 
+        function getLatestTeamJobs() {
+          JobService.getJobs({
+            display: 'teamjobs',
+            team_id: vm.Auth().currentTeam().id
+          })
+          .then(
+            function(data) {
+            //
+            //saved - send user somewhere
+            vm.latestTeamJobs = data.data;
+            },
+            function(data) {
+              toastr.error('Error','There was an error getting latest team jobs');
+            }
+          );
+        }
+
+        function getLatestUserJobs() {
+          JobService.getJobs({
+            display: 'myjobs',
+            team_id: vm.Auth().currentTeam().id
+          })
+          .then(
+            function(data) {
+            //
+            //saved - send user somewhere
+            vm.latestMyJobs = data.data;
+            },
+            function(data) {
+              toastr.error('Error','There was an error getting latest team jobs');
+            }
+          );
+        }
 
         function getFeaturedCompositions() {
           CompositionService.getFeatured()

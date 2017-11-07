@@ -43,6 +43,77 @@
 </div>
 
 
+<div class="row">
+  <div class="col-md-6 col-lg-6">
+    <div class="card-box">
+      <h5>My latest jobs</h5>
+      <table class="table" ng-if="vm.latestMyJobs.length > 0">
+        <tr ng-repeat="job in vm.latestMyJobs | limitTo:5">
+          <td><a ui-sref="jobs.view({job_id:job.id})" ui-sref-opts="{reload: true}">
+            <img class="img img-fluid rounded" width="100" ng-src="{{job.sku.composition.thumbnail}}">
+          </a>
+        </td>
+          <td><a ui-sref="jobs.view({job_id:job.id})" ui-sref-opts="{reload: true}">
+            {{job.sku.composition.name}}
+          </a>
+        </td>
+
+          <td width="200">
+            <div class="progress">
+                <div class="progress-bar progress-lg progress-bar-success progress-bar-striped active progress-animated wow animated " role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%;">
+                    <span >{{job.progress}} %</span>
+                </div>
+            </div>
+          </td>
+
+        </tr>
+      </table>
+
+      <div ng-if="vm.latestMyJobs.length == 0">
+        <p>You have no jobs yet</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-6">
+    <div class="card-box">
+      <h5>Latest Team jobs</h5>
+      <table class="table" ng-if="vm.latestTeamJobs.length > 0">
+        <tr ng-repeat="job in vm.latestTeamJobs | limitTo:5">
+          <td><img ng-src="{{job.user.profilepic}}" style="width:30px; height:30px" class="img img-responsive rounded-circle" alt="{{job.user.firstname}} {{job.user.lastname}}" /></td>
+          <td><a ui-sref="jobs.view({job_id:job.id})" ui-sref-opts="{reload: true}">
+            <img class="img img-fluid rounded" width="100" ng-src="{{job.sku.composition.thumbnail}}">
+          </a>
+        </td>
+          <td><a ui-sref="jobs.view({job_id:job.id})" ui-sref-opts="{reload: true}">
+            {{job.sku.composition.name}}
+          </a>
+        </td>
+
+          <td width="200">
+            <div class="progress">
+                <div class="progress-bar progress-lg progress-bar-success progress-bar-striped active progress-animated wow animated " role="progressbar" aria-valuenow="{{job.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{job.progress}}%;">
+                    <span >{{job.progress}} %</span>
+                </div>
+            </div>
+          </td>
+
+        </tr>
+      </table>
+
+      <div ng-if="vm.latestTeamJobs.length == 0">
+        <p>Your team has no jobs yet</p>
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
 
 
 </div>
