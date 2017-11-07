@@ -1,5 +1,7 @@
 <div ng-controller="FeaturedCompositionsController as vm">
 
+  <button class="btn btn-primary" ng-click="vm.openNewAddModal()">Add</button>
+
   <ul data-as-sortable="vm.dragControlListeners" data-ng-model="vm.featuredcompositions" class="list-unstyled">
     <li ng-repeat="featuredcomposition in vm.featuredcompositions" data-as-sortable-item>
       <div class="card card-box" >
@@ -15,13 +17,35 @@
             {{featuredcomposition.composition.name}}
           </div>
           <div class="col-5">
-            <button ng-click="vm.removeComposition(featuredcomposition.composition.id, $index)" class="btn btn-danger">Remove</button>
+            <button ng-click="vm.removeComposition(featuredcomposition, $index)" class="btn btn-danger">Remove</button>
           </div>
 
         </div>
       </div>
     <li>
   </ul>
+
+
+  <div id="newcompModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newcompModal" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title mt-0" id="myModalLabel">Add featured composition</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form-horizontal m-t-20">
+                          <select class="form-control" ng-model="vm.newfeaturedcomp" ng-options="composition as composition.name for composition in vm.compositions"></select>
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-success waves-effect" data-dismiss="modal" ng-click="vm.addFeaturedComposition();">Save</button>
+                      </div>
+                  </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+          </div>
 
 
 </div>

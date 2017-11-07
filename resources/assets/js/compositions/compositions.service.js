@@ -24,11 +24,43 @@ var angular = require('angular');
         removeExample:removeExample,
         addExample:addExample,
         searchFiltered:searchFiltered,
-        getFeatured:getFeatured
+        getFeatured:getFeatured,
+        saveFeaturedOrdering:saveFeaturedOrdering,
+        removeFeaturedComposition:removeFeaturedComposition,
+        addNewFeaturedComposition:addNewFeaturedComposition
       };
       return api;
 
       ////////////
+
+      function addNewFeaturedComposition(newcomp) {
+        return $http({
+              url : '/featuredcompositions/add/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition_id: newcomp.composition_id,
+                priority: newcomp.priority
+
+              }
+          });
+      }
+
+
+      function removeFeaturedComposition(composition) {
+        return $http({
+              url : '/featuredcompositions/remove/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                composition_id: composition.id
+              }
+          });
+      }
 
       function getFeatured() {
         return $http({
@@ -40,6 +72,18 @@ var angular = require('angular');
           });
       }
 
+      function saveFeaturedOrdering(orderValues) {
+        return $http({
+              url : '/featuredcompositions/order/',
+              method : 'POST',
+              headers : {
+                'Content-Type' : 'application/json'
+              },
+              data : {
+                orderValues: orderValues
+              }
+          });
+      }
 
 
       function searchFiltered(filters) {

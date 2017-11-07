@@ -90126,11 +90126,42 @@ function CompositionService($http) {
     removeExample: removeExample,
     addExample: addExample,
     searchFiltered: searchFiltered,
-    getFeatured: getFeatured
+    getFeatured: getFeatured,
+    saveFeaturedOrdering: saveFeaturedOrdering,
+    removeFeaturedComposition: removeFeaturedComposition,
+    addNewFeaturedComposition: addNewFeaturedComposition
   };
   return api;
 
   ////////////
+
+  function addNewFeaturedComposition(newcomp) {
+    return $http({
+      url: '/featuredcompositions/add/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition_id: newcomp.composition_id,
+        priority: newcomp.priority
+
+      }
+    });
+  }
+
+  function removeFeaturedComposition(composition) {
+    return $http({
+      url: '/featuredcompositions/remove/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        composition_id: composition.id
+      }
+    });
+  }
 
   function getFeatured() {
     return $http({
@@ -90138,6 +90169,19 @@ function CompositionService($http) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  function saveFeaturedOrdering(orderValues) {
+    return $http({
+      url: '/featuredcompositions/order/',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        orderValues: orderValues
       }
     });
   }
@@ -90846,12 +90890,25 @@ function FeaturedCompositionsController($scope, $state, AuthService, toastr, Swe
   vm.Auth = Auth;
 
   vm.featuredcompositions = [];
+  vm.removeComposition = removeComposition;
+
+  vm.dragControlListeners = {
+    orderChanged: orderChanged
+  };
+
+  vm.openNewAddModal = openNewAddModal;
+
+  vm.newfeaturedcomp = {};
+  vm.addFeaturedComposition = addFeaturedComposition;
+
+  vm.compositions;
 
   /////////////////////////////////////////////////
   activate();
 
   function activate() {
     loadFeaturedCompositions();
+    getCompositions();
   }
 
   function Auth() {
@@ -90859,6 +90916,73 @@ function FeaturedCompositionsController($scope, $state, AuthService, toastr, Swe
   }
   /////////////////////////////////////////////////
 
+
+  function getCompositions() {
+    CompositionService.getAll().then(function (data) {
+      if (data.status == 200) {
+        vm.compositions = data.data;
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error getting compositions.');
+      }
+    });
+  }
+
+  function addFeaturedComposition() {
+    var newFeatured = {
+      composition_id: vm.newfeaturedcomp.id,
+      priority: vm.featuredcompositions.length + 1
+    };
+
+    CompositionService.addNewFeaturedComposition(newFeatured).then(function (data) {
+      if (data.status == 200) {
+        loadFeaturedCompositions();
+        toastr.success('Success', 'Added');
+      } else {
+        //
+        //log error
+        toastr.error('Error', 'There was an error adding featured composition.');
+      }
+    });
+  }
+
+  function openNewAddModal() {
+    vm.newfeaturedcomp = {};
+    $('#newcompModal').modal('show');
+  }
+
+  function removeComposition(composition, index) {
+    CompositionService.removeFeaturedComposition(composition).then(function (data) {
+      //
+      toastr.success('Success', 'Removed');
+      vm.featuredcompositions.splice(index, 1);
+    }, function (data) {
+      toastr.error('Error', 'Could not remove composition.');
+    });
+  }
+
+  function orderChanged(event) {
+
+    var orderValues = [];
+    vm.featuredcompositions.forEach(function (featuredcomp, key) {
+      orderValues.push({
+        'featuredcomposition_id': featuredcomp.id,
+        'priority': key
+      });
+      featuredcomp.priority = key;
+    });
+    saveNewOrder(orderValues);
+  }
+
+  function saveNewOrder(orderValues) {
+    CompositionService.saveFeaturedOrdering(orderValues).then(function (data) {
+      //
+      toastr.success('Success', 'Order saved');
+    }, function (data) {
+      toastr.error('Error', 'Could not save order.');
+    });
+  }
 
   function loadFeaturedCompositions() {
     CompositionService.getFeatured().then(function (data) {

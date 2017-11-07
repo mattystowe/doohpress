@@ -11,6 +11,7 @@ use App\Frame;
 use App\Wemockup;
 use App\Example;
 use App\Preprocess;
+use App\Featuredcomposition;
 
 use Log;
 use DB;
@@ -22,6 +23,47 @@ class CompositionsController extends Controller
       $comps = Composition::with(['tags','outputtype','compositioncategory'])->get();
       return $comps;
     }
+
+    public function addFeaturedComposition(Request $request) {
+      $featuredcomp = Featuredcomposition::create([
+        'composition_id'=>$request->input('composition_id'),
+        'priority'=>$request->input('priority'),
+      ]);
+      if ($featuredcomp) {
+        return response('Saved',200);
+      } else {
+        return response('Could not save', 422);
+      }
+    }
+
+    public function removeFeaturedCompositions(Request $request) {
+      $featuredcomp = Featuredcomposition::find($request->input('composition_id'));
+      if ($featuredcomp) {
+        if ($featuredcomp->delete()) {
+          return response('Deleted ok',200);
+        } else {
+          return response('Error deleting featured comp', 422);
+        }
+      } else {
+        return response('Not found', 404);
+      }
+    }
+
+
+    //save the ordering of featured compositions
+    //
+    //
+    //
+    public function orderFeaturedCompositions(Request $request) {
+      $orderValues = $request->input('orderValues');
+      foreach ($orderValues as $item) {
+        $featuredcomp = Featuredcomposition::findOrFail($item['featuredcomposition_id']);
+        $featuredcomp->priority = $item['priority'];
+        $featuredcomp->save();
+      }
+      return response('Saved',200);
+    }
+
 
 
     public function getOutputTypes() {

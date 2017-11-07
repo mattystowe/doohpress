@@ -61,7 +61,8 @@ Route::middleware(['auth'])->group(function () {
   $this->post('/jobs/getlist/','JobsController@getList');
 
   $this->get('/featuredcompositions/get/','HomeController@getFeaturedCompositions');
-  
+
+
 
   Route::middleware(['superadmin'])->group(function () {
 
@@ -94,6 +95,12 @@ Route::middleware(['auth'])->group(function () {
     $this->post('/owners/add/','OwnersController@add');
     $this->post('/owners/update/','OwnersController@update');
     $this->get('/owners/load/{owner_id}','OwnersController@load');
+
+    $this->post('/featuredcompositions/order/','CompositionsController@orderFeaturedCompositions');
+    $this->post('/featuredcompositions/remove/','CompositionsController@removeFeaturedCompositions');
+    $this->post('/featuredcompositions/add/','CompositionsController@addFeaturedComposition');
+
+
   });
 
 });
