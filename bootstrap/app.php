@@ -41,6 +41,20 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+/**
+ * Configure logging to use logentries
+ *
+ *
+ *
+ * @var Monolog
+ */
+if (env('LOCAL_LOGGING') !=true) {
+  $app->configureMonologUsing(function($monolog) {
+     $logEntriesHandler = new Monolog\Handler\LogEntriesHandler(env('LOGENTRIES_TOKEN'));
+     $monolog->pushHandler($logEntriesHandler);
+   });
+}
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

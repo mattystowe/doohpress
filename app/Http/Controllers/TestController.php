@@ -9,11 +9,12 @@ use Filestack\FilestackException;
 use App\DoohpressLogger;
 use App\Wemockup;
 use App\Job;
+use Log;
 
 class TestController extends Controller
 {
     public function test() {
-      $client = new FilestackClient('A9f0kYLl5RDTyHSt2NxrRz'); // temp using flowtracker key...
+      /*$client = new FilestackClient('A9f0kYLl5RDTyHSt2NxrRz'); // temp using flowtracker key...
 
       $external_url = 'https://s3-eu-west-1.amazonaws.com/doohpressstorage/jobs/inputfiles/zZ56grSLqkivcBKiKLcQ_Comp 1.mp4';
       $output_options = [
@@ -26,7 +27,9 @@ class TestController extends Controller
 
       $result = $client->convertVideo($external_url, 'mov', $output_options);
       //$conversion_url = $result['conversion_url'];
-      return $result;
+      return $result;*/
+      Log::debug('testing');
+      return response('ok',200);
     }
 
 
