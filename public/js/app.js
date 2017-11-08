@@ -89472,7 +89472,7 @@ var mapping = angular.module('blocks.mapping');
 
 mapping.config(function (uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
-        //key: 'your api key',
+        key: 'AIzaSyDN2iXYoQw-tXbnrCjPoz1lmV3oEY8j-Yw',
         //v: '3.20', //defaults to latest 3.X anyhow
         libraries: 'weather,geometry,visualization'
     });
@@ -91442,9 +91442,13 @@ core.factory('redirectInterceptor', function ($q, $location, $window) {
   return {
     'responseError': function responseError(response) {
       if (response.status == 401) {
-        $window.location.href = "/logout";
+        $window.location.href = "/logout"; // send user back to login screen to relogin
         return $q.reject(response);
       }
+      //
+      //Catch other global http response codes here 
+      //
+      //
     }
   };
 });
