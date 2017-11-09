@@ -22,7 +22,7 @@ class CreateTeamsTable extends Migration
 
         DB::table('teams')->insert([
             [
-              'name'=>'Dooohpress',
+              'name'=>'Doohpress',
               'profilepic'=>'/images/profilepics/avatar-team-default.gif'
             ]
         ]);

@@ -18,6 +18,17 @@ class CreateFrametypesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        DB::table('frametypes')->insert(
+          array(
+              'name' => 'Digital'
+          )
+        );
+        DB::table('frametypes')->insert(
+          array(
+              'name' => 'Non-Digital'
+          )
+        );
     }
 
     /**

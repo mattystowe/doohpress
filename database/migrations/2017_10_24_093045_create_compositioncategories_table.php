@@ -18,6 +18,12 @@ class CreateCompositioncategoriesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+        DB::table('compositioncategories')->insert([
+          ['name' => 'Static Camera'],
+          ['name' => 'Walking - Steadycam'],
+          ['name' => 'Vehicle - Steadycam'],
+          ['name' => 'Aerial Drone']
+        ]);
     }
 
     /**

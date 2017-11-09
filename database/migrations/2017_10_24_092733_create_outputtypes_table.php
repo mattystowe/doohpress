@@ -18,6 +18,23 @@ class CreateOutputtypesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        DB::table('outputtypes')->insert(
+          array(
+              'name' => 'Single Image'
+          )
+        );
+        DB::table('outputtypes')->insert(
+          array(
+              'name' => 'Video'
+          )
+        );
+        DB::table('outputtypes')->insert(
+          array(
+              'name' => 'VR'
+          )
+        );
+
     }
 
     /**

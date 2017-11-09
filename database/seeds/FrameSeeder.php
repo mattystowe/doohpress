@@ -45,7 +45,7 @@ class FrameSeeder extends Seeder
           $Owner_Ocean_Outdoor->name = 'Ocean Outdoor UK';
           $Owner_Ocean_Outdoor->logo = 'http://heavenly.co.uk/wp-content/uploads/2013/10/news_news_ocean_logo_640x360new_634366423478661250.jpg';
           $Owner_Ocean_Outdoor->website = 'http://www.oceanoutdoor.co.uk';
-          $Owner_Ocean_Outdoor->social_twitter='@oceanoutdooruk';
+          $Owner_Ocean_Outdoor->social_twitter='https://twitter.com/oceanoutdooruk';
           $Owner_Ocean_Outdoor->save();
 
 

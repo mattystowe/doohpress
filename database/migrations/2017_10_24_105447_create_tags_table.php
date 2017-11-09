@@ -23,6 +23,17 @@ class CreateTagsTable extends Migration
             $table->integer('taggable_id');
             $table->string('taggable_type');
         });
+
+        DB::table('tags')->insert([
+          ['name' => 'Day'],
+          ['name' => 'Night'],
+          ['name' => 'Sunny'],
+          ['name' => 'Cloudy'],
+          ['name' => 'Rainy'],
+          ['name' => 'Morning'],
+          ['name' => 'Afternoon'],
+          ['name' => 'Evening']
+        ]);
     }
 
     /**
