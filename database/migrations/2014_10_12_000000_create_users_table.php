@@ -31,8 +31,8 @@ class CreateUsersTable extends Migration
           [
             'firstname'=>'Doohpress',
             'lastname'=>'Admin',
-            'email'=>'admin@doohpress.com',
-            'password'=>Hash::make('skymonkey'),
+            'email'=>'admin@domain.com',
+            'password'=>Hash::make('password'),
             'profilepic'=>'/images/profilepics/avatar-starter.png',
             'superadmin'=>true
           ]
